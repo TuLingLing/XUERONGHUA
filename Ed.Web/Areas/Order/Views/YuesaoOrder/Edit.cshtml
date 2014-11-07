@@ -1,0 +1,281 @@
+﻿@using System.Web.Optimization
+@using Ed.Common
+@using Ed.Entity
+@using Ed.Web.Helpers
+
+@{
+   //客户信息
+    var customer =(TClientInfo) ViewBag.Customer;
+    //月嫂信息
+    var yuesaoes =(List<TPregnanterInfo>) ViewBag.Yuesao;
+    //订单信息
+  var order = (TOrder)ViewBag.Order;
+  //下单人
+  string orderCreaterName = ViewBag.OrderCreaterName;
+  
+  
+  //月嫂订单信息
+   var yuesaoOrder=(TYuesaoOrder) ViewBag.yuesaoOrder ;
+    
+    Layout = null;
+}
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花云服务_订单第三步输入客户信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+        <script src="~/Themes/default/base/js/city.js"></script>
+    <!--my97DatePicker-->
+    <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<style type="text/css">
+.commontable { margin-top:20px;}
+.commontable td {padding:3px 5px; text-align:left; color:#726F6F; line-height:22px;}
+.commontable td.tit{background-color:#EBECEE;text-align:center; width:110px; color:#000;}
+.commontable th{ width:70px; text-align:right; font-weight:normal;}
+.commontable .yuesao_list .list{ display:block; line-height:30px; height:30px;width:100%; border:1px solid #ccc; margin-top:-1px; overflow:hidden;}
+.commontable .yuesao_list .list span{ display:block; float:left; width:15%; text-align:center; color:green;}
+.commontable .yuesao_list .list a{ margin-left:20px;}
+.commontable .yuesao_list .list span.green{ color:green;}
+.teshu{margin-top: 10px;}
+
+.order_status{position:absolute; width:120px; height:50px; font-size:24px; font-weight:bold; line-height:50px;text-align:center;top:30px; right:20px;-moz-transform: rotate(30deg);-webkit-transform: rotate(30deg);}
+.daichuli{ border:3px solid red;color:#F00;}
+.daizhixing{ border:3px solid green;color:green;}
+.zhixingzhong{border:3px solid blue;color:blue;}
+.weihuzhong{border:3px solid gray;color:gray;}
+</style>
+        <script type="text/javascript">
+            //=============================================================
+            //去除顶层加载中
+            $(document).ready(function () {
+
+                //$("#OrderSumMoney").focus();
+
+                //去除加载中
+                if (undefined != top.dialog.list["show_loading"]) {
+                    top.dialog.list["show_loading"].close().remove();
+                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
+                }
+            });
+            //=====================================================================
+        </script>
+
+         <script type="text/javascript">
+             $(function () {
+
+                 validate_form();
+
+
+                 //选择医院时触发写入值
+                 $("#HospitalSelect").change(function () {
+                     var xx = $("#HospitalSelect option:selected").text();
+                     var yy = $("#HospitalSelect option:selected").val();
+                     $("#YorderHospital").val(xx);
+                     $("#YorderHaddress").val(yy);
+                 });
+             });
+             //表单验证
+             function validate_form() {
+                 $("#step4_form").validate({
+                     errorPlacement: function (error, element) {
+                         var errorMsg = error[0].innerHTML;
+                         var elementName = element[0].name;
+                         $("#" + elementName).formtip(errorMsg);
+                         //showMsg(errorMsg, "错误提示", "Error");
+                         $("#" + elementName).attr("placeholder", errorMsg);
+                     },
+                     success: function (element) {
+                         var elem = $(element)[0].htmlFor;
+                         $("#" + elem).poshytip('disable');
+                         $("#" + elem).poshytip('destroy');
+                         $("#" + elem).removeClass("error").addClass("success");
+                         //身份证号码生成生日
+                         if (elem == "OrderSumMoney") {
+                             var all = $("#OrderSumMoney").val();
+                             var prepay = $("#OrderPrepaid").html();
+
+                             var nopay = $("#OrderSumMoney").html();
+                             nopay = (all - prepay);
+                             //if (prepay < 0) {
+                             //    showTopMsg("总金额小于预付款", "错误提示！", "Warn");
+                             //}
+                             $("#nopay").html(nopay);
+                         }
+                     }
+                 });
+             }
+          </script>
+        <script type="text/javascript">
+
+            //表单验证方法，供父窗口调用
+            function form_valid() {
+                if ($("#step4_form").valid()) {
+                    var all = $("#OrderSumMoney").val();
+                    var prepay = $("#OrderPrepaid").html();
+
+                    var nopay = $("#OrderSumMoney").html();
+                    nopay = (all - prepay);
+                    if (prepay < 0) {
+                        showTopMsg("总金额小于预付款", "错误提示！", "Error");
+                        return false;
+                    }
+					var xx=$(':radio[name="YorderYuesao"]:checked').val();
+					if(xx==undefined)
+					{
+						showTopMsg("必须选择一个月嫂！","错误提示！","Error");
+					return false;
+						
+					}
+					
+                 return true;
+                } else {
+                    return false;
+                }
+
+            }
+    
+        </script>
+        
+        <script type="text/javascript">
+            $(function () {
+                var city = get_city_names("@customer.ClientCity");
+                var addr = city + " " + $("#ClientCity").html();
+                $("#ClientCity").html(addr);
+            });
+
+
+            function pregnanterinfo_view(id) {
+                var url = "/Yuesao/PregnanterInfo/View?id=" + id;
+                //console.log(id);
+                showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂", 720, 400);
+
+                //必须有这个，阻止刷新
+                return false;
+            }
+        </script>
+
+
+
+    </head><body>
+    <div class="boxwarp">
+	 <div class="order_status daichuli">@Html.OptionsPalse(@order.OrderStatus, "1|待处理,2|待执行, 3|待评价,4|待维护,0|回收站")</div>
+        <form id="step4_form">
+          
+            <table width="900" border="0" cellspacing="0" cellpadding="0" class="commontable">
+                <tbody>
+                    <tr>
+                        <td rowspan="2" class="tit"><label>客户信息   </label></td>
+                        <!---隐藏值-->
+                        <input type="hidden" id="ClientId" name="ClientId" value="@customer.Id" />
+                        <th>客户编号：</th>
+                        <td>@customer.ClientCode</td>
+                        <th>客户姓名：</th>
+                        <td>@customer.ClientName</td>
+                        <th>所属民族：</th>
+                        <td>@customer.ClientNational</td>
+                        <th>年龄：</th>
+                        <td>@customer.ClientAge 岁</td>
+                    </tr>
+                    <tr>
+                        <th>手机：</th>
+                        <td>@customer.ClientTel1</td>
+                        <th>详细地址：</th>
+                        <td colspan="6"><span id="ClientCity">@customer.ClientAddress</span></td>
+                    </tr>
+                    <tr> <td colspan="9"><div style=" height:3px;"></div></td> </tr>
+                    <tr>
+                        <td rowspan="2" class="tit"><label>月嫂信息</label><br/></td>
+                        <th>预定时间：</th>
+                        <!---隐藏值-->
+                        <input type="hidden" id="OrderBegin" name="OrderBegin" value="@order.OrderBegin" />
+                        <input type="hidden" id="OrderEnd" name="OrderEnd" value="@order.OrderEnd" />
+                        <td colspan="4" style=" font-weight:bold; color:red; font-size:14px;">(开始)@Html.DateTimeNullPalse(@order.OrderBegin).ToString("yyyy-MM-dd") - (结束)@Html.DateTimeNullPalse(@order.OrderEnd).ToString("yyyy-MM-dd")</td>
+                      
+                    </tr>
+                    <tr>
+                        <th>意向月嫂：</th>
+                        <td colspan="8" class="yuesao_list">
+                            @foreach (var yuesao in yuesaoes)
+                            {
+                                <div class="list">
+                                    <input type="hidden"  name="YorderAlter" value="@yuesao.Id" />
+                                    <span class="green">@yuesao.PInfoCode</span>
+                                    <span style="width:60px;">@yuesao.PInfoName</span>
+                                    <span style="width:60px;">@yuesao.PInfoAge 岁</span>
+                                    <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★")</span>
+                                    <span>@yuesao.PInfoPrice</span>
+                                    <span>@yuesao.PInfoTel</span><a href="javascript:pregnanterinfo_view(@yuesao.Id);">查看</a>
+                                    @Html.RadioButton("YorderYuesao", yuesao.Id)确定该月嫂
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                    <tr> <td colspan="9"><div style=" height:3px;"></div></td> </tr>
+                    <tr>
+                        <td rowspan="5" class="tit"><label>订单信息</label><br/></td>
+                        <!---隐藏值-->
+                        <input type="hidden" id="OrderCode" name="OrderCode" value="@order.OrderCode" />
+                        <th>订单编号：</th>
+                        <td>@order.OrderCode</td>
+                        <th><span class="must">*</span>预产期：</th>
+                        <td style=" color:blue; font-size:14px;">
+                            <input value='@Html.DateTimeNullPalse(@yuesaoOrder.YorderChildbirth).ToString("yyyy-MM-dd")' class="form-control Wdate dateISO required" data-val="true" data-val-date="填入正确格式" id="YorderChildbirth" maxlength="10" minlength="10" name="YorderChildbirth" onClick="WdatePicker()"    type="text">
+                        </td>
+                        <th><span class="must">*</span>胎数：</th>
+                        <td colspan="3">
+                            <select value="1" class="form-control required valid success" id="YorderCode" name="YorderCode" placeholder="">
+                                <option value="">请选择</option>
+                                <option selected="selected" value="1">一胎</option>
+                                <option value="2">二胎</option>
+                                <option value="3">三胎</option>
+                            </select>
+                        </td>
+                    </tr>
+                   
+                   <tr> <td colspan="9"><div style=" height:3px;"></div></td> </tr>
+                    <tr>
+                        <th>预产医院：</th><td><input class="form-control" id="YorderHospital" name="YorderHospital" placeholder="预产医院" style="width:220px;" type="text" value="@yuesaoOrder.YorderHospital" /></td>
+                        <th>详细地址：</th><td colspan="6"><input class="form-control" id="YorderHaddress" name="YorderHaddress" placeholder="医院详细地址" style="width:100%;" type="text" value="@yuesaoOrder.YorderHaddress" /></td>
+                    </tr>
+                    <tr>
+                        <th>详细要求：</th>
+                        <td colspan="8">
+                            <textarea class="form-control" cols="4" id="YorderRequire" maxlength="200" minlength="1" name="YorderRequire" rows="3" style="width:100%;">@yuesaoOrder.YorderRequire</textarea>
+                        </td>
+                    </tr>
+         
+                    <tr>
+                        <th>下单相关：</th>
+                        <td>
+						@orderCreaterName   ( @Html.DateTimeNullPalse(order.OrderDate).ToString("yyyy-MM-dd") )
+					
+						</td>
+                        <th>处理相关：</th>
+						<td colspan="8">
+                        <input type="text" id="OrderWeihuName" name="OrderWeihuName" class="form-control isreadonly" value="@Session[EdKeys.SESSION_USER_NAME]" onfocus = "this.blur()" />
+						   <input type="hidden" id="OrderWeihu" name="OrderWeihu" value="@Session[EdKeys.SESSION_USER_ID]"/>
+                              @Html.TextBox("OrderProcesstime", order.OrderProcesstime, new { @class = "form-control isreadonly", Value = @Html.LoadDefaultValue(@Html.DateTimeNullPalse(order.OrderProcesstime).ToString("yyyy-MM-dd"), DateTime.Now.ToString("yyyy-MM-dd")), @onfocus = "this.blur()" })
+                        </td>
+                    </tr>
+                    <tr> <td colspan="9"><div style=" height:3px;"></div></td> </tr>
+                    <tr>
+             <td class="tit"><label>财务信息</label></td>
+            <th>总金额：</th>
+            <td>
+			<input class="form-control required" id="OrderSumMoney" name="OrderSumMoney" placeholder="订单总金额" style="width:100px;color:#900; font-size:14px; font-weight:bold;" type="text" value="0.00" />
+			</td>
+            <th>已付定金：</th>
+            <td style="color:green;font-size:14px; font-weight:bold;"><span id="OrderPrepaid">@order.OrderPrepaid</span> 元</td>
+            <th>未付款：</th>
+            <td style="color:red; font-size:14px;font-weight:bold;"><span id="nopay">0</span> 元</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </body>
+    </html>
+    

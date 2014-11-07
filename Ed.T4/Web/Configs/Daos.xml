@@ -1,0 +1,46 @@
+﻿
+<?xml version="1.0" encoding="utf-8"?>
+<objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
+  <!--clientInfoDao-->
+  <object id="clientInfoDao" type="Ed.Dao.Impl.TClientInfoDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--clientMaintenanceDao-->
+  <object id="clientMaintenanceDao" type="Ed.Dao.Impl.TClientMaintenanceDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--orderDao-->
+  <object id="orderDao" type="Ed.Dao.Impl.TOrderDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--orderFinanceDao-->
+  <object id="orderFinanceDao" type="Ed.Dao.Impl.TOrderFinanceDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--pregnanterEvaluationDao-->
+  <object id="pregnanterEvaluationDao" type="Ed.Dao.Impl.TPregnanterEvaluationDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--pregnanterInfoDao-->
+  <object id="pregnanterInfoDao" type="Ed.Dao.Impl.TPregnanterInfoDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--pregnanterMaintenanceDao-->
+  <object id="pregnanterMaintenanceDao" type="Ed.Dao.Impl.TPregnanterMaintenanceDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--pregnanterServiceRecordDao-->
+  <object id="pregnanterServiceRecordDao" type="Ed.Dao.Impl.TPregnanterServiceRecordDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--sysDepartmentDao-->
+  <object id="sysDepartmentDao" type="Ed.Dao.Impl.TSysDepartmentDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--sysLogDao-->
+  <object id="sysLogDao" type="Ed.Dao.Impl.TSysLogDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--sysPowerDao-->
+  <object id="sysPowerDao" type="Ed.Dao.Impl.TSysPowerDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--sysRoleDao-->
+  <object id="sysRoleDao" type="Ed.Dao.Impl.TSysRoleDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--sysUserDao-->
+  <object id="sysUserDao" type="Ed.Dao.Impl.TSysUserDaoImpl, Ed.Dao" singleton="false">
+  </object>
+  <!--yuesaoOrderDao-->
+  <object id="yuesaoOrderDao" type="Ed.Dao.Impl.TYuesaoOrderDaoImpl, Ed.Dao" singleton="false">
+  </object>
+</objects>

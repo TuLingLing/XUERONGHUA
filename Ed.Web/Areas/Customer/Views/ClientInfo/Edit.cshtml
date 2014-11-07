@@ -1,0 +1,560 @@
+﻿@using System.Web.Optimization
+@using Ed.Entity
+@using Ed.Web.Helpers
+@model Ed.Entity.TClientInfo
+@{
+    Layout = null;
+    //页面类型
+    var actionType = ViewBag.ActionType;
+    //创建人Id,UserLname,UserTname
+    var clientCreaterId =(int)ViewBag.SysUser.Id;
+    var clientCreaterName = (string)ViewBag.SysUser.UserTname; 
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>客户信息查看/修改/添加</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+    
+    <!--列表css、js-->
+    <link href="/Themes/default/lib/jquery.bootgrid/jquery.bootgrid.css" rel="stylesheet" />
+    <script src="/Themes/default/lib/jquery.bootgrid/jquery.bootgrid.js"></script>
+
+    <!--my97DatePicker-->
+    <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <!--省市数据-->
+    <script src="/Themes/default/base/js/city.js" type="text/javascript"></script>
+    
+    
+    <script type="text/javascript">
+    //=============================================================
+    //去除顶层加载中
+    $(document).ready(function () {
+        //去除加载中
+        if (undefined != top.dialog.list["show_loading"]) {
+            top.dialog.list["show_loading"].close().remove();
+            //showTopMsg("页面加载成功！", "温馨提示", "Success");
+        }
+		
+		selected_show("ClientOnote", "C_ClientOnote");
+		selected_add("ClientOnote", "C_ClientOnote");
+    });
+    //=====================================================================
+    </script>
+
+
+
+
+    <!--客户js-->
+    <script type="text/javascript">
+        $(function () {
+            //表单验证
+            validate_form();
+            //加载省市数据
+            load_city_data("ClientProv", "ClientArea", "ClientRegion");
+            init_city_data("ClientProv", "ClientArea", "ClientRegion", "@Model.ClientCity");
+
+      
+        });
+
+
+
+
+
+        //表单验证
+        function validate_form() {
+            //表单验证
+            $("#clientinfo_form").validate({
+                rules: {
+             @if(@actionType=="Add"){
+                //验证手机号是否存在
+                        @Html.Raw("ClientTel1: {remote: { type: 'GET', url: '/api/ClientInfoApi/Validate?fields=ClientTel1&eqs==&operations=AND&existReturn=false', data: { values: function () { return $('#ClientTel1').val(); } } }}")
+                        @Html.Raw(",")
+               //验证身份证号是否存在
+                        @Html.Raw("ClientIdcard: {remote: { type: 'GET', url: '/api/ClientInfoApi/Validate?fields=ClientIdcard&eqs==&operations=AND&existReturn=false', data: { values: function () { return $('#ClientIdcard').val(); } } }}")
+        }
+        },
+        messages: {
+            ClientTel1: {
+                    remote: "该手机号已存在，请勿重复添加客户！"
+                },
+            ClientIdcard: {
+                remote: "该身份证号已存在，请勿重复添加客户！"
+            }
+        },
+                invalidHandler: function (e, validator) {
+                    var msg = "有 " + validator.numberOfInvalids() + " 项填写有误，请检查！";
+                    showMsg(msg, "错误提示", "Error");
+                },
+                focusInvalid: false,
+                errorPlacement: function (error, element) {
+                    var errorMsg = error[0].innerHTML;
+                    var elementName = element[0].name;
+                    $("#" + elementName).formtip(errorMsg);
+                    $("#" + elementName).attr("placeholder", errorMsg);
+                },
+                success: function (element) {
+                    var elem = $(element)[0].htmlFor;
+                    $("#" + elem).poshytip('disable');
+                    $("#" + elem).poshytip('destroy');
+                    $("#" + elem).removeClass("error").addClass("success");
+                    //身份证号码生成生日
+                    if (elem == "ClientIdcard") {
+                        idcard_to_birth_age($.trim($("#" + elem).val()));
+                    }
+                }
+            });
+        }
+
+        //身份证生成生日和年龄
+        function idcard_to_birth_age(cardNum) {
+            if (isChinaIDCard(cardNum)) {
+                var bir = get_birthday_by_idcard(cardNum);
+                var now = '@DateTime.Now.ToString("yyyy-MM-dd")';
+                var age=  YearDiff(bir, now);
+                $("#ClientBirthday").val(bir);
+                $("#ClientAge").val(age);
+            }
+        }
+
+        //表单验证方法，供父窗口调用
+        function form_valid() {
+            if ($("#clientinfo_form").valid()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        function showc_note() {
+
+            showContentDialog($("#c_note_select").html(), "常用备注标签", 400, 100);
+   
+        }
+    </script>
+    
+    <!--维护js-->
+    <script type="text/javascript">
+        //全局变量
+        var clientmaintenance_grid;
+
+        $(function () {
+
+            //初始化表格
+            InitClientMaintenanceGrid();
+        });
+
+
+        function InitClientMaintenanceGrid() {
+            clientmaintenance_grid = $("#clientmaintenance_grid_data").bootgrid({
+                ajax: true,
+                post: function () {
+                    return {
+                        compNum: $("#CompNum").val()
+                    };
+                },
+                url: "/api/ClientMaintenanceApi/GetBootGridClientMaintenances?clientId=@Model.Id",
+                selection: true,
+                multiSelect: true,
+                rowSelect: false,
+                keepSelection: true,
+                rowCount: [10, 30, 50],
+                templates: {
+                    header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return clientmaintenance_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\" return clientmaintenance_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                        "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                        "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                },
+                labels: {
+                    all: "all", //checkbox全选的值
+                    search: "请输入维护内容",
+                    loading: "加载中...",
+                    noResults: "对不起，暂无符合条件的记录！",
+                    refresh: "刷新",
+                    infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                },
+                formatters: {
+                    CMainType: function (column, row) {
+                        switch (row.CMainType) {
+                            case "1":
+                                return "信息维护";
+                            case "2":
+                                return "跟踪记录";
+                            case "3":
+                                return "纪念日";
+                            case "4":
+                                return "其他";
+                            default:
+                                return row.CMainType;
+                                break;
+                        }
+                    },
+                    CMainCreater: function (columb, row) {
+                        return row.CMainCreaterName;
+                    }
+                }
+            }).on("loaded.rs.jquery.bootgrid", function (e) {
+                //按钮提示
+                $('.tip').tooltip({ placement: "bottom" });
+                //按钮气泡
+                $('.pop').popover({ html: true, trigger: "hover" });
+                //showMsg("数据加载完毕！", "Success");
+            });
+        }
+
+        function clientmaintenance_add() {
+            showTopWindow("clientmaintenance_show_add", "/Customer/ClientMaintenance/Edit?actionType=Add&clientId=@Model.Id", null, 600, 280, function () {
+                var clientmaintenance_form = $(top.window.frames["frm_clientmaintenance_show_add"].document).find("#clientmaintenance_form");
+                //console.log(clientmaintenance_form);
+                var flag = top.window.document.getElementById("frm_clientmaintenance_show_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+                var data = $(clientmaintenance_form).serialize();
+                //console.log((data));
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/ClientMaintenanceApi/AddClientMaintenance",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //showMsg("添加中，请稍后...");
+                    },
+                    complete: function () {
+                        //d.close().remove();
+                    },
+                    success: function (result) {
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            clientmaintenance_grid.bootgrid("reload");
+                            showMsg("客户维护添加成功！", "Success");
+                        } else {
+                            showMsg("系统异常，客户维护添加失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+
+            });
+            //必须有这个，阻止刷新
+            return false;
+        }
+
+     
+        function clientmaintenance_delete() {
+            var ids = get_selected_ids("clientmaintenance_grid_data");
+            //console.log(ids);
+            if (ids == "") {
+                showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+                return false;
+            }
+            //console.log(ids);
+            //return false;
+            showTopDialog("show_clientmaintenance_delete", "<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+                $.ajax({
+                    type: "DELETE",
+                    cache: false,
+                    url: "/api/ClientMaintenanceApi/DeleteClientMaintenance?ids=" + ids,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //showMsg("添加中，请稍后...");
+                    },
+                    complete: function () {
+                        //d.close().remove();
+                    },
+                    success: function (result) {
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            clientmaintenance_grid.bootgrid("reload");
+                            showMsg("客户维护删除成功！", "Success");
+                        } else {
+                            showMsg("系统异常，客户维护删除失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+            }, function () {
+                showMsg("您取消了操作！", "Error");
+            });
+            //必须有这个，阻止刷新
+            return false;
+        }
+    </script>
+    
+    <!--订单js-->
+    <script type="text/javascript">
+        //全局变量
+        var order_grid;
+
+        $(function () {
+
+            //初始化表格
+            InitOrderGrid();
+        });
+
+
+        function InitOrderGrid() {
+            order_grid = $("#order_grid_data").bootgrid({
+                ajax: true,
+                url: "/api/OrderApi/GetBootGridOrders?clientId=@Model.Id",
+                selection: false,
+                multiSelect: false,
+                rowSelect: false,
+                keepSelection: false,
+                rowCount: [10, 30, 50],
+                post: function () {
+                    return {
+                        OrderCreater: "@Session[EdKeys.SESSION_USER_ID]"
+                    };
+                },
+                templates: {
+                    header: ""
+                },
+                labels: {
+                    all: "all", //checkbox全选的值
+                    search: "请输入名称",
+                    loading: "加载中...",
+                    noResults: "对不起，暂无符合条件的记录！",
+                    refresh: "刷新",
+                    infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                },
+                formatters: {
+                    OrderCode:function(clumn,row) {
+                        return row.OrderCode;
+                    },
+                    OrderType:function(clumn,row) {
+                        switch (row.OrderType) {
+                            case 1:
+                                return "月嫂订单";
+                            case 2:
+                                return "育婴师";
+                            case 3:
+                                return "催乳";
+                            case 4:
+                                return "增值产品";
+                            default:
+                                return row.OrderType;
+                                break;
+                        }
+                    }, OrderStatus: function (clumn, row) {
+                        switch (row.OrderStatus) {
+                            case 1:
+                                return "待处理";
+                            case 2:
+                                return "待执行";
+                            case 3:
+                                return "执行中";
+                            case 4:
+                                return "订单完成";
+                            case 5:
+                                return "回收站 ";
+                            default:
+                                return row.OrderStatus;
+                                break;
+                        }
+                    },
+                    OrderCreater: function (column,row) {
+                        return row.OrderCreaterName;}
+                    ,
+                        OrderWeihu: function (column,row) {
+                            return row.OrderWeihuName;
+                        }
+                }
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+
+        <div class="tab-content">
+            <ul class="nav nav-tabs" id="formTab">
+                <li class="active"><a href="#customer-info" data-toggle="tab">客户基本信息</a></li>
+                @if (actionType == "Edit"){ 
+                     <li ><a href="#maintenance-info" data-toggle="tab">维护记录信息</a></li>
+                    <li ><a href="#order-info" data-toggle="tab">客户订单信息</a></li>
+                    }
+            </ul>
+          
+            <div class="tab-pane active" id="customer-info">
+                <div style="height:15px;"></div>
+                <!--客户表单-->
+                <form id="clientinfo_form" name="clientinfo_form">
+                    <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+                        <tbody>
+                            <tr>
+                                <!--客户id-->
+                                @Html.HiddenFor(model => model.Id)
+                                <th><span class="must">*</span>客户编号：</th>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ClientCode, new { @class = "form-control isreadonly", @style = "width: 200px; color:red;font-weight:bold;", @placeholder = "系统自动生成", @onfocus = "this.blur();" })
+                                </td>
+                                <th><span class="must">*</span>客户姓名：</th>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ClientName, new { @class = "form-control required", @minlength = "1", @maxlength = "16", @style = "width: 140px;", @placeholder = "客户姓名" })
+                                    @Html.DropDownListFor(model => model.ClientSex, @Html.BuildSelectList("1|女,2|男", @Html.LoadDefaultValue(Model.ClientSex, "1").ToString()), new { @class = "form-control required", Value = "1" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span class="must">*</span>联系手机：</th>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ClientTel1, new { @class = "form-control required phone", @minlength = "11", @maxlength = "11", @style = "width: 200px;color:blue;", @placeholder = "很重要,不可重复" })
+                                </td>
+                                <th><span class="must">*</span>宝宝预产期：</th>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ClientChildbirth, new { @class = "form-control Wdate dateISO required", @minlength = "10", @maxlength = "10", Value = @Html.LoadDefaultValue(@Html.DateTimeNullPalse(Model.ClientChildbirth).ToString("yyyy-MM-dd"), ""), onclick = "WdatePicker()" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>身份证号：</th>
+                                <td>@Html.TextBoxFor(model => model.ClientIdcard, new { @class = "form-control  idcard", @style = "width: 200px;font-weight:blod;", @minlength = "18", @maxlength = "18", @placeholder = "可自动生成生日及年龄" })</td>
+                                <th>客户生日：</th>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ClientBirthday, new { @class = "form-control isreadonly", Value = @Html.LoadDefaultValue((Html.DateTimeNullPalse(Model.ClientBirthday)).ToString("yyyy-MM-dd"), DateTime.Now.ToString("yyyy-MM-dd")), @onfocus = "this.blur();" })
+                                    @Html.TextBoxFor(model => model.ClientAge, new { @class = "form-control isreadonly", @style = "width: 80px;", @placeholder = "年龄", @onfocus = "this.blur();" }) 岁
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>所属民族：</th>
+                                <td>@Html.TextBoxFor(model => model.ClientNational, new {Value=@Html.LoadDefaultValue(Model.ClientNational,"汉族"), @class = "form-control", @style = "width:200px;", maxlength = "10", @placeholder = "所属民族" })</td>
+                                <th>家庭住址：</th>
+                                <td>
+                                    <select id="ClientProv" name="ClientProv" style="width:100px;" class="form-control">
+                                        <option value="0" selected="selected">请选择</option>
+                                    </select>
+                                    <select id="ClientArea" name="ClientArea" style="width:100px;" class="form-control">
+                                        <option value="0" selected="selected">请选择</option>
+                                    </select>
+                                    <select id="ClientRegion" name="ClientRegion" style="width:100px;" class="form-control">
+                                        <option value="0">请选择</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>联系手机2：</th>
+                                <td>@Html.TextBoxFor(model => model.ClientTel2, new { @class = "form-control phone", @style = "width:200px;", minlength = "11", @maxlength = "11" })</td>
+                                <th>详细住址：</th>
+                                <td>@Html.TextBoxFor(model => model.ClientAddress, new { @class = "form-control", @style = "width:308px;", minlength = "1", @maxlength = "100" })</td>
+                            </tr>
+                            <tr>
+                                <th>常用备注：</th>
+                                <td>
+                                    @Html.HiddenFor(model => model.ClientOnote)
+                                    <div id="c_note_div" class="c_note" onclick="showc_note()">
+                                    </div> 
+									<div class="clear"></div>
+                            <div id="c_note_select" style="display:none;">
+                           <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="清淡" name="C_ClientOnote" onclick="c_snote()"/>清淡</label>
+                           <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="少油" name="C_ClientOnote" onclick="c_snote()"/>少油</label>
+                           <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="少盐" name="C_ClientOnote" onclick="c_snote()"/>少盐</label>
+                           <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="善谈" name="C_ClientOnote" onclick="c_snote()"/>善谈</label>
+                           <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="自信" name="C_ClientOnote" onclick="c_snote()"/>自信</label>
+                           <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="整洁" name="C_ClientOnote" onclick="c_snote()"/>整洁</label>
+						   
+                                    </div>
+<!--常用备注书写部分-->
+<script type = "text/javascript" >
+$(function () {
+var xx = $("#ClientOnote").val().split(",");
+
+if(xx!=""){
+$.each(xx, function(i, val) {
+$("#c_note_div").append("<span>"+val+"</span>");})}
+else {$("#c_note_div").html("请点击这里进行选择");}
+});
+
+
+function c_snote()
+{
+		var chk_value = [];
+		
+		$("#c_note_div").html("");
+		$("#ClientOnote").val("");	
+		$('input[name="C_ClientOnote"]:checked').each(function() {
+			chk_value.push($(this).val());
+			$("#c_note_div").append("<span>"+$(this).val()+"</span>");
+		});
+		$("#ClientOnote").val(chk_value);	
+}
+</script>
+									
+                                </td>
+                                <th>详细备注：</th>
+                                <td>
+                                    @Html.TextAreaFor(model => model.ClientNote, new { @class = "form-control", @style = "width:308px;", @rows = "3", @cols = "4", minlength = "1", @maxlength = "200" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>创建人：</th>
+                                <td>
+                                    @Html.DropDownListFor(model => model.ClientCreater, @Html.BuildSelectList(@clientCreaterId.ToString() + "|" + @clientCreaterName, @Html.LoadDefaultValue(Model.ClientCreater.ToString(), @clientCreaterId.ToString()).ToString(), false), new { @class = "form-control", @style = "width:200px;", @disabled = "diabled" })
+                                    @Html.HiddenFor(model => model.ClientCreater, new { Value = @Session[EdKeys.SESSION_USER_ID], @class = "form-control" })
+                                    <!--维护人-->
+                                    @Html.HiddenFor(model => model.ClientWeihu)
+                                </td>
+                                <th>创建时间：</th>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ClientCreateTime, new { @class = "form-control isreadonly", Value = @Html.LoadDefaultValue(@Html.DateTimeNullPalse(Model.ClientCreateTime).ToString("yyyy-MM-dd"), DateTime.Now.ToString("yyyy-MM-dd")), @onfocus = "this.blur()" })
+                                    <!--最后修改-->
+                                    @Html.HiddenFor(model => model.ClientLasttime, new { @class = "form-control", Value = DateTime.Now })
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+               @if (actionType == "Edit")
+               {
+                   <div class="tab-pane " id="maintenance-info">
+
+                       <div>
+                           <table id="clientmaintenance_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                               <thead>
+                                   <tr>
+                                       <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="CMainType" data-order="desc">维护类别</th>
+                                       <th data-column-id="CMainContent" data-header-align="center" data-formatter="CMainContent" data-order="desc" data-header-css-class="wid400">维护内容</th>
+                                       <th data-column-id="CMainCreaterName" data-header-align="center" data-formatter="CMainCreater" data-order="desc">维护人</th>
+                                       <th data-column-id="CMainTime" data-header-align="center" data-formatter="CMainTime" data-order="desc">维护时间</th>
+                                   </tr>
+                               </thead>
+                           </table>
+                       </div>
+                   </div>
+                   <div class="tab-pane " id="order-info">
+                       <div style="height: 15px;"></div>
+                       <div>
+                           <table id="order_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                               <thead>
+                                   <tr>
+                                       <th data-column-id="OrderDate" data-header-align="center" data-formatter="OrderCode" data-order="desc">订单号码</th>
+                                       <th data-column-id="OrderDate" data-header-align="center" data-formatter="OrderDate" data-order="desc">下单日期</th>
+                                       <th data-column-id="OrderType" data-header-align="center" data-formatter="OrderType" data-order="desc">订单类型</th>
+                                       <th data-column-id="OrderBegin" data-header-align="center" data-formatter="OrderBegin" data-order="desc">订单开始</th>
+                                       <th data-column-id="OrderEnd" data-header-align="center" data-formatter="OrderEnd" data-order="desc">订单结束</th>
+                                       <th data-column-id="OrderStatus" data-header-align="center" data-formatter="OrderStatus" data-order="desc">订单状态</th>
+                                       <th data-column-id="OrderCreater" data-header-align="center" data-formatter="OrderCreater" data-order="desc">业务点/员</th>
+                                       <th data-column-id="OrderWeihu" data-header-align="center" data-formatter="OrderWeihu" data-order="desc">维护人员</th>
+                                   </tr>
+                               </thead>
+                           </table>
+                       </div>
+                   </div>
+               } </div>
+
+</body>
+
+

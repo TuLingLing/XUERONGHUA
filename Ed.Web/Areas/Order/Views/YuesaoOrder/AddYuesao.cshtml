@@ -1,0 +1,422 @@
+﻿@{
+    ViewBag.Title = "AddYuesao";
+}
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>订单添加第第二步_意向月嫂选择管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+@Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+<!--my97DatePicker-->
+<script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link href="/Themes/default/lib/poshytip/tip-yellow/tip-yellow.css" rel="stylesheet" />
+    <script src="/Themes/default/lib/validate/jquery.validate.min.js"></script>
+    <script src="/Themes/default/lib/validate/jquery.validate.extend.js"></script>
+    <script src="/Themes/default/lib/validate/messages_cn.js"></script>
+    <script src="/Themes/default/lib/poshytip/jquery.poshytip.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            validate_form();
+        });
+        //表单验证
+        function validate_form() {
+            $("#step2_form").validate({
+                errorPlacement: function (error, element) {
+                    var errorMsg = error[0].innerHTML;
+                    var elementName = element[0].name;
+                    $("#" + elementName).formtip(errorMsg);
+                    //showMsg(errorMsg, "错误提示", "Error");
+                    $("#" + elementName).attr("placeholder", errorMsg);
+                },
+                success: function (element) {
+                    var elem = $(element)[0].htmlFor;
+                    $("#" + elem).poshytip('disable');
+                    $("#" + elem).poshytip('destroy');
+                    $("#" + elem).removeClass("error").addClass("success");
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        //全局变量
+        var pregnanterinfo_grid;
+
+        $(function () {
+
+            //初始化表格
+            InitPregnanterInfoGrid();
+        });
+
+
+        function InitPregnanterInfoGrid() {
+            pregnanterinfo_grid = $("#pregnanterinfo_grid_data").bootgrid({
+                ajax: true,
+                post: function () {
+                    return {
+                        searchType: 2,
+                        searchPhrase: function () {
+                            return init_search();
+                        },
+                        orderStart: function () {
+                            return $("#OrderStart").val();
+                        },
+                        OrderEnd: function () {
+                            return $("#OrderEnd").val();
+                        }
+                    };
+                },
+                url: "/api/PregnanterInfoApi/GetBootGridPregnanterInfos",
+                selection: false,
+                multiSelect: false,
+                rowSelect: false,
+                keepSelection: true,
+                rowCount: [8, 30, 50],
+                templates: {
+                    header: ""
+                },
+                labels: {
+                    all: "all", //checkbox全选的值
+                    search: "请输入名称",
+                    loading: "加载中...",
+                    noResults: "对不起，暂无符合条件的记录！",
+                    refresh: "刷新",
+                    infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                },
+                formatters: {
+                    PInfoType: function (column, row) {
+                        return GetOptionValue(row.PInfoType, "0|普通,1|员工制,2|其他");
+                    },
+ 					PInfoEducation: function (column, row) {
+                        return GetOptionValue(row.PInfoEducation, "1|本科及以上,2|大专,3|高中,4|初中及以下");
+                    },
+                    PInfoLevel: function (clumn, row) {
+                        switch (row.PInfoLevel) {
+                            case 1:
+                                return "<span style=\"color:#ddc104\">★</span>";
+                            case 2:
+                                return "<span style=\"color:#b806a9\">★★</span>";
+                            case 3:
+                                return "<span style=\"color:#2701e9\">★★★</span>";
+                            case 4:
+                                return "<span style=\"color:#e90122\">★★★★</span>";
+                            case 5:
+                                return "<span style=\"color:#ddc104\">★★★★★</span>";
+                            case 6:
+                                return "<span style=\"color:#ddc104\">★★★★★★</span>";
+                            case 7:
+                                return "<span style=\"color:#ddc104\">★★★★★★★</span>";
+                            default:
+                                return "";
+                                break;
+                        }
+                    },
+					"PInfoClass": function (column, row) {
+					var jineng=row.PInfoClass;
+					var yy="";
+					if(jineng!=null&&jineng!="")
+					{
+					xx=jineng.split(",");
+					$.each(xx, function(i, val) {
+					yy=yy+"<span class='jineng'>"+val.substring(0,1)+"</span>";
+					})
+					}
+                    return yy;
+                    },
+                    
+                    "PInfoName": function (column, row) {
+                        //alert(row.PInfoPhoto);
+                        return "<div class=\"pop\" data-toggle=\"popover\" data-title=\"详细信息\" data-content=\"<img src='" + row.PInfoPhoto + "'> \">" + row.PInfoName + "</div>";
+                    },
+                    "commands": function (column, row) {
+                        var ydObj = "#btn-order-" + row.Id;
+                        var ydTipObj = $(ydObj).find("span");
+                        var ydNameObj = $(ydTipObj).next();
+                        var ydNumObj = $(ydNameObj).next();
+                      
+                            $(ydObj).on('click', function () {
+                              if ($(ydTipObj).html() == "预定") {
+                                alert("bbbb");
+                                $(ydObj).html("<span>已预订</span>");
+                            }
+                            });
+							return "<a href=\"javascript:yuesao_view(" + row.Id + ")\" style=\"margin-right:10px; color:blue;margin-left:10px;\">查看</a>"+
+							"<a id=\"btn-order-" + row.Id + "\" href=\"javascript:do_order(" + row.Id+",'"+row.PInfoName+"','"+row.PInfoCode+ "');\" title=\"\" style=\"color:red;\">预定</a>";
+                    }
+                }
+            }).on("loaded.rs.jquery.bootgrid", function (e) {
+                //按钮提示
+                $('.tip').tooltip({ placement: "bottom" });
+                //按钮气泡
+                $('.pop').popover({ html: true, trigger: "hover", placement: "right" });
+                //showMsg("数据加载完毕！", "Success");
+            })
+            //.on("click.rs.jquery.bootgrid", function (e, columns, row) {
+            //    return yuesao_view(row.Id);
+            //});
+        }
+
+        //搜索月嫂
+        function yuesao_search() {
+            if (!$("#step2_form").valid()) {
+                return false;
+            }
+            var age_start = $.trim($("#PInfoAgeStart").val());
+            var age_end = $.trim($("#PInfoAgeEnd").val());
+            var price_start = $.trim($("#PInfoPriceStart").val());
+            var price_end = $.trim($("#PInfoPriceEnd").val());
+            var star_start = $.trim($("#PInfoLevelStart").val());
+            var star_end = $.trim($("#PInfoLevelEnd").val());
+            var order_start= $("#OrderStart").val();
+            var order_end = $("#OrderEnd").val();
+            if (age_start > age_end) {
+                showTopMsg("起始年龄不能大于终止年龄！", "错误提示", "Error");
+                return;
+            }
+            if (price_start > price_end) {
+                showTopMsg("起始价位不能大于终止价位！", "错误提示", "Error");
+                return;
+            }
+            if (star_start > star_end) {
+                showTopMsg("起始级别不能大于终止级别！", "错误提示", "Error");
+                return;
+            }
+            if (order_start > order_end) {
+                showTopMsg("起始日期不能大于终止日期！", "错误提示", "Error");
+                return;
+            }
+            //var searchPhrase = init_search();
+            //pregnanterinfo_grid.bootgrid("search", searchPhrase);
+            pregnanterinfo_grid.bootgrid("reload");
+        }
+        //构造搜索条件
+        function init_search()
+        {
+            var searchParams = new Array();
+            var fields = "PInfoAge,PInfoAge,PInfoPrice,PInfoPrice,PInfoLevel,PInfoLevel,PInfoEdage,PInfoXingzuo,PInfoShuxiang,PInfoNational";
+            searchParams.push(fields);
+            var eqs = ">=,<=,>=,<=,>=,<=,=,=,=,like";
+            searchParams.push(eqs);
+            var age_start = $.trim($("#PInfoAgeStart").val());
+            var age_end = $.trim($("#PInfoAgeEnd").val());
+            var price_start = $.trim($("#PInfoPriceStart").val());
+            var price_end = $.trim($("#PInfoPriceEnd").val());
+            var star_start = $.trim($("#PInfoLevelStart").val());
+            var star_end = $.trim($("#PInfoLevelEnd").val());
+            var ed_age = $.trim($("#PInfoEdAge").val());
+            var xz = encodeURI($.trim($("#PInfoXingzuo").val()));
+            var sx = encodeURI($.trim($("#PInfoShuxiang").val()));
+			
+            var national = encodeURI($.trim($("#PInfoNational").val()));
+			
+            var values = age_start + "," + age_end + "," + price_start + "," + price_end + "," + star_start + "," + star_end + "," + ed_age+","+xz+","+sx+","+national;
+            searchParams.push(values);
+            var ops = "AND,AND,AND,AND,AND,AND,AND,AND,AND,AND";
+            searchParams.push(ops);
+            var searchPhrase = searchParams.join("|");
+            return searchPhrase;
+        }
+
+
+        //查看月嫂
+        function yuesao_view(id) {
+            var url = "/Yuesao/PregnanterInfo/View?id=" + id;
+            showTopContentWindow("yuesao_show_view", url, "查看月嫂信息", 800, 420);
+            return false;
+        }
+
+
+        function get_selected_yuesaos() {
+            var ids = "";
+            var rowIds = [];
+            $("#yuesaoes div").each(function() {
+                var hid = $(this).find("input[type='hidden']").val();
+                rowIds.push(hid);
+            });
+            ids = rowIds.join(",");
+            return ids;
+        }
+
+        //删除
+        function del_yuesao(obj) {
+            var ys = $(obj).parent(".selectlist");
+            //console.log(ys);
+            $(ys).hide("slow").remove();     
+        }
+
+        //预定
+        function do_order(id, name, code) {
+            showTopDialog("syslog_show_delete", "<div class='dialog_confirm'>确认预定该月嫂吗？</div>", "温馨提示", 400, 75, function () {
+                var flag = true;
+                $("#yuesaoes div").each(function () {
+                    var hid = $(this).find("input[type='hidden']").val();
+                    //alert(hid);
+                    if (id == hid) {
+                        showTopMsg("您已经选择此月嫂，请勿重复添加！", "错误开始", "Error");
+                        flag = false;
+                    }
+                });
+                if (flag) {
+                    var ys = $("#yuesaoes").find(".selectlist");
+                    var has_count = ys.length;
+                    if (has_count >= 3) {
+                        showTopMsg("对不起，最多只能预定3个月嫂！", "错误开始", "Error");
+                    } else {//预定
+                        var ordhtml = '<div class="selectlist">' + code + ' <b>' + name + '</b> <span onclick="del_yuesao(this);">×</span><input type="hidden" name="YuesaoId" value="' + id + '"/></div>';
+                        $("#yuesaoes").append(ordhtml);
+                        showTopDialog("show_top_msg", "<div class='dialog_ok'>恭喜您，预定成功！您当前已预订" + (parseInt(has_count) + 1) + "个月嫂，还可以预定" + (3 - (parseInt(has_count) + 1)) + "个。</div>", "温馨提示", 400, 95);
+                    }
+
+
+                }
+
+            }, function () { });
+       
+            return false;
+        }
+
+    </script>
+    <style type="text/css">
+        .commontable th{ width:65px;}
+		.commontable th{ text-align:right;}
+        .commontable tr { height: 35px;}
+        .commontable .selectlist{ width:160px; height: 24px; line-height: 24px; background-color:antiquewhite; color: red; border: 1px solid #ccc; margin-bottom: 5px; padding-left:10px; float:left; margin-left:12px;}
+        .commontable .selectlist span{ float: right; margin-right: 8px; cursor: pointer;}
+        .commontable .selectlist b{ color: green;}
+.jineng{ background-color:#e94967; color:#FFFFFF; line-height:22px; padding:3px 5px; margin-right:5px;}
+#pregnanterinfo_grid_data td{padding:6px 5px;}
+    </style>
+    <script type="text/javascript">
+        function step3() {
+            if (!$("#step2_form").valid()) {
+                return false;
+            }
+
+            var ys = $("#yuesaoes").find(".selectlist");
+            var ids = get_selected_yuesaos();
+            //alert(ys.length);
+            if (ys.length <= 0) {
+                showTopMsg("月嫂至少需要预定一个！", "错误提示", "Error");
+                return false;
+            }
+
+            var step4_url = '/Order/YuesaoOrder/AddYuesaoInfo/?client_num=' + $("#client_num").val() + "&num_type=" + $("#num_type").val() + "&ids=" + ids+"&order_start="+$("#OrderStart").val()+"&order_end="+$("#OrderEnd").val();
+            //alert(step4_url);
+            top.dialog.list["show_add"].height(500).width(900).title("3. 完善订单详细信息");
+            window.location.href = step4_url;
+        }
+    </script>
+    </head><body>
+    <div style="margin-top: 10px;">
+      <form id="step2_form">
+        <table width="900" border="0" cellspacing="0" cellpadding="0" class="commontable">
+          <tr>
+            <input type="hidden" id="client_num" name="client_num" value="@ViewBag.ClientNum" />
+            <input type="hidden" id="num_type" name="num_type" value="@ViewBag.NumType" />
+            <th>月嫂年龄：</th>
+            <td><input id="PInfoAgeStart" name="PInfoAgeStart" class="form-control number" type="text" style="width:54px" />
+              -
+              <input id="PInfoAgeEnd" name="PInfoAgeEnd" class="form-control number" type="text" style="width:54px" />
+            </td>
+            <th>月嫂价位：</th>
+            <td><input id="PInfoPriceStart" name="PInfoPriceStart" class="form-control number" type="text" style="width:54px" placeholder="价位"/>
+              -
+              <input id="PInfoPriceEnd" name="PInfoPriceEnd"  class="form-control number" type="text" style="width:54px" placeholder="价位"/>
+            </td>
+            <th>月嫂级别：</th>
+            <td><input id="PInfoLevelStart" name="PInfoLevelStart" class="form-control number" type="text" style="width:54px" placeholder="星级"/>
+              -
+              <input id="PInfoLevelEnd" name="PInfoLevelEnd" class="form-control number" type="text" style="width:54px" placeholder="星级"/>
+            </td>
+            <td rowspan="2" style="width:320px;">
+			<button type="button" class="btn btn-default btn-lg btn-block" style="width:100%;padding:10px 16px;" onclick="yuesao_search();">立即搜索</button>
+          </tr>
+          <tr>
+            <th>开始日期：</th>
+            <td><input id="OrderStart" name="OrderStart" class="form-control Wdate required dateISO" onclick="WdatePicker()" type="text" style="width: 120px" /></td>
+            <th>从业年限：</th>
+            <td><select value="1" class="form-control valid success wid120" id="PInfoEdAge" name="PInfoEdAge" placeholder="">
+                <option value="">请选择年龄</option>
+                <option value="1">1年以下</option>
+                <option value="2">1-3年</option>
+                <option value="3">3-7年</option>
+                <option value="4">7年以上</option>
+              </select>
+            </td>
+            <th>月嫂属相：</th>
+            <td><select value="1" class="form-control valid success wid120" id="PInfoShuxiang" name="PInfoShuxiang" placeholder="">
+                <option value="">请选择属相</option>
+                <option value="属鼠">属鼠</option>
+                <option value="属牛">属牛</option>
+                <option value="属虎">属虎</option>
+                <option value="属兔">属兔</option>
+                <option value="属龙">属龙</option>
+                <option value="属蛇">属蛇</option>
+                <option value="属马">属马</option>
+                <option value="属羊">属羊</option>
+                <option value="属猴">属猴</option>
+                <option value="属鸡">属鸡</option>
+                <option value="属狗">属狗</option>
+                <option value="属猪">属猪</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>结束日期：</th>
+            <td><input id="OrderEnd" name="OrderEnd" class="form-control Wdate required dateISO" type="text" onclick="WdatePicker()" style="width: 120px" /></td>
+            <th>月嫂星座：</th>
+            <td><select value="1" class="form-control valid success wid120" id="PInfoXingzuo" name="PInfoXingzuo" placeholder="">
+                <option value="">请选择星座</option>
+                <option value="白羊座">白羊座</option>
+                <option value="金牛座">金牛座</option>
+                <option value="双子座">双子座</option>
+                <option value="巨蟹座">巨蟹座</option>
+                <option value="狮子座">狮子座</option>
+                <option value="处女座">处女座</option>
+                <option value="天秤座">天秤座</option>
+                <option value="天蝎座">天蝎座</option>
+                <option value="射手座">射手座</option>
+                <option value="摩羯座">摩羯座</option>
+                <option value="水瓶座">水瓶座</option>
+                <option value="双鱼座">双鱼座</option>
+              </select>
+            </td>
+			<th>所属民族：</th>
+            <td><input class="form-control" type="text" id="PInfoNational" name="PInfoNational" style="width:120px;" /></td>
+			<td rowspan="2" style="width:320px;">
+			 <button type="button" class="btn btn-primary btn-lg btn-block" style="width:100%; padding:10px 16px;" onclick="step3();">下一步填写订单信息</button></td>
+			</td>
+          </tr>
+          <tr>
+            <th>已选月嫂：</th>
+            <td colspan="5">
+			<div style=" margin-left:-12px;" id="yuesaoes">
+			 <div style="clear:both"></div>
+			 </div>
+			 </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <table id="pregnanterinfo_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true" style="margin-top: 10px;">
+      <thead>
+        <tr>
+            @*<th data-column-id="PInfoCode" data-header-align="center" data-formatter="PInfoCode" data-order="desc">月嫂编号</th>*@
+          <th data-column-id="PInfoName" data-header-align="center" data-formatter="PInfoName" data-order="desc" data-header-css-class="wid60">姓名</th>
+          <th data-column-id="PInfoEdage" data-header-align="center" data-formatter="PInfoEdage" data-order="desc" data-header-css-class="wid60">年限</th>
+          <th data-column-id="PInfoLevel" data-header-align="center" data-formatter="PInfoLevel" data-order="desc" data-header-css-class="wid90">等级</th>
+		  <th data-column-id="PInfoPrice" data-header-align="center" data-formatter="PInfoPrice" data-order="desc" data-header-css-class="wid60">价位</th>
+          <th data-column-id="PInfoAge" data-header-align="center" data-formatter="PInfoAge" data-order="desc" data-header-css-class="wid60">年龄</th>
+          <th data-column-id="PInfoXingzuo" data-header-align="center" data-formatter="PInfoXingzuo" data-order="desc" data-header-css-class="wid60">星座</th>
+          <th data-column-id="PInfoShuxiang" data-header-align="center" data-formatter="PInfoShuxiang" data-order="desc" data-header-css-class="wid60">属相</th>
+           <th data-column-id="PInfoPermanent" data-header-align="center" data-formatter="PInfoPermanent" data-order="desc" data-header-css-class="wid90">户口</th>
+            <th data-column-id="PInfoNational" data-header-align="center" data-formatter="PInfoNational" data-order="desc" data-header-css-class="wid60">民族</th>
+            <th data-column-id="PInfoEducation" data-header-align="center" data-formatter="PInfoEducation" data-order="desc" data-header-css-class="wid60">学历</th>
+          <th data-column-id="PInfoClass" data-header-align="center" data-formatter="PInfoClass" data-sortable="false" data-header-css-class="wid100">特殊技能</th>
+          <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false" data-header-css-class="wid90">操作</th>
+        </tr>
+      </thead>
+    </table>
+    </body>
+</html>

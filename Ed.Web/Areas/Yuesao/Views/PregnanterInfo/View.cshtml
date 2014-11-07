@@ -1,0 +1,502 @@
+﻿@using Ed.Common;
+@using Ed.Web.Helpers
+@{
+    Layout=null;
+    //准备资料
+    var life_pics = (object[])Utils.StringToObjectArray(Model.PInfoLifeimg, ',');
+    //证书资料
+    var cert_pics = (object[])Utils.StringToObjectArray(Model.PInfoCertimg, ',');
+    var services = (List
+<Ed.Entity.TPregnanterServiceRecord>
+)ViewBag.ServiceRecord;
+    var evals = (List<System.Collections.Generic.Dictionary<string, object>>)ViewBag.Eval;
+}
+@model Ed.Entity.TPregnanterInfo
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花_月嫂信息查看页面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+    <script src="~/Themes/default/lib/jquery/jquery-1.11.1.min.js"></script>
+    <script src="~/Themes/default/base/js/city.js"></script>
+    <link href="~/Themes/default/yuesao/Common.css" rel="stylesheet" type="text/css">
+    <script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+    <link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" type="text/css" />
+    <script src="/Themes/default/lib/function.js"></script>
+    <link media="screen" type="text/css" href="~/Themes/default/yuesao/zoom.css" rel="stylesheet">
+    <!--去除顶层加载中-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    <script language="javascript"> 
+        $(function(){
+            $('.tab span').click(function(){ 
+                $('.tab span').removeClass();
+                $(this).addClass("current");
+                $(".summary").hide().eq($('.tab span').index(this)).show();}); 
+        
+		var xxxx = $("#PInfoClass").val().split(",");
+			$.each(xxxx, function(i, val) {
+			$("#S_PInfoClass").append("<span class='jineng'>"+val+"</span>");})
+			
+		}); 
+		
+        function show_percent() {
+            $("#teach_item").show();
+            $(".blockUI").show();
+			 
+            //showContentDialog($("#teach_item"), "月嫂培训认证信息",600,300);
+        }
+        function guanbi() {
+            $("#teach_item").hide();
+            $(".blockUI").hide();
+            //showContentDialog($("#teach_item"), "月嫂培训认证信息",600,300);
+        }
+    </script>
+        <style type="text/css">
+            .comment_list li {
+                padding:10px 0;
+                border-bottom:1px solid #EEE;
+            }
+            .comment_list li .xing {
+                color:#FF6600;
+                text-align:center;
+            }
+            .comment_list li .inner {
+                padding:18px;
+                padding-right: 0;
+                background-color:#FEFFF4;
+                border:1px solid #F3F3F3;
+                ;
+                width:100%;
+            }
+            .comment_list li .inner p {
+                line-height:20px;
+            }
+            .comment_list li .inner .meta {
+                padding-top:3px;
+                color:#999;
+                border:none;
+            }
+            .comment_list li .inner .meta span {
+                margin-right:20px;
+            }
+            .summary .commontable tr {
+                height:auto;
+                margin:5px 0px;
+            }
+            .summary .commontable tr th {
+                width:70px;
+                font-weight:bold;
+            }
+            .summary .list_img {
+                width:500px;
+                height:auto;
+                margin-left:-20px;
+            }
+            .summary .list_img ul {
+                margin:0px;
+                padding:0px;
+            }
+            .summary .list_img li {
+                list-style: none;
+                margin:0px;
+                padding:0px
+            }
+            .summary .list_img a {
+                display:block;
+                float:left;
+                overflow:hidden;
+            }
+            .summary .list_img a img {
+                height:138px;
+                width:auto;
+                margin:20px;
+                border:1px solid #ccc;
+                margin-right:0px;
+            }
+        </style>
+        <script src="/Themes/default/base/js/shengxiao.js"></script>
+        <script src="/Themes/default/base/js/xingzuo.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //初始化生肖属相
+                init_sx_sx();
+                //初始化弹出框选中
+
+                init_detail_info("cert", "@Model.PInfoCert");
+                init_detail_info("quality", "@Model.PInfoQuality");
+                init_detail_info("service", "@Model.PInfoService");
+                init_detail_info("knowledge", "@Model.PInfoKnowledge");
+                init_detail_info("edu", "@Model.PInfoEdu");
+
+            });
+
+    //初始化生肖属相
+    function init_sx_sx() {
+        var sx = $("#sx").html();
+        var xz = $("#xz").html();
+        var sx_content = get_desc_by_sx(sx);
+        var xz_content = get_desc_by_xz(xz);
+        $("#sx_content").html(sx_content);
+        $("#xz_content").html(xz_content);
+
+        //alert(sx_content + " " + xz_content);
+    }
+
+
+    //初始化弹出框选中 141031 By 唐有炜
+    function init_detail_info(typeid, content) {
+        //alert($("#cert").html());
+        $("#" + typeid).find("li").each(function () {
+            //alert($(this).html());
+            var current = $(this).html();
+            $(this).removeClass("check");
+            var conArr = content.split(",");
+            for (var i = 0; i < conArr.length; i++) {
+                var con = conArr[i];
+                if (con == current) {
+                    $(this).addClass("check");
+                    continue;
+                }
+            }
+        });
+    }
+
+    function do_order() {
+        showTopContentWindow("show_add", "/Order/YuesaoOrder/AddClient/", "1. 选择订单类型并确认客户信息", 500, 200);
+    }
+</script>
+    </head>
+    <body>
+        <div id="page">
+            <div class="textbox">
+                <div class="detail_left">
+                    <div class="photo_box"> <img src="@Model.PInfoPhoto" width="180" height="180" alt="@Model.PInfoName" title="@Model.PInfoName" class="photo" /> </div>
+                    <div style="width:220px; margin:0px auto;">
+                        <h1 style="width:100px; float:left;">@Model.PInfoName</h1>
+                        <div class="buttons"> <a class="button4" href="jascript:;" onClick="do_order();" >预约她</a> </div>
+                    </div>
+                    <div class="info_percent" id="info_percent" onClick="show_percent();">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                @{
+                                    var pInfoCertDegree =(Model.PInfoCert==null)?"0%":Math.Round((Html.LoadDefaultValue(Model.PInfoCert,"0").ToString().Split(',').Length) / 9.00, 2).ToString("P0");
+                                    var pInfoQualityDegree = (Model.PInfoQuality == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoQuality, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
+                                    var pInfoService = (Model.PInfoService == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoService, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
+                                    var pInfoEdu = (Model.PInfoEdu == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoEdu, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
+                                    var pInfoKnowledge = (Model.PInfoKnowledge == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoKnowledge, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
+                                }
+                                <tr>
+                                    <td class="text">基本信息</td>
+                                    <td class="bar">
+                                        <div class="border">
+                                            <div class="color" style="width:@pInfoCertDegree"></div>
+                                        </div>
+                                    </td>
+                                 
+                                    <td class="number">@pInfoCertDegree</td>
+                                </tr>
+                                <tr>
+                                    <td class="text">产妇护理</td>
+                                    <td class="bar">
+                                        <div class="border">
+                                            <div class="color" style="width:@pInfoQualityDegree"></div>
+                                        </div>
+                                    </td>
+                                    <td class="number">@pInfoQualityDegree</td>
+                                </tr>
+                                <tr>
+                                    <td class="text">婴儿护理</td>
+                                    <td class="bar">
+                                        <div class="border">
+                                            <div class="color" style="width:@pInfoService"></div>
+                                        </div>
+                                    </td>
+                                    <td class="number">@pInfoService</td>
+                                </tr>
+                                <tr>
+                                    <td class="text">专业家务</td>
+                                    <td class="bar">
+                                        <div class="border">
+                                            <div class="color" style="width:@pInfoKnowledge"></div>
+                                        </div>
+                                    </td>
+                                    <td class="number">@pInfoKnowledge</td>
+                                </tr>
+                                <tr>
+                                    <td class="text">高端技能</td>
+                                    <td class="bar">
+                                        <div class="border">
+                                            <div class="color" style="width:@pInfoEdu"></div>
+                                        </div>
+                                    </td>
+                                    <td class="number">@pInfoEdu</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="detail_right">
+                    <ul class="tab">
+                        <li><span class="current" data-for="area1">基本信息</span></li>
+                        <li><span data-for="area2">匹配参考</span></li>
+                        <li><span data-for="area3">生活照片</span></li>
+                        <li><span data-for="area4">评价记录</span></li>
+                    </ul>
+                    <div class="summary area1">
+                        <p style="float:right;">今天正在：<span style="font-weight:bold;color:#F00;">空闲中..</span>.</p>
+                        <p style="font-weight:bold">@Model.PInfoAge  @Model.PInfoNational  @Model.PInfoXingzuo   @Model.PInfoShuxiang   @Html.OptionsPalse(@Model.PInfoEducation, "1|本科及以上,2|大专,3|高中,4|初中及以下")</p>
+                        <p>户口所在<span class="money">@Model.PInfoPermanent</span>，有<span class="money">@Html.OptionsPalse(@Model.PInfoEdage, "1|1年以下,2|1-3年,3|3-5年,4|5-7年,5|7-9年,6|9年以上")</span>家政服务行业工作经验。</p>
+                        <p><strong>现居住地址：</strong>@Model.PInfoAddress</p>
+                        <p class="salary"><strong>参考工资：</strong><span class="money">@Model.PInfoPrice 元/月</span></p>
+                        <p><strong>综合评级：</strong><span style="color:red; font-size:16px;">@Html.OptionsPalse(@Model.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★")</span></p>
+                        <p><strong>特长爱好：</strong>@Model.PInfoHobby</p>
+                        <p><strong>特别技能：</strong>
+                        @Html.HiddenFor(model => model.PInfoClass)
+                        <a id="S_PInfoClass">
+                        </a>
+                        </p>
+                        <div class="manager" style="margin-top:20px;">
+                            <div class="evaluation">
+                                <div class="text">
+                                    <span>雪绒花母婴护理中心</span><span>对她的评价：</span><br />
+                                    @Model.PInfoNote
+                                </div>
+                            </div>
+                            <a href="#" target="_blank"><img src="~/Themes/default/yuesao/Images/xueronghua.gif" class="photo" alt="程敏" width="120" height="120" /></a>
+                        </div>
+                    </div>
+                    <div class="summary" style="display:none;">
+
+                        <div class="secion">
+                            <h5>生肖：<span id="sx">@Model.PInfoShuxiang.Replace("属", "")</span></h5>
+                            <div id="sx_content">
+                                <p>为人正直，守规矩。不该做的事不做，不该问的话不问，选择这样的阿姨，不会增加客户的烦恼。</p>
+                                <p>对上司、长辈敬重。面对比自己见识广、文化高的客户，这份敬重感也同样适用。</p>
+                                <p>工作认真，有责任感，对雇主交代的事，总是超乎意料的完成。</p>
+                                <p>防卫意识强，做事考虑全面，轻易不出差漏。相信客户都会需要一位做事效率高的好阿姨吧。</p>
+                            </div>
+                        </div>
+                        <div class="secion">
+                            <h5>星座：<span id="xz">@Model.PInfoXingzuo.Replace("座", "")</span></h5>
+
+                            <div id="xz_content">
+                                <p>性格外向、对人友善体贴。阿姨们会把小生命的诞生当成是很神圣的事。</p>
+                                <p>心胸开阔、光明磊落、不拘小节、讲义气。大家都愿意和宽容大方的人交朋友，这些正能量会给狮子座的阿姨带来好运气，也会带给客户带来益处。</p>
+                                <p>做事坚持原则和理念，阿姨不混账，和她讲道理即可。</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="summary" style="display:none;">
+
+                        <h3>月嫂生活照片</h3>
+                        <div class="list_img">
+                            <ul class="gallery">
+                                @foreach (var life_pic in life_pics)
+                                {
+                                    try
+                                    {
+                                        var life_infos = life_pic.ToString().Split('|');
+
+                                        var big = life_infos[1];
+                                        var small = life_infos[2];
+                                        var des = life_infos[3] ?? "暂无描述...";
+                                        <li> <a class="pic" href="@big" title=""><img src="@small" alt="" width="auto" /></a> </li>
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                                <div style="clear:both;"></div>
+                            </ul>
+                        </div>
+
+
+                        <h3>月嫂证件照片</h3>
+                        <div class="list_img">
+                            <ul class="gallery">
+                                @foreach (var cert_pic in cert_pics)
+                                {
+                                    try
+                                    {
+                                        var cert_infos = cert_pic.ToString().Split('|');
+                                        var big = cert_infos[1];
+                                        var small = cert_infos[2];
+                                        var des = cert_infos[3] ?? "暂无描述...";
+                                        <li> <a class="pic" href="@big" title=""><img src="@small" alt="" width="auto" height="200px;" /></a> </li>
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                                <div style="clear:both;"></div>
+                            </ul>
+                            <script src="~/Themes/default/yuesao/zoom.min.js"></script>
+                        </div>
+                    </div>
+
+                    <div class="summary" style="display:none;">
+                        <h4 class="base_tit">共有 @evals.Count 位为此月嫂进行评价</h4>
+                        <div class="comment_list">
+                            @foreach (var evaltion in evals)
+                            {
+                                var evaImg = @Html.GetValue(evaltion, "PEvaImg");
+                                <li>
+                                    <span style="cursor: pointer;float: right;height: 50px;" onClick="showTopDialog('prev_img', '<div style=\'text-align:center;\'><img style=\'height:390px;\' src =\'@evaImg\' /></div>','查看大图',650,400,null, null);">
+                                        <div style="width:100px; height:70px; overflow:hidden;"><img src='@evaImg' style="width:auto;height: 70px;margin-top:2px;" /></div>
+                                    </span>
+                                    <div class="inner">
+                                        <div>@Html.GetValue(evaltion, "PEvaContent")</div>
+                                        <div class="meta"> <span class="blue">评价人：@Html.GetValue(evaltion, "PEvaPerson")</span><span class="time">@DateTime.Parse(@Html.GetValue(evaltion, "PEvaTime").ToString()).ToString("yyyy-MM-dd")</span> 评价级别：<span class="xing">@Html.OptionsPalse(int.Parse(@Html.GetValue(evaltion, "PEvaLevel").ToString()), "1|★,2|★★,3|★★★")</span> </div>
+                                    </div>
+                                </li>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                </div>
+                
+                <div class="detail_more">
+                    <div class="item">
+                        <div class="left">
+                            <div class="icon verify">身份验证</div>
+                        </div>
+                        <div class="info">
+                            <b>月嫂编号：</b>@Model.PInfoCode<br />
+                            <b>身份证号：</b> @Html.EncodeIdcard(Model.PInfoIdcard) <br />
+                            <b>户籍所在地：</b>@Model.PInfoPermanent <br />
+                            <b>建档日期：</b>@Model.PInfoCreatedate<br />
+                            <b>最近更新：</b>@Model.PInfoLastdate<br />
+                        </div>
+                    </div>
+                    <div class="item" style="margin-right:0">
+                        <div class="left">
+                            <div class="icon home">家庭成员</div>
+                        </div>
+                        <div class="info">
+                            <p>
+                                <b>姓名：</b>@Html.EncodeName(Model.PInfoContacter1) <br />
+                                <b>关系：</b>@Model.PInfoRelation1<br />
+                                <b>姓名：</b>@Model.PInfoContact2<br />
+                                <b>关系：</b>@Model.PInfoRelation2<br />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="left">
+                            <div class="icon teach">培训记录</div>
+                        </div>
+                        <div class="info"> @Html.Raw(@Html.NullPalse(Model.PInfoTrain).ToString().Replace("\n", "<br/>"))<br /><br /><br /><br /> </div>
+                    </div>
+                    <div class="item" style="margin-right:0">
+                        <div class="left">
+                            <div class="icon service">获得奖励</div>
+                        </div>
+                        <div class="info"> @Html.Raw(@Html.NullPalse(Model.PInfoReward).ToString().Replace("\n", "<br/>"))<br /><br /><br /><br /> </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+            <div id="teach_item" style="display:none; position:fixed;top:60px; left:65px;z-index:1011; padding:10px;">
+                <h1>@Model.PInfoName 评分详情<span style="color:#F00; font-size:18px; font-weight:bold; float:right; margin-right:20px; cursor:pointer;" onClick="guanbi();">关闭</span></h1>
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>基本信息</th>
+                            <th>产妇护理</th>
+                            <th>婴儿护理</th>
+                            <th>专业家务</th>
+                            <th>高端技能</th> 
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul id="cert">
+                                    <li>身份证书</li>
+                                    <li>学历证书</li>
+                                    <li>健康证明</li>
+                                    <li>体检证书</li>
+                                    <li>家庭成员</li>
+                                    <li>行业经验</li>
+                                    <li>婚姻状况</li>
+                                    <li>宗教信仰</li>
+                                    <li>行业道德</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul id="quality">
+                                    <li class="check">心理辅导</li>
+                                    <li>乳房护理</li>
+                                    <li>子宫按摩</li>
+                                    <li>恶露观察</li>
+                                    <li>侧切护理</li>
+                                    <li>产妇擦涂</li>
+                                    <li>喂养指导</li>
+                                    <li>腹带打绑</li>
+                                    <li>产后操</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul id="service">
+                                    <li>黄疸观察</li>
+                                    <li class="check">脐带护理</li>
+                                    <li class="check">二便观察</li>
+                                    <li>视听训练</li>
+                                    <li class="check">婴儿喂养</li>
+                                    <li>湿疹护理</li>
+                                    <li class="check">红臀护理</li>
+                                    <li>婴儿抚触</li>                               
+                                    <li>被动操</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul id="knowledge">
+                                    <li>餐具清洗消毒</li>
+                                    <li>奶具清洗消毒</li>
+                                    <li>尿布清洗消毒</li>
+                                    <li>衣物清洗消毒</li>
+                                    <li>卧室清洗消毒</li>异常处理
+                                    <li>厨房清洗消毒</li>
+                                    <li>月子餐的制作</li>
+                                    <li>营养康复方案</li>
+                                    <li>婴儿洗浴护理</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul id="edu">
+                                    <li>育婴技能</li>
+                                    <li>催乳技能</li>
+                                    <li>推拿技能</li>
+                                    <li>游泳抚触</li>
+                                    <li>双胎护理</li>
+                                    <li>早产护理</li>
+                                    <li>营养搭配</li>
+                                    <li>产后理疗</li>
+                                    <li>异常处理</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="blockUI blockOverlay" style="z-index: 1000; border: none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; background-color: rgb(0, 0, 0); opacity: 0.6; cursor: default; position: fixed; display:none;"></div>
+
+        </div>
+    </body>
+    </html>
+    

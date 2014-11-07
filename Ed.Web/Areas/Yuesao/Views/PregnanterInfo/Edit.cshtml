@@ -1,0 +1,1353 @@
+﻿@using System.Web.Optimization
+@using Ed.Common
+@using Ed.Entity
+@using Ed.Web.Helpers
+@model Ed.Entity.TPregnanterInfo
+@{
+    Layout = null;
+    //页面类型
+    var actionType = ViewBag.ActionType;
+    //创建人Id,UserLname,UserTname
+    var createrId = (int)ViewBag.SysUser.Id;
+    var createrName = (string)ViewBag.SysUser.UserTname;
+    //准备资料
+    var life_pics = (object[])Utils.StringToObjectArray(Model.PInfoLifeimg, ',');
+    //证书资料
+    var cert_pics = (object[])Utils.StringToObjectArray(Model.PInfoCertimg, ',');
+    
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>雪绒花_月嫂管理_添加月嫂</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+    <!--表单异步提交,用于单文件上传-->
+    <script src="/Themes/default/lib/jquery.form/jquery.form.js"></script>
+
+    <!--文件上传js-->
+    <script type='text/javascript' src="/Themes/default/lib/swfupload/swfupload.js"></script>
+    <script type='text/javascript' src="/Themes/default/lib/swfupload/swfupload.queue.js"></script>
+    <script src="/Themes/default/lib/swfupload/swfupload.handlers.js" type="text/javascript"></script>
+
+    <!--列表css、js-->
+    <link href="/Themes/default/lib/jquery.bootgrid/jquery.bootgrid.css" rel="stylesheet" />
+    <script src="/Themes/default/lib/jquery.bootgrid/jquery.bootgrid.js"></script>
+
+    <!--my97DatePicker-->
+    <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <!--省市数据-->
+    <script src="/Themes/default/base/js/city.js" type="text/javascript"></script>
+
+
+    <!--上传样式-->
+     <style type="text/css">
+    .zhengjian .upload-btn{background: url(/Themes/default/base/images/btn_upload.png);width:217px; height:40px;}
+    .shenghuo .upload-btn{background: url(/Themes/default/base/images/btn_upload2.png);width:217px; height:40px;}
+    </style>
+    
+    <!--初始化-->
+    <script type="text/javascript">
+    $(function () {
+        //初始化上传控件
+        $("#PInfoLifeimg").InitSWFUpload({ btntext: "批量上传", btnwidth: 217, single: false, water: true, thumbnail: true, filesize: "2048", sendurl: "/Tools/UploadApi/", flashurl: "/Themes/default/lib/swfupload/swfupload.swf", filetypes: "*.jpg;*.jpge;*.png;*.gif;" });
+        $("#PInfoCertimg").InitSWFUpload({ btntext: "批量上传", btnwidth: 217, single: false, water: true, thumbnail: true, filesize: "2048", sendurl: "/Tools/UploadApi/", flashurl: "/Themes/default/lib/swfupload/swfupload.swf", filetypes: "*.jpg;*.jpge;*.png;*.gif;" });
+
+
+        //加载省市数据
+        load_city_data("YuesaoProv", "YuesaoArea", "YuesaoRegion");
+        init_city_data("YuesaoProv", "YuesaoArea", "YuesaoRegion", "@Model.PInfoCity");
+        //加载复选框选取与读写事件
+        selected_show("PInfoClass", "C_PInfoClass");
+        selected_add("PInfoClass", "C_PInfoClass");
+		
+		selected_show("PInfoCert", "C_PInfoCert");
+        selected_add("PInfoCert", "C_PInfoCert");
+		
+		selected_show("PInfoQuality", "C_PInfoQuality");
+        selected_add("PInfoQuality", "C_PInfoQuality");
+		
+		selected_show("PInfoService", "C_PInfoService");
+        selected_add("PInfoService", "C_PInfoService");
+		
+        selected_show("PInfoKnowledge", "C_PInfoKnowledge");
+        selected_add("PInfoKnowledge", "C_PInfoKnowledge");
+
+        selected_show("PInfoEdu", "C_PInfoEdu");
+        selected_add("PInfoEdu", "C_PInfoEdu");
+        //让手机号码和身份证在修改时只读
+        //make_fields_readonly_where_edit();
+    });
+    //头像上传及裁切
+    function do_photo_capture(obj) {
+        showTopWindow("photo_show_add", "/Tools/CaptureUpload/", "图片上传", 700, 450, function () {
+            //var time = new Date().getTime();
+            var topWinObj = top.window.document.getElementById("frm_photo_show_add").contentWindow;
+            var status = topWinObj.get_status();
+            var imageurl = topWinObj.get_url();
+            if (status == "true") {
+                $(obj).prev().attr("src", imageurl);
+                $(obj).next().val(imageurl);
+            }
+
+        });
+        return false;
+    }
+    @*
+    function make_fields_readonly_where_edit() {
+        @if (@actionType=="Edit")
+            {
+            //手机变为只读
+            @Html.Raw("$('#PInfoTel').addClass('isreadonly').attr('onfocus', 'blur()');")
+            //身份证变为只读
+            @Html.Raw("$('#PInfoIdcard').addClass('isreadonly').attr('onfocus', 'blur()');")
+            }
+    }*@
+</script>
+
+    <!--去除顶层加载中-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+
+   
+    <!---月嫂信息-->
+    <script type="text/javascript">
+    $(function () {
+        validate_form();
+
+
+        $('#formTab a[href="#detail-info"]').click(function (e) {
+            e.preventDefault(); //阻止a链接的跳转行为
+            var is_first_form_valid = form_valid();
+            if (!is_first_form_valid) {
+                $("#formTab a:first").tab('show'); //显示当前选中的链接及关联的content
+                return false;
+            } else {
+                $(this).tab('show'); //显示当前选中的链接及关联的content
+            }
+            //alert(is_first_form_valid);
+        });
+
+        $('#formTab a[href="#card-info"]').click(function (e) {
+            e.preventDefault(); //阻止a链接的跳转行为
+            var is_first_form_valid = form_valid();
+            if (!is_first_form_valid) {
+                $("#formTab a:first").tab('show'); //显示当前选中的链接及关联的content
+                return false;
+            } else {
+                $(this).tab('show'); //显示当前选中的链接及关联的content
+            }
+            //alert(is_first_form_valid);
+        });
+
+
+    });
+
+
+    //表单验证
+    function validate_form() {
+        //表单验证
+        $("#pregnanterinfo_form1").validate({
+            rules: {
+                @if(@actionType=="Add"){
+                        //验证手机号是否存在
+                        @Html.Raw("PInfoTel: {remote: { type: 'GET', url: '/api/PregnanterInfoApi/Validate?fields=PInfoTel&eqs==&operations=AND&existReturn=false', data: { values: function () { return $('#PInfoTel').val(); } } }}")
+                        @Html.Raw(",")
+                        //验证身份证号是否存在
+                        @Html.Raw("PInfoIdcard: {remote: { type: 'GET', url: '/api/PregnanterInfoApi/Validate?fields=PInfoIdcard&eqs==&operations=AND&existReturn=false', data: { values: function () { return $('#PInfoIdcard').val(); } } }}")
+                    }
+            },
+            messages: {
+                PInfoTel: {
+                    remote: "该手机号已存在，请勿重复添加月嫂！"
+                },
+                PInfoIdcard: {
+                    remote: "该身份证号已存在，请勿重复添加月嫂！"
+                }
+            },
+            invalidHandler: function (e, validator) {
+                var msg = "有 " + validator.numberOfInvalids() + " 项填写有误，请检查！";
+                $("#msgprint").html(msg).show().focus();
+                setTimeout(function () {
+                    $("#msgprint").fadeOut(500);
+                    //如果动画结束则删除节点
+                    if (!$("#msgprint").is(":animated")) {
+                        $("#msgprint").hide();
+                    }
+                }, 1000);
+            },
+            focusInvalid: false,
+            errorPlacement: function (error, element) {
+                var errorMsg = error[0].innerHTML;
+                var elementName = element[0].name;
+                $("#" + elementName).formtip(errorMsg);
+                $("#" + elementName).attr("placeholder", errorMsg);
+            },
+            success: function (element) {
+                var elem = $(element)[0].htmlFor;
+                $("#" + elem).poshytip('disable');
+                $("#" + elem).poshytip('destroy');
+                $("#" + elem).removeClass("error").addClass("success");
+                //身份证自动生成
+                if (elem == "PInfoIdcard") {
+                    idcard_to_birth_age($.trim($("#" + elem).val()));
+                }
+            }
+        });
+    }
+
+                //自动生成
+                function idcard_to_birth_age(cardNum) {
+        var bir = get_birthday_by_idcard(cardNum);
+        //var now = get_current_date();
+        var now = '@DateTime.Now.ToString("yyyy-MM-dd")';
+        var age = YearDiff(bir, now);
+        var xingzuo = get_xingzuo_by_bir(bir);
+        var shuxiang = get_shuxiang_by_bir(bir);
+        $("#PInfoBirthday").val(bir);
+        $("#PInfoAge").val(age);
+        $("#PInfoXingzuo").val(xingzuo);
+        //alert($("#PInfoXingzuo").val());
+        $("#PInfoShuxiang").val(shuxiang);
+        //alert($("#PInfoShuxiang").val());
+    }
+
+
+    //表单验证方法，供父窗口调用
+    function form_valid() {
+        if ($("#pregnanterinfo_form1").valid()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+    //           function form_valid() {
+    //            var fm1 = document.forms[0];
+    //            var rmsg = new Object();
+    //            if ($(fm1).valid()) {
+    //                if (!isFormChanged(fm1, null)) {
+    //                    rmsg.Status = false;
+    //                    rmsg.Action = "formNoChange";
+    //                    return rmsg;
+    //                } else {
+    //                rmsg.Status = true;
+    //                return rmsg;
+    //            }
+    //
+    //            } else {
+    //            rmsg.Status = false;
+    //            return rmsg;
+    //            }
+    //
+    //        }
+
+    </script>
+    <!--服务日程-->
+    <script type="text/javascript">
+    //全局变量
+    var pregnanterservicerecord_grid;
+
+    $(function () {
+
+        //初始化表格
+        InitPregnanterServiceRecordGrid();
+    });
+
+
+    function InitPregnanterServiceRecordGrid() {
+        pregnanterservicerecord_grid = $("#pregnanterservicerecord_grid_data").bootgrid({
+            ajax: true,
+            url: "/api/PregnanterServiceRecordApi/GetBootGridPregnanterServiceRecords?yuesaoId=@Model.Id",
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            rowCount: [10, 30, 50],
+            templates: {
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return pregnanterservicerecord_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return pregnanterservicerecord_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                    "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+            },
+            labels: {
+                all: "all", //checkbox全选的值
+                search: "请输入名称",
+                loading: "加载中...",
+                noResults: "对不起，暂无符合条件的记录！",
+                refresh: "刷新",
+                infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+            },
+            formatters: {
+			PServiceType: function(column, row) {
+                            return GetOptionValue(row.PServiceType, "1|上户（内单）,2|上岗（外单）,3|请假休息,4|其他安排");
+                        },
+            PServiceBegin:function(column, row) {
+                return row.PServiceBegin;
+            },
+            PServiceCreater: function (column, row) {
+                return row.PServiceCreaterName;
+            }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function (e) {
+            //按钮提示
+            $('.tip').tooltip({ placement: "bottom" });
+            //按钮气泡
+            $('.pop').popover({ html: true, trigger: "hover" });
+            //showMsg("数据加载完毕！", "Success");
+        });
+    }
+
+
+    function pregnanterservicerecord_add() {
+        showTopWindow("pregnanterservicerecord_show_add", "/Yuesao/PregnanterServiceRecord/Edit?actionType=Add&pid=@Model.Id", null,600,300, function () {
+            var pregnanterservicerecord_form = $(top.window.frames["frm_pregnanterservicerecord_show_add"].document).find("#pregnanterservicerecord_form");
+            //console.log(pregnanterservicerecord_form);
+            var flag = top.window.document.getElementById("frm_pregnanterservicerecord_show_add").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(pregnanterservicerecord_form).serialize();
+            console.log((data));
+            //return false;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/PregnanterServiceRecordApi/AddPregnanterServiceRecord",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_add_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnanterservicerecord_grid.bootgrid("reload");
+                        showMsg("添加成功！", "Success");
+                    } else {
+                        showMsg("系统异常，添加失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function pregnanterservicerecord_edit(id) {
+        var url = "/Yuesao/PregnanterServiceRecord/Edit?actionType=Edit&id=" + id;
+        //console.log(id);
+        showTopWindow("pregnanterservicerecord_show_edit", url, null, 800, 400, function () {
+            var pregnanterservicerecord_form = $(top.window.frames["frm_pregnanterservicerecord_show_edit"].document).find("#pregnanterservicerecord_form");
+            //console.log(pregnanterservicerecord_form);
+            var flag = top.window.document.getElementById("frm_pregnanterservicerecord_show_edit").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(pregnanterservicerecord_form).serialize();
+            //console.log((data));
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/PregnanterServiceRecordApi/EditPregnanterServiceRecord",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnanterservicerecord_grid.bootgrid("reload");
+                        //console.log(grid);
+
+                        showMsg("修改成功！", "Success");
+                    } else {
+                        showMsg("系统异常，修改失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+
+        });
+
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function pregnanterservicerecord_multi_delete() {
+        var ids = get_selected_ids("pregnanterservicerecord_grid_data");
+        //console.log(ids);
+        if (ids == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        pregnanterservicerecord_delete(ids);
+    }
+
+    function pregnanterservicerecord_delete(ids) {
+        showTopDialog("pregnanterservicerecord_show_delete", "<div class='dialog_alert'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/PregnanterServiceRecordApi/DeletePregnanterServiceRecord?ids=" + ids,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnanterservicerecord_grid.bootgrid("reload");
+                        showMsg("删除成功！", "Success");
+                    } else {
+                        showMsg("系统异常，删除失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+    </script>
+    <!--维护信息-->
+    <script type="text/javascript">
+        //全局变量
+        var pregnantermaintenance_grid;
+
+        $(function() {
+
+            //初始化表格
+            InitPregnanterMaintenanceGrid();
+        });
+
+
+        function InitPregnanterMaintenanceGrid() {
+            pregnantermaintenance_grid = $("#pregnantermaintenance_grid_data").bootgrid({
+                ajax: true,
+                url: "/api/PregnanterMaintenanceApi/GetBootGridPregnanterMaintenances?yuesaoId=@Model.Id",
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            rowCount: [10, 30, 50],
+            templates: {
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return pregnantermaintenance_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return pregnantermaintenance_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                    "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+            },
+            labels: {
+                all: "all", //checkbox全选的值
+                search: "请输入名称",
+                loading: "加载中...",
+                noResults: "对不起，暂无符合条件的记录！",
+                refresh: "刷新",
+                infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+            },
+            formatters: {
+                PMainCreater: function (column, row) {
+                    return row.PMainCreaterName;
+                },
+                PMainCreatTime: function (column, row) { return row.PMainCreatTime; },
+			PMainType: function(column, row) {
+                            return GetOptionValue(row.PMainType, "1|信息维护,2|跟踪记录,3|纪念日维护,4|其他类型");
+                        },
+			PMainContent: function (column, row) {
+                    return "<div class=\"pop\" data-toggle=\"popover\" data-title=\"详细信息\" data-content=\"" + row.PMainContent + "\">" + shortString(row.PMainContent,20, '...') + "</div>";
+                }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function (e) {
+            //按钮提示
+            $('.tip').tooltip({ placement: "bottom" });
+            //按钮气泡
+            $('.pop').popover({ html: true, trigger: "hover" });
+            //showMsg("数据加载完毕！", "Success");
+        });
+    }
+
+
+    function pregnantermaintenance_add() {
+        showTopWindow("pregnantermaintenance_show_add", "/Yuesao/PregnanterMaintenance/Edit?actionType=Add&pid=@Model.Id", null, 600, 240, function () {
+            var pregnantermaintenance_form = $(top.window.frames["frm_pregnantermaintenance_show_add"].document).find("#pregnantermaintenance_form");
+            //console.log(pregnantermaintenance_form);
+            var flag = top.window.document.getElementById("frm_pregnantermaintenance_show_add").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(pregnantermaintenance_form).serialize();
+            //console.log((data));
+            //return;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/PregnanterMaintenanceApi/AddPregnanterMaintenance",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_add_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnantermaintenance_grid.bootgrid("reload");
+                        showMsg("添加成功！", "Success");
+                    } else {
+                        showMsg("系统异常，添加失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function pregnantermaintenance_edit(id) {
+        var url = "/Yuesao/PregnanterMaintenance/Edit?actionType=Edit&id=" + id + "&pid=@Model.Id";
+        //console.log(id);
+        showTopWindow("pregnantermaintenance_show_edit", url, null,500,400, function () {
+            var pregnantermaintenance_form = $(top.window.frames["frm_pregnantermaintenance_show_edit"].document).find("#pregnantermaintenance_form");
+            //console.log(pregnantermaintenance_form);
+            var flag = top.window.document.getElementById("frm_pregnantermaintenance_show_edit").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(pregnantermaintenance_form).serialize();
+            //console.log((data));
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/PregnanterMaintenanceApi/EditPregnanterMaintenance",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnantermaintenance_grid.bootgrid("reload");
+                        //console.log(grid);
+
+                        showMsg("修改成功！", "Success");
+                    } else {
+                        showMsg("系统异常，修改失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+
+        });
+
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function pregnantermaintenance_multi_delete() {
+        var ids = get_selected_ids("pregnantermaintenance_grid_data");
+        //console.log(ids);
+        if (ids == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        pregnantermaintenance_delete(ids);
+    }
+
+    function pregnantermaintenance_delete(ids) {
+        showTopDialog("pregnantermaintenance_show_delete", "<div class='dialog_alert'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/PregnanterMaintenanceApi/DeletePregnanterMaintenance?ids=" + ids,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnantermaintenance_grid.bootgrid("reload");
+                        showMsg("删除成功！", "Success");
+                    } else {
+                        showMsg("系统异常，删除失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+    </script>
+    <!--评价记录-->
+    <script type="text/javascript">
+    //全局变量
+    var pregnanterevaluation_grid;
+
+    $(function () {
+
+        //初始化表格
+        InitPregnanterEvaluationGrid();
+    });
+
+
+    function InitPregnanterEvaluationGrid() {
+        pregnanterevaluation_grid = $("#pregnanterevaluation_grid_data").bootgrid({
+            ajax: true,
+            url: "/api/PregnanterEvaluationApi/GetBootGridPregnanterEvaluations?yuesaoId=@Model.Id",
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            rowCount: [10, 30, 50],
+            templates: {
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return pregnanterevaluation_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return pregnanterevaluation_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                    "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+            },
+            labels: {
+                all: "all", //checkbox全选的值
+                search: "请输入名称",
+                loading: "加载中...",
+                noResults: "对不起，暂无符合条件的记录！",
+                refresh: "刷新",
+                infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+            },
+            formatters: {
+                PEvaTime: function (column, row) { return row.PEvaTime; },
+				PEvaLevel: function(column, row) {
+                            return GetOptionValue(row.PEvaLevel, "1|★,2|★★,3|★★★");
+            },
+			PEvaContent: function (column, row) {
+                    return "<div class=\"pop\" data-toggle=\"popover\" data-title=\"评价内容\" data-content=\"" + row.PEvaContent + "\">" + shortString(row.PEvaContent,20, '...') + "</div>";
+                }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function (e) {
+            //按钮提示
+            $('.tip').tooltip({ placement: "bottom" });
+            //按钮气泡
+            $('.pop').popover({ html: true, trigger: "hover" });
+            //showMsg("数据加载完毕！", "Success");
+        });
+    }
+
+
+    function pregnanterevaluation_add() {
+        showTopWindow("pregnanterevaluation_show_add", "/Yuesao/PregnanterEvaluation/Edit?actionType=Add&pid=@Model.Id", null, 600, 350, function () {
+            var pregnanterevaluation_form = $(top.window.frames["frm_pregnanterevaluation_show_add"].document).find("#pregnanterevaluation_form");
+            //console.log(pregnanterevaluation_form);
+            var flag = top.window.document.getElementById("frm_pregnanterevaluation_show_add").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(pregnanterevaluation_form).serialize();
+            //console.log((data));
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/PregnanterEvaluationApi/AddPregnanterEvaluation",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_add_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnanterevaluation_grid.bootgrid("reload");
+                        showMsg("添加成功！", "Success");
+                    } else {
+                        showMsg("系统异常，添加失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function pregnanterevaluation_edit(id) {
+        var url = "/Yuesao/PregnanterEvaluation/Edit?actionType=Edit&id=" + id + "&pid=@Model.Id";
+        //console.log(id);
+        showTopWindow("pregnanterevaluation_show_edit", url, null, 800, 400, function () {
+            var pregnanterevaluation_form = $(top.window.frames["frm_pregnanterevaluation_show_edit"].document).find("#pregnanterevaluation_form");
+            //console.log(pregnanterevaluation_form);
+            var flag = top.window.document.getElementById("frm_pregnanterevaluation_show_edit").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(pregnanterevaluation_form).serialize();
+            //console.log((data));
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/PregnanterEvaluationApi/EditPregnanterEvaluation",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnanterevaluation_grid.bootgrid("reload");
+                        //console.log(grid);
+
+                        showMsg("修改成功！", "Success");
+                    } else {
+                        showMsg("系统异常，修改失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+
+        });
+
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function pregnanterevaluation_multi_delete() {
+        var ids = get_selected_ids("pregnanterevaluation_grid_data");
+        //console.log(ids);
+        if (ids == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        pregnanterevaluation_delete(ids);
+    }
+
+    function pregnanterevaluation_delete(ids) {
+        showTopDialog("pregnanterevaluation_show_delete", "<div class='dialog_alert'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/PregnanterEvaluationApi/DeletePregnanterEvaluation?ids=" + ids,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        pregnanterevaluation_grid.bootgrid("reload");
+                        showMsg("删除成功！", "Success");
+                    } else {
+                        showMsg("系统异常，删除失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+    </script>
+
+</head>
+<body>
+    <!--表单错误提示区-->
+    <div tabindex="-1" id="msgprint" class="warning" style="position: fixed; width: 90%; display: none;">您的表单包含错误，请检查！</div>
+    <div class="tab-content">
+        <ul class="nav nav-tabs" id="formTab">
+            <li class="active"><a href="#basic-info" data-toggle="tab">基本信息</a></li>
+            <li><a href="#detail-info" data-toggle="tab">详细信息</a></li>
+            <li><a href="#card-info" data-toggle="tab">证件图片</a></li>
+            @if (actionType == "Edit")
+            {
+                <li><a href="#service-info" data-toggle="tab">服务日程</a></li>
+                <li><a href="#weihu-info" data-toggle="tab">维护信息</a></li>
+                <li><a href="#judge-info" data-toggle="tab">评价记录</a></li>
+            }
+        </ul>
+        <div class="tab-pane active" id="basic-info">
+            <div style="height:15px;"></div>
+            <form id="pregnanterinfo_form1" name="pregnanterinfo_form1">
+                <!--id-->
+                @Html.HiddenFor(model => model.Id)
+                <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+                    <tbody>
+                        <tr>
+                            <th><span class="must">*</span>月嫂编号：</th>
+                            <td>
+                                @Html.TextBoxFor(model => model.PInfoCode, new { @class = "form-control isreadonly", Model.PInfoCode, @style = "width:200px; color:red;", @placeholder = "系统自动生成", @onfocus = "this.blur();" })
+                            </td>
+                            <th><span class="must">*</span>月嫂姓名：</th>
+                            <td>
+                                @Html.TextBoxFor(model => model.PInfoName, new { @class = "form-control required", @style = "width:100px; ", @maxlength=16,@placeholder = "姓名" })
+                                @Html.TextBoxFor(model => model.PInfoNational, new { @class = "form-control", Value = @Html.LoadDefaultValue(Model.PInfoNational, "汉族"), @style = "width:114px; ", @placeholder = "民族", @maxlength = 10 })
+                            </td>
+                            <td rowspan="4" style="width:170px;">
+                                <div style="width:150px; height:155px; background-color:#fff">
+                                     <!--裁切上传开始-->
+                                   <img id="p_info_photopre" src='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="150px" height="118px;"  />
+                                   <button class="btn btn-primary" style="width:150px;" onclick="return do_photo_capture(this);">点击打开上传窗口</button>
+                                   <input type="hidden" id="PInfoPhoto" name="PInfoPhoto" value='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' />
+                            <!--裁切上传结束-->           
+                                    <!--单文件上传开始-->
+                                   @* <img id="p_info_photopre" src='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="150px" height="130px;" />
+                                    <div style="width:130px; height:25px; overflow:hidden;">
+                                        <input type="hidden" id="PInfoPhoto" name="PInfoPhoto" value='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' />
+                                        <a href="javascript:;" class="files">
+                                            <input type="file" style="width: 130px;" id="file_p_info_photo" name="file_p_info_photo" onchange=" PicUpload('pregnanterinfo_form1', 'file_p_info_photo', 'PInfoPhoto', 'p_info_photopre'); " />
+                                        </a>*@
+                                        <!--单文件上传结束-->
+                                    </div>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span class="must">*</span>月嫂手机：</th>
+                            <td>
+                                @Html.TextBoxFor(model => model.PInfoTel, new { @class = "form-control required phone", @style = "width: 200px; ",@maxlength=12, @placeholder = "" })
+                            </td>
+                            <th><span class="must">*</span>身份证号：</th>
+                            <td>
+                                @Html.TextBoxFor(model => model.PInfoIdcard, new { @class = "form-control required idcard",@maxlength=18, @style = "width: 218px; ", @placeholder = "可自动生成生日,年龄,星座,属相" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>自动生成部分：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoBirthday, new { @class = "form-control isreadonly", Value = @Html.LoadDefaultValue((Html.DateTimeNullPalse(Model.PInfoBirthday)).ToString("yyyy-MM-dd"), DateTime.Now.ToString("yyyy-MM-dd")), @style = "width: 150px; ", @placeholder = "生日", @onfocus = "this.blur()" })
+                                @Html.TextBoxFor(model => model.PInfoAge, new { @class = "form-control isreadonly", @style = "width:94px; ", @placeholder = "年龄", @onfocus = "this.blur()" })
+                                @Html.TextBoxFor(model => model.PInfoXingzuo, new { @class = "form-control isreadonly", @style = "width:140px; ", @placeholder = "星座", @onfocus = "this.blur()" })
+                                @Html.TextBoxFor(model => model.PInfoShuxiang, new { @class = "form-control isreadonly", @style = "width:123px; ", @placeholder = "属相", @onfocus = "this.blur()" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>从业年限：</th>
+                            <td> @Html.DropDownListFor(model => model.PInfoEdage, @Html.BuildSelectList("1|1年以下,2|1-3年,3|3-7年,4|7年以上", @Html.LoadDefaultValue(Model.PInfoEdage, "").ToString()), new { @class = "form-control required", Value = ""})
+                            @Html.DropDownListFor(model => model.PInfoEducation, @Html.BuildSelectList("1|本科及以上,2|大专,3|高中,4|初中及以下", @Html.LoadDefaultValue(Model.PInfoEducation, "").ToString()), new { @class = "form-control", @style = "width: 110px;", Value = "" })
+                            </td>
+                            <th>特别技能：</th>
+                            <td>
+							<!--@Html.TextBoxFor(model => model.PInfoClass, new { @class = "form-control", @style = "width: 218px; ", @maxlength=10,@placeholder = "" })-->
+								<label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胞胎" name="C_PInfoClass" />双胞胎</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="早产儿" name="C_PInfoClass" />早产儿</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴师" name="C_PInfoClass"/>育婴师</label>
+								@Html.HiddenFor(model => model.PInfoClass, new {@class = "form-control"})
+							</td>
+
+							
+							
+                        </tr>
+                        <tr>
+                            <th>户口所在地：</th>
+                            <td>@Html.TextBoxFor(model => model.PInfoPermanent, new { @class = "form-control", @style = "width: 96px; ", @maxlength = 100, @placeholder = "" })
+                            @Html.DropDownListFor(model => model.PInfoMarriage, @Html.BuildSelectList("1|已婚,2|未婚,3|保密", @Html.LoadDefaultValue(Model.PInfoMarriage, "").ToString()), new { @class = "form-control", @style = "width: 100px;", Value = "" })
+                            
+                            </td>
+                            <th>现住省市：</th>
+                            <td colspan="2">
+                                <select id="YuesaoProv" name="YuesaoProv" style="width:124px;" class="form-control">
+                                    <option value="0" selected="selected">选择</option>
+                                </select>
+                                <select id="YuesaoArea" name="YuesaoArea" style="width:124px;" class="form-control">
+                                    <option value="0" selected="selected">选择</option>
+                                </select>
+                                <select id="YuesaoRegion" name="YuesaoRegion" style="width:124px;" class="form-control">
+                                    <option value="0" selected="selected">选择</option>
+                                </select>
+
+                                <!--@Html.TextBoxFor(model => model.PInfoCity, new { @class = "form-control", @style = "width:200px; ",@placeholder=""})-->
+                                @Html.TextBoxFor(model => model.PInfoAddress, new { @class = "form-control", @style = "width: 380px; margin-top: 5px;",@maxlength=100, @placeholder = "" })
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>创建人：</th>
+                            <td>
+                                @Html.DropDownListFor(model => model.PInfoCreateperson, @Html.BuildSelectList(@createrId + "|" + @createrName, @Html.LoadDefaultValue(Model.PInfoCreateperson, @createrId.ToString()).ToString(), false), new { @class = "form-control", @style = "width:200px;", @disabled = "disabled" })
+                                @Html.HiddenFor(model => model.PInfoCreateperson, new { Value = @createrId.ToString(), @class = "form-control" })
+                            </td>
+                            <th rowspan="2">月嫂备注：</th>
+                            <td rowspan="2" colspan="2">
+                                @Html.TextAreaFor(model => model.PInfoNote, new { @class = "form-control", @style = "width:380px;", @placeholder = "可填写详细备注", @rows = "4" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>最后联系：</th>
+                            <td>
+                                @Html.TextBoxFor(model => model.PInfoLastdate, new { @class = "form-control isreadonly", Value = @Html.LoadDefaultValue(Html.DateTimeNullPalse(Model.PInfoLastdate).ToString("yyyy-MM-dd"), DateTime.Now.ToString("yyyy-MM-dd")), @style = "width: 200px; ", @placeholder = "", @onfocus = "this.blur()" })
+                            </td>
+                        </tr>
+                        <tr style="background-color:#F0F1F1;">
+                            <th><span class="must">*</span>属性部分：</th>
+                            <td colspan="4" style=" font-weight:bold; color:green;">
+                                @Html.DropDownListFor(model => model.PInfoType, @Html.BuildSelectList("0|普通月嫂,1|员工制月嫂,2|其他类型", @Html.LoadDefaultValue(Model.PInfoType, "1").ToString(), false), new { @class = "form-control required", @style = "width:160px", Value = "1" })
+
+                                @Html.DropDownListFor(model => model.PInfoLevel, @Html.BuildSelectList("1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★", @Html.LoadDefaultValue(Model.PInfoLevel, "0").ToString()), new { @class = "form-control required", @style = "width:160px", Value = "4" })
+
+								
+								@Html.TextBoxFor(model => model.PInfoPrice, new { @class = "form-control required number", @style = "width: 188px; ",@maxlength=8, @placeholder ="请输入月嫂价格" })
+								
+                                @Html.DropDownListFor(model => model.PInfoState, @Html.BuildSelectList("1|开启预定,2|关闭状态,0|放入回收站", @Html.LoadDefaultValue(Model.PInfoState, "1").ToString()), new { @class = "form-control required", @style = "width:160px", Value = "1" })
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div class="tab-pane" id="detail-info">
+            <div style="height:15px;"></div><form id="pregnanterinfo_form2">
+                <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+                    <tbody>
+                    <tr>
+                    <td>基本信息</td>
+                    <td>
+                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="身份证书" name="C_PInfoCert"/>身份证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="学历证书" name="C_PInfoCert"/>学历证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="健康证明" name="C_PInfoCert"/>健康证明</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="体检证书" name="C_PInfoCert"/>体检证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家庭成员" name="C_PInfoCert"/>家庭成员</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="行业经验" name="C_PInfoCert"/>行业经验</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婚姻状况" name="C_PInfoCert"/>婚姻状况</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert"/>宗教信仰</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="行业道德" name="C_PInfoCert"/>行业道德</label>
+								@Html.HiddenFor(model => model.PInfoCert, new {@class = "form-control" })</td>
+                    <td>产妇护理</td>
+                    <td>
+                     <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理辅导" name="C_PInfoQuality"/>心理辅导</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理" name="C_PInfoQuality"/>乳房护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="子宫按摩" name="C_PInfoQuality"/>子宫按摩</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="恶露观察" name="C_PInfoQuality"/>恶露观察</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="侧切护理" name="C_PInfoQuality"/>侧切护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产妇擦涂" name="C_PInfoQuality"/>产妇擦涂</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="喂养指导" name="C_PInfoQuality"/>喂养指导</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="腹带打绑" name="C_PInfoQuality"/>腹带打绑</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产后操" name="C_PInfoQuality"/>产后操</label>
+								@Html.HiddenFor(model => model.PInfoQuality, new {@class = "form-control" })
+                    </td>
+                    <td>婴儿护理</td>
+                    <td>
+                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="黄疸观察" name="C_PInfoService"/>黄疸观察</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="脐带护理" name="C_PInfoService"/>脐带护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="二便观察" name="C_PInfoService"/>二便观察</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练" name="C_PInfoService"/>视听训练</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿喂养" name="C_PInfoService"/>婴儿喂养</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="湿疹护理" name="C_PInfoService"/>湿疹护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="红臀护理" name="C_PInfoService"/>红臀护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿抚触" name="C_PInfoService"/>婴儿抚触</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动操" name="C_PInfoService"/>被动操</label>
+								@Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
+                    </td>
+                    <td>专业家务</td>
+                    <td><label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="餐具清洗消毒" name="C_PInfoKnowledge"/>餐具清洗消毒</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="奶具清洗消毒" name="C_PInfoKnowledge"/>奶具清洗消毒</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="尿布清洗消毒" name="C_PInfoKnowledge"/>尿布清洗消毒</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="衣物清洗消毒" name="C_PInfoKnowledge"/>衣物清洗消毒</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="卧室清洗消毒" name="C_PInfoKnowledge"/>卧室清洗消毒</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="厨房清洗消毒" name="C_PInfoKnowledge"/>厨房清洗消毒</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="月子餐的制作" name="C_PInfoKnowledge"/>月子餐的制作</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养康复方案" name="C_PInfoKnowledge"/>营养康复方案</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿洗浴护理" name="C_PInfoKnowledge"/>婴儿洗浴护理</label>
+								@Html.HiddenFor(model => model.PInfoKnowledge, new {@class = "form-control" })</td>
+                   <td>
+                    高端技能
+                    </td>
+                    <td>
+                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴技能" name="C_PInfoEdu"/>育婴技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="催乳技能" name="C_PInfoEdu"/>催乳技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="推拿技能" name="C_PInfoEdu"/>推拿技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="游泳抚触" name="C_PInfoEdu"/>游泳抚触</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胎护理" name="C_PInfoEdu"/>双胎护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="早产护理" name="C_PInfoEdu"/>早产护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养搭配" name="C_PInfoEdu"/>营养搭配</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产后理疗" name="C_PInfoEdu"/>产后理疗</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="异常处理" name="C_PInfoEdu"/>异常处理</label>
+								@Html.HiddenFor(model => model.PInfoEdu, new {@class = "form-control" })
+                    </td>
+                    </tr>
+                    
+                        
+                        <!--<tr>
+                            <th>基本信息：</th>
+                            <td colspan="3">
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="身份证书" name="C_PInfoCert"/>身份证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="学历证书" name="C_PInfoCert"/>学历证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="健康证明" name="C_PInfoCert"/>健康证明</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="体检证书" name="C_PInfoCert"/>体检证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家庭成员" name="C_PInfoCert"/>家庭成员</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="行业经验" name="C_PInfoCert"/>行业经验</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婚姻状况" name="C_PInfoCert"/>婚姻状况</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert"/>宗教信仰</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="资格证书" name="C_PInfoCert"/>资格证书</label>
+								@Html.HiddenFor(model => model.PInfoCert, new {@class = "form-control" })
+                            </td>
+                        </tr>
+                        <tr>
+                        <th>综合素质：</th>
+                            <td colspan="3">
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="基本礼仪" name="C_PInfoQuality"/>基本礼仪</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表" name="C_PInfoQuality"/>仪容仪表</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常保洁" name="C_PInfoQuality"/>日常保洁</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家电使用" name="C_PInfoQuality"/>家电使用</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="目视看板" name="C_PInfoQuality"/>目视看板</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="财务计算" name="C_PInfoQuality"/>财务计算</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="说普通话" name="C_PInfoQuality"/>说普通话</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="沟通技能" name="C_PInfoQuality"/>沟通技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="厨艺实操" name="C_PInfoQuality"/>厨艺实操</label>
+								@Html.HiddenFor(model => model.PInfoQuality, new {@class = "form-control" })
+								</td>
+                        </tr>
+                         <tr>
+                     
+                            <th>服务意识：</th>
+                            <td colspan="3">
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="职业道德" name="C_PInfoService"/>职业道德</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="月嫂手册" name="C_PInfoService"/>月嫂手册</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="感恩课程" name="C_PInfoService"/>感恩课程</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="面试礼仪" name="C_PInfoService"/>面试礼仪</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="可同承诺" name="C_PInfoService"/>可同承诺</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="安全须知" name="C_PInfoService"/>安全须知</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="客户心愿" name="C_PInfoService"/>客户心愿</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="服务赠言" name="C_PInfoService"/>服务赠言</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母婴誓言" name="C_PInfoService"/>母婴誓言</label>
+								@Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
+								</td> 
+                        </tr>
+                        <tr>
+                         <th>高端技能：</th>
+                            <td colspan="3">
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴技能" name="C_PInfoEdu"/>育婴技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="高级育婴" name="C_PInfoEdu"/>高级育婴</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="催乳技能" name="C_PInfoEdu"/>催乳技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="高级催乳" name="C_PInfoEdu"/>高级催乳</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="推拿技能" name="C_PInfoEdu"/>推拿技能</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="高级推拿" name="C_PInfoEdu"/>高级推拿</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="游泳抚触" name="C_PInfoEdu"/>游泳抚触</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理咨询" name="C_PInfoEdu"/>心理咨询</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养配餐" name="C_PInfoEdu"/>营养配餐</label>
+								@Html.HiddenFor(model => model.PInfoEdu, new {@class = "form-control" })
+								</td>
+                        </tr>
+                        <tr>
+                        <th>育婴知识：</th>
+                            <td colspan="3">
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿被动操" name="C_PInfoKnowledge"/>婴儿被动操</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作" name="C_PInfoKnowledge"/>营养餐制作</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿抚触操" name="C_PInfoKnowledge"/>婴儿抚触操</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="黄疸的观察" name="C_PInfoKnowledge"/>黄疸观察</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="脐带的护理" name="C_PInfoKnowledge"/>脐带护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿的洗浴" name="C_PInfoKnowledge"/>婴儿洗浴</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产后形体操" name="C_PInfoKnowledge"/>产后形体操</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="喂养的指导" name="C_PInfoKnowledge"/>喂养的指导</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="湿疹的处理" name="C_PInfoKnowledge"/>湿疹的处理</label>
+								@Html.HiddenFor(model => model.PInfoKnowledge, new {@class = "form-control" })
+								</td>
+                        </tr>
+                        <tr>
+                            <th>参加培训：</th>
+                            <td>
+                                @Html.TextAreaFor(model => model.PInfoTrain, new { @class = "form-control", @style = "width:270px;height:60px;", @placeholder = "格式为：2014年8月 参加雪绒花 小儿推拿培训" })
+                            </td>
+                            <th>获得奖励：</th>
+                            <td>
+                                @Html.TextAreaFor(model => model.PInfoReward, new { @class = "form-control", @style = "width:270px;height:60px;", @placeholder = "格式为：2014年8月 获得省级 家协表彰" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>特长爱好：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoHobby, new { @class = "form-control", @style = "width:668px; ", @placeholder = "多个请用,分割；如唱歌,跳舞,做广东菜,会郑州戏曲,唱胎教音乐,与产妇看电视下棋等" })
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th>紧急联系人1：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoContacter1, new { @class = "form-control", @style = "width:110px; ", @placeholder = "姓名" })
+                                @Html.TextBoxFor(model => model.PInfoRelation1, new { @class = "form-control", @style = "width:106px; ", @placeholder = "关系" })
+                                @Html.TextBoxFor(model => model.PInfoWorkunit1, new { @class = "form-control", @style = "width:260px; ", @placeholder = "单位" })
+                                @Html.TextBoxFor(model => model.PInfoReltel1, new { @class = "form-control", @style = "width:180px;color:blue;", @placeholder = "电话" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>紧急联系人2：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoContact2, new { @class = "form-control", @style = "width:110px; ", @placeholder = "姓名" })
+                                @Html.TextBoxFor(model => model.PInfoRelation2, new { @class = "form-control", @style = "width:106px; ", @placeholder = "关系" })
+                                @Html.TextBoxFor(model => model.PInfoWorkunit2, new { @class = "form-control", @style = "width:260px; ", @placeholder = "单位" })
+                                @Html.TextBoxFor(model => model.PInfoRelTel2, new { @class = "form-control", @style = "width:180px;color:blue;", @placeholder = "电话" })
+                            </td>
+                        </tr>-->
+                    </tbody>
+                </table>
+                
+                <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect" style="margin-top:10px;"> <tbody>
+                <tr>
+                            <th>参加培训：</th>
+                            <td>
+                                @Html.TextAreaFor(model => model.PInfoTrain, new { @class = "form-control", @style = "width:270px;height:80px;", @placeholder = "格式为：2014年8月 参加雪绒花 小儿推拿培训" })
+                            </td>
+                            <th>获得奖励：</th>
+                            <td>
+                                @Html.TextAreaFor(model => model.PInfoReward, new { @class = "form-control", @style = "width:270px;height:80px;", @placeholder = "格式为：2014年8月 获得省级 家协表彰" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>特长爱好：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoHobby, new { @class = "form-control", @style = "width:668px; ", @placeholder = "多个请用,分割；如唱歌,跳舞,做广东菜,会郑州戏曲,唱胎教音乐,与产妇看电视下棋等" })
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th>紧急联系人1：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoContacter1, new { @class = "form-control", @style = "width:110px; ", @placeholder = "姓名" })
+                                @Html.TextBoxFor(model => model.PInfoRelation1, new { @class = "form-control", @style = "width:106px; ", @placeholder = "关系" })
+                                @Html.TextBoxFor(model => model.PInfoWorkunit1, new { @class = "form-control", @style = "width:260px; ", @placeholder = "单位" })
+                                @Html.TextBoxFor(model => model.PInfoReltel1, new { @class = "form-control", @style = "width:180px;color:blue;", @placeholder = "电话" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>紧急联系人2：</th>
+                            <td colspan="3">
+                                @Html.TextBoxFor(model => model.PInfoContact2, new { @class = "form-control", @style = "width:110px; ", @placeholder = "姓名" })
+                                @Html.TextBoxFor(model => model.PInfoRelation2, new { @class = "form-control", @style = "width:106px; ", @placeholder = "关系" })
+                                @Html.TextBoxFor(model => model.PInfoWorkunit2, new { @class = "form-control", @style = "width:260px; ", @placeholder = "单位" })
+                                @Html.TextBoxFor(model => model.PInfoRelTel2, new { @class = "form-control", @style = "width:180px;color:blue;", @placeholder = "电话" })
+                            </td>
+                        </tr>
+                </tbody> </table>
+            </form>
+        </div>
+
+        <div class="tab-pane" id="card-info">
+            <div style="height:15px;"></div>
+            <form id="pregnanterinfo_form3">
+               <!--个人资料-->
+                <div class="upload-box shenghuo" id="PInfoLifeimg">
+                    <span class="upload-progress"></span>
+                </div>
+
+               <div class="photo-list">
+                    <ul>
+                        @foreach (var life_pic in life_pics)
+                        {
+                            try
+                            {
+                                var life_infos = life_pic.ToString().Split('|');
+                                
+                                var big = life_infos[1];
+                                var small = life_infos[2];
+                                var des = life_infos[3] ?? "暂无描述...";
+                                var pics = "0|" + big + "|" + small;
+                                <li>
+                                    <input type="hidden" name="PInfoLifeimg" value="@pics" />
+                                    <input type="hidden" name="PInfoLifeimgRemark" value="remark" />
+                                    <div class="img-box">
+                                        <img src="@small" bigsrc="@big" />
+                                        <span class="remark"><i>@des</i></span>
+                                    </div>
+                                    <a href="javascript:;" onclick=" setRemark(this, 'PInfoLifeimg'); ">描述</a>
+                                    <a href="javascript:;" onclick=" delImg(this); ">删除</a>
+                                </li>
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    </ul>
+                </div>
+                
+                
+                <!--证书-->
+                 <div class="upload-box zhengjian" id="PInfoCertimg">
+                     <span class="upload-progress"></span>
+                </div>
+                
+                <div class="photo-list">
+                    <ul>
+                            @foreach (var cert_pic in cert_pics)
+                        {
+                            try
+                            {
+                                var cert_infos = cert_pic.ToString().Split('|');
+                                var big = cert_infos[1];
+                                var small = cert_infos[2];
+                                var des = cert_infos[3] ?? "暂无描述...";
+                                var pics = "0|" + big + "|" + small;
+                                <li>
+                                    <input type="hidden" name="PInfoCertimg" value="@pics" />
+                                    <input type="hidden" name="PInfoCertimgRemark" value="remark" />
+                                    <div class="img-box" onclick=" setFocusImg(this); ">
+                                        <img src="@small" bigsrc="@big" />
+                                        <span class="remark"><i>@des</i></span>
+                                    </div>
+                                    <a href="javascript:;" onclick=" setRemark(this, 'PInfoCertimg'); ">描述</a>
+                                    <a href="javascript:;" onclick=" delImg(this); ">删除</a>
+                                </li>
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        @if(actionType=="Edit"){
+        <div class="tab-pane" id="service-info">
+            <table id="pregnanterservicerecord_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                <thead>
+                    <tr>
+                        <th data-column-id="PServiceType" data-header-align="center" data-formatter="PServiceType" data-order="desc">日程类型</th>
+                        <th data-column-id="Id"  data-identifier="true" data-header-align="center" data-formatter="PServiceBegin" data-order="desc">开始时间</th>
+                        <th data-column-id="PServiceEnd" data-header-align="center" data-formatter="PServiceEnd" data-order="desc">结束时间</th>
+                        <th data-column-id="PServiceNote" data-header-align="center" data-formatter="PServiceNote" data-order="desc">日程备注</th>
+                        <th data-column-id="PServiceCreateTime" data-header-align="center" data-formatter="PServiceCreateTime" data-order="desc">添加时间</th>
+                        <th data-column-id="PServiceCreater" data-header-align="center" data-formatter="PServiceCreater" data-order="desc">添加人</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="tab-pane" id="weihu-info">
+            <table id="pregnantermaintenance_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                <thead>
+                    <tr>
+                        <th data-column-id="PMainType" data-header-align="center" data-formatter="PMainType" data-order="desc" data-header-css-class="wid120">维护类型</th>
+                        <th data-column-id="PMainContent" data-header-align="center" data-formatter="PMainContent" data-order="desc">维护内容</th>
+                        <th data-column-id="PMainCreater" data-header-align="center" data-formatter="PMainCreater" data-order="desc" data-header-css-class="wid90">维护人</th>
+                        <th  data-column-id="Id"  data-identifier="true"  data-header-align="center" data-formatter="PMainCreatTime" data-order="desc"  data-header-css-class="wid90">维护时间</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+
+        <div class="tab-pane" id="judge-info">
+            <table id="pregnanterevaluation_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                <thead>
+                    <tr>
+                        <th data-column-id="PEvaLevel" data-header-align="center" data-formatter="PEvaLevel" data-order="desc" data-header-css-class="wid90">评价级别</th>
+                        <th data-column-id="PEvaContent" data-header-align="center" data-formatter="PEvaContent" data-order="desc">评价内容</th>
+                        <th data data-column-id="Id"  data-identifier="true"  data-header-align="center" data-formatter="PEvaTime" data-order="desc" data-header-css-class="wid120">评价时间</th>
+                        <th data-column-id="PEvaPerson" data-header-align="center" data-formatter="PEvaPerson" data-order="desc" data-header-css-class="wid90">评价人</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        }
+        </div>
+</body>
+</html>
+
+

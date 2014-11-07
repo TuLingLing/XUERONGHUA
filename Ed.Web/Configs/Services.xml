@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
+  <!--accountService-->
+  <object id="accountService" type="Ed.Service.Impl.AccountServiceImpl, Ed.Service" singleton="false">
+    <property name="SysUserDao" ref="sysUserDao" />
+    <property name="SysRoleDao" ref="sysRoleDao" />
+    <property name="SysLogDao" ref="sysLogDao" />
+  </object>
+  <!--accountService-->
+  <!--clientInfoService-->
+  <object id="clientInfoService" type="Ed.Service.Impl.ClientInfoServiceImpl, Ed.Service" singleton="false">
+    <property name="ClientInfoDao" ref="clientInfoDao" />
+  </object>
+  <!--clientMaintenanceService-->
+  <object id="clientMaintenanceService" type="Ed.Service.Impl.ClientMaintenanceServiceImpl, Ed.Service" singleton="false">
+    <property name="ClientMaintenanceDao" ref="clientMaintenanceDao" />
+  </object>
+  <!--orderService-->
+  <object id="orderService" type="Ed.Service.Impl.OrderServiceImpl, Ed.Service" singleton="false">
+    <property name="OrderDao" ref="orderDao" />
+  </object>
+  <!--orderFinanceService-->
+  <object id="orderFinanceService" type="Ed.Service.Impl.OrderFinanceServiceImpl, Ed.Service" singleton="false">
+    <property name="OrderFinanceDao" ref="orderFinanceDao" />
+  </object>
+  <!--pregnanterEvaluationService-->
+  <object id="pregnanterEvaluationService" type="Ed.Service.Impl.PregnanterEvaluationServiceImpl, Ed.Service" singleton="false">
+    <property name="PregnanterEvaluationDao" ref="pregnanterEvaluationDao" />
+  </object>
+  <!--pregnanterInfoService-->
+  <object id="pregnanterInfoService" type="Ed.Service.Impl.PregnanterInfoServiceImpl, Ed.Service" singleton="false">
+    <property name="PregnanterInfoDao" ref="pregnanterInfoDao" />
+  </object>
+  <!--pregnanterMaintenanceService-->
+  <object id="pregnanterMaintenanceService" type="Ed.Service.Impl.PregnanterMaintenanceServiceImpl, Ed.Service" singleton="false">
+    <property name="PregnanterMaintenanceDao" ref="pregnanterMaintenanceDao" />
+  </object>
+  <!--pregnanterServiceRecordService-->
+  <object id="pregnanterServiceRecordService" type="Ed.Service.Impl.PregnanterServiceRecordServiceImpl, Ed.Service" singleton="false">
+    <property name="PregnanterServiceRecordDao" ref="pregnanterServiceRecordDao" />
+  </object>
+  <!--sysDepartmentService-->
+  <object id="sysDepartmentService" type="Ed.Service.Impl.SysDepartmentServiceImpl, Ed.Service" singleton="false">
+    <property name="SysDepartmentDao" ref="sysDepartmentDao" />
+  </object>
+  <!--sysLogService-->
+  <object id="sysLogService" type="Ed.Service.Impl.SysLogServiceImpl, Ed.Service" singleton="false">
+    <property name="SysLogDao" ref="sysLogDao" />
+  </object>
+  <!--sysPowerService-->
+  <object id="sysPowerService" type="Ed.Service.Impl.SysPowerServiceImpl, Ed.Service" singleton="false">
+    <property name="SysPowerDao" ref="sysPowerDao" />
+  </object>
+  <!--sysRoleService-->
+  <object id="sysRoleService" type="Ed.Service.Impl.SysRoleServiceImpl, Ed.Service" singleton="false">
+    <property name="SysRoleDao" ref="sysRoleDao" />
+  </object>
+  <!--sysUserService-->
+  <object id="sysUserService" type="Ed.Service.Impl.SysUserServiceImpl, Ed.Service" singleton="false">
+    <property name="SysUserDao" ref="sysUserDao" />
+  </object>
+  <!--yuesaoOrderService-->
+  <object id="yuesaoOrderService" type="Ed.Service.Impl.YuesaoOrderServiceImpl, Ed.Service" singleton="false">
+    <property name="YuesaoOrderDao" ref="yuesaoOrderDao" />
+  </object>
+</objects>

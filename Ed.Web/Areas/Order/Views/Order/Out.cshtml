@@ -1,0 +1,300 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花_订单管理_订单作废管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+        <!--去除顶层加载中 14-10-17 By 唐有炜-->
+        <script type="text/javascript">
+            //=============================================================
+            //去除顶层加载中
+            $(document).ready(function () {
+                //去除加载中
+                if (undefined != top.dialog.list["show_loading"]) {
+                    top.dialog.list["show_loading"].close().remove();
+                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
+                }
+            });
+            //=====================================================================
+        </script>
+
+
+        <script type="text/javascript">
+            //全局变量
+            var order_grid;
+
+            $(function () {
+
+                //初始化表格
+                InitOrderGrid();
+            });
+
+
+            function InitOrderGrid() {
+                order_grid = $("#order_grid_data").bootgrid({
+                    ajax: true,
+                    post: function() {
+                    return {
+                       OrderStatus:0
+                    };
+                    },
+                    url: "/api/OrderApi/GetBootGridOrders",
+                    selection: true,
+                    multiSelect: true,
+                    rowSelect: false,
+                    keepSelection: true,
+                    rowCount: [10, 30, 50],
+                    templates: {
+                        header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"彻底删除\" onclick=\"return order_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>彻底删除</button></div>" +
+                    "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                    },
+                    labels: {
+                        all: "all", //checkbox全选的值
+                        search: "请输入名称",
+                        loading: "加载中...",
+                        noResults: "对不起，暂无符合条件的记录！",
+                        refresh: "刷新",
+                        infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                    },
+                    formatters: {
+                        OrderStatus: function (colum, row) {
+                            switch (row.OrderStatus) {
+                                case 0:
+                                    return "<span style=\"color:orange\">已作废</span>";
+                                case 1:
+                                    return "<span style=\"color:red\">待处理</span>";
+                                case 2:
+                                    return "<span style=\"color:#b806a9\">待执行</span>";
+                                case 3:
+                                    return "<span style=\"color:#2701e9\">执行中</span>";
+                                case 4:
+                                    return "<span style=\"color:#e90122\">订单完成</span>";
+                                default:
+                                    return "";
+                                    break;
+                            }
+                        },
+                        OrderEnd: function (column, row) {
+                            switch (row.OrderStatus) {
+                                case 1:
+                                    return "<span style=\"color:red\">(预定) </span>" + row.OrderBegin + "至" + row.OrderEnd;
+                                case 2:
+                                    return "<span style=\"color:green\">(服务) </span>" + row.OrderBegin + "至" + row.OrderEnd;
+                                default:
+                                    return "";
+                                    break;
+                            }
+                        },
+                        "OrderCreater": function (column, row) {
+                            return row.OrderCreaterName;
+                        },
+                        "OrderWeihu": function (column, row) {
+                            return row.OrderWeihuName;
+                        },
+                        OrderType: function (column, row) {
+                            return GetOptionValue(row.OrderType, "1|月嫂服务,2|育婴师服务,3|催乳师服务");
+                        },
+                        "commands": function (column, row) {
+                            return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
+                        }
+                    }
+                }).on("loaded.rs.jquery.bootgrid", function (e) {
+                    //按钮提示
+                    $('.tip').tooltip({ placement: "bottom" });
+                    //按钮气泡
+                    $('.pop').popover({ html: true, trigger: "hover" });
+                    //showMsg("数据加载完毕！", "Success");
+                });
+            }
+
+
+            function order_add() {
+                showTopWindow("order_show_add", "/Settings/Order/Edit?actionType=Add", null, 800, 400, function () {
+                    var order_form = $(top.window.frames["frm_order_show_add"].document).find("#order_form");
+                    //console.log(order_form);
+                    var flag = top.window.document.getElementById("frm_order_show_add").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(order_form).serialize();
+                    //console.log((data));
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/OrderApi/AddOrder",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_add_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                showMsg("添加成功！", "Success");
+                            } else {
+                                showMsg("系统异常，添加失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+
+            function order_edit(id) {
+                var url = "/Settings/Order/Edit?actionType=Edit&id=" + id;
+                //console.log(id);
+                showTopWindow("order_show_edit", url, null, 800, 400, function () {
+                    var order_form = $(top.window.frames["frm_order_show_edit"].document).find("#order_form");
+                    //console.log(order_form);
+                    var flag = top.window.document.getElementById("frm_order_show_edit").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(order_form).serialize();
+                    //console.log((data));
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/OrderApi/EditOrder",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                //console.log(grid);
+
+                                showMsg("修改成功！", "Success");
+                            } else {
+                                showMsg("系统异常，修改失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+
+
+                });
+
+                //必须有这个，阻止刷新
+                return false;
+            }
+            //订单预览界面
+            function order_show(order_code) {
+                showTopWindow("show_view", "/Order/YuesaoOrder/ViewYuesao?order_code=" + order_code, "查看订单", 900, 450, function () { }, function () { });
+            }
+            function order_multi_delete() {
+                var ids = get_selected_ids("order_grid_data");
+                //console.log(ids);
+                if (ids == "") {
+                    showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+                    return false;
+                }
+                //return false;
+                order_delete(ids);
+            }
+
+            function order_delete(ids) {
+                showTopDialog("order_show_delete", "<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "/api/YuesaoOrderApi/DeleteYuesaoOrder?ids=" + ids,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_delete_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                showMsg("删除成功！", "Success");
+                            } else {
+                                showMsg("系统异常，删除失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_delete_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+        </script>
+
+
+    
+ </head>
+    <body>
+
+<div>
+    <table id="order_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+        <thead>
+            <tr>
+                <th data-column-id="OrderCode" data-header-align="center" data-identifier="true" data-formatter="OrderCode" data-order="desc" data-header-css-class="wid140">订单编号</th>
+<!--		  <th data-column-id="ClientId" data-header-align="center"  data-formatter="ClientId" data-order="desc">客户编号</th>-->
+		  <th data-column-id="OrderType" data-header-align="center"  data-formatter="OrderType" data-order="desc">订单类型</th>
+		  <!--<th data-column-id="OrderEnd" data-header-align="center"  data-formatter="OrderEnd" data-order="desc" data-header-css-class="wid200">服务时间</th>-->
+		  <th data-column-id="OrderStatus" data-header-align="center"  data-formatter="OrderStatus" data-order="desc">订单状态</th>
+		  <th data-column-id="OrderSumMoney" data-header-align="center"  data-formatter="OrderSumMoney" data-order="desc">订单金额</th>
+		  <th data-column-id="OrderPrepaid" data-header-align="center"  data-formatter="OrderPrepaid" data-order="desc">已付金额</th>
+		  <th data-column-id="OrderCreater" data-header-align="center"  data-formatter="OrderCreater" data-order="desc">创建人</th>
+		  <th data-column-id="OrderWeihu" data-header-align="center"  data-formatter="OrderWeihu" data-order="desc">维护人</th>
+		  <th data-column-id="OrderDate" data-header-align="center"  data-formatter="OrderDate" data-order="desc">下单日期</th>
+		  <th data-column-id="OrderProcesstime" data-header-align="center"  data-formatter="OrderProcesstime" data-order="desc">处理日期</th>
+		  <th data-column-id="Id"  data-formatter="commands" data-sortable="false">操作</th>
+		    </tr>
+        </thead>
+    </table>
+</div>
+
+</body>
+</html>
+
+

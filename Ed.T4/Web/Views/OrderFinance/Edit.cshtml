@@ -1,0 +1,199 @@
+﻿@using System.Web.Optimization
+@using Ed.Web.Helpers
+@model Ed.Entity.TOrderFinance
+@{
+    Layout = null;
+    //页面类型
+    var actionType = ViewBag.ActionType;
+}
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>添加/修改</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+ 
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+
+    <!--my97DatePicker-->
+    <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <!--省市数据-->
+    <script src="/Themes/default/base/js/city.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+	
+    <script type="text/javascript">
+        $(function () {
+            validate_form();
+        });
+
+
+            //表单验证
+        function validate_form() {
+            //表单验证
+            $("#orderfinance_form").validate({
+                 invalidHandler: function (e, validator) {
+                        var msg = "有 " + validator.numberOfInvalids() + " 项填写有误，请检查！";
+                        $("#msgprint").html(msg).show().focus();
+                        setTimeout(function () {
+                            $("#msgprint").fadeOut(500);
+                            //如果动画结束则删除节点
+                            if (!$("#msgprint").is(":animated")) {
+                                $("#msgprint").hide();
+                            }
+                        }, 1000);
+                    },
+                    focusInvalid: false,
+                    errorPlacement: function (error, element) {
+                        var errorMsg = error[0].innerHTML;
+                        var elementName = element[0].name;
+                         $("#" + elementName).formtip(errorMsg);
+                        $("#" + elementName).attr("placeholder", errorMsg);
+                    },
+                    success: function (element) {
+                        var elem = $(element)[0].htmlFor;
+                        $("#" + elem).poshytip('disable');
+                        $("#" + elem).poshytip('destroy');
+                        $("#" + elem).removeClass("error").addClass("success");
+                    }
+            });
+        }
+
+
+
+
+
+
+
+
+
+                //表单验证方法，供父窗口调用
+        function form_valid() {
+            if ($("#orderfinance_form").valid()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+    </script>
+
+
+
+
+</head>
+<body>
+    <form id="orderfinance_form" name="orderfinance_form">
+         <!--id-->
+           
+       
+           <!--表单错误提示区-->
+        <div tabindex="-1" id="msgprint" class="warning" style="position: fixed; width: 90%; display: none;">您的表单包含错误，请检查！</div>
+        <div class="tab-content">
+            <ul class="nav nav-tabs" id="formTab">
+                <li class="active"><a href="#tab-info" data-toggle="tab">Tab1</a></li>
+                 </ul>
+            <div class="tab-pane active" id="tab-info">
+              <div style="height:15px;"></div>
+
+			   <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+			    <tbody>
+
+
+
+		     			 			 			 				   <tr>
+                	<th><span class="must">*</span>Id：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>OrderCode：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.OrderCode, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>FinType：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.FinType, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>FinPayment：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.FinPayment, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>FinAddtime：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.FinAddtime, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>FinCreater：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.FinCreater, new { @class = "form-control required number", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>FinNote：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.FinNote, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  				 </tbody>
+			     </table>
+            </div>
+          
+
+         
+        </div>
+
+    </form>
+
+</body>
+</html>
+

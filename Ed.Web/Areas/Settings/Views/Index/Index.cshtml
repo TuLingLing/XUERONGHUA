@@ -1,0 +1,96 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>雪绒花_系统设置页面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="/Themes/default/lib/bootstrap/css/bootstrap-3.2.0.css" rel="stylesheet" />
+    <link href="/Themes/default/lib/bootstrap/assets/css/docs.css" rel="stylesheet" />
+    <link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+    <script src="/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+    <script src="/Themes/default/lib/cookie/jquery.cookie.js"></script>
+    <script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+    <script src="/Themes/default/lib/function.js"></script>
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+
+    <script type="text/javascript">
+        function show_user() {
+            showTopContentWindow("show_add", "/Settings/SysUser/List", "用户管理", 1000, 480, function () {
+            });
+        }
+        function show_role() {
+            showTopContentWindow("show_add", "/Settings/SysRole/List", "角色管理", 1000, 480, function () {
+            });
+        }
+        function show_power() {
+            showTopMsg("系统内置模块很重要，暂时不可管理！", "温馨提示", "Warn");
+            //showTopContentWindow("show_add", "/Settings/SysPower/List", "权限管理", 1000, 480, function () {});
+        }
+        function show_department() {
+            showTopContentWindow("show_add", "/Settings/SysDepartment/List", "组织架构",1000, 480, function () {
+            });
+        }
+        function show_data() {
+            showTopContentWindow("show_add", "/Settings/DataBackup/List", "数据备份", 1000, 480, function () {
+            });
+        }
+        function show_log() {
+            showTopContentWindow("show_add", "/Settings/SysLog/List", "日志管理", 1000, 480, function () {
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="" style=" width:231px; height:346px;overflow:hidden; border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;">
+        <div class="bs-glyphicons">
+            <ul class="bs-glyphicons-list">
+                <li onclick="show_user();">
+                    <span class="glyphicon glyphicon-user"></span>
+                    <span class="glyphicon-class">用户管理</span>
+                </li>
+                <li onclick="show_role();">
+                    <span class="glyphicon glyphicon-signal"></span>
+                    <span class="glyphicon-class">角色管理</span>
+                </li>
+                <li onclick="show_power();">
+                    <span class="glyphicon glyphicon-asterisk"></span>
+                    <span class="glyphicon-class">权限管理</span>
+                </li>
+                <li onclick="show_department();">
+                    <span class="glyphicon glyphicon-road"></span>
+                    <span class="glyphicon-class">组织架构</span>
+                </li>
+                <li onclick="show_data();">
+                    <span class="glyphicon glyphicon-hdd"></span>
+                    <span class="glyphicon-class">数据管理</span>
+                </li>
+                <li onclick="show_log();">
+                    <span class="glyphicon glyphicon-tasks"></span>
+                    <span class="glyphicon-class">操作日志</span>
+                </li>
+                <div style="clear:both"></div>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+

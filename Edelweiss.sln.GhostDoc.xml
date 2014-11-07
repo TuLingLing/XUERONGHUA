@@ -1,0 +1,44 @@
+<GhostDoc>
+  <SpellChecker>
+    <IncludeExtensions>
+    </IncludeExtensions>
+    <IgnoreExtensions>
+      <IgnoreExtension>.cs</IgnoreExtension>
+      <IgnoreExtension>.cshtml</IgnoreExtension>
+    </IgnoreExtensions>
+    <IgnoreFiles>
+      <IgnoreFile>.\Ed.Common\LogHelper.cs</IgnoreFile>
+      <IgnoreFile>.\Ed.Common\Utils.cs</IgnoreFile>
+      <IgnoreFile>.\Ed.Entity\TSysDepartment.cs</IgnoreFile>
+      <IgnoreFile>.\Ed.T4\Dao\Impl\TSysDepartmentDaoImpl.cs</IgnoreFile>
+      <IgnoreFile>.\Ed.T4\Service\ISysUserService.cs</IgnoreFile>
+    </IgnoreFiles>
+  </SpellChecker>
+<HelpConfigurations selected="HelpFile">
+  <HelpConfiguration name="HelpFile">
+    <OutputPath>.\Help</OutputPath>
+    <HelpFileName>Edelweiss</HelpFileName>
+    <ImageFolderPath />
+    <HtmlFormats>
+      <HtmlHelp>true</HtmlHelp>
+      <MSHelpViewer>false</MSHelpViewer>
+      <MSHelp2>false</MSHelp2>
+      <Website>false</Website>
+    </HtmlFormats>
+    <IncludeScopes>
+      <Public>true</Public>
+      <Internal>false</Internal>
+      <Protected>false</Protected>
+      <Private>false</Private>
+      <Inherited>true</Inherited>
+      <InheritedFromReferences>true</InheritedFromReferences>
+      <EnableTags>false</EnableTags>
+      <TagList />
+    </IncludeScopes>
+    <ResolveCrefLinks>true</ResolveCrefLinks>
+    <HeaderText />
+    <FooterText />
+    <SelectedProjects />
+  </HelpConfiguration>
+</HelpConfigurations>
+</GhostDoc>

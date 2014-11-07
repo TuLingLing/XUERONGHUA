@@ -1,0 +1,67 @@
+﻿@model dynamic
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>雪绒花_订单管理首页</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="/Themes/default/lib/bootstrap/css/bootstrap-3.2.0.css" rel="stylesheet" />
+        <link href="/Themes/default/lib/bootstrap/assets/css/docs.css" rel="stylesheet" />
+        <link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+        <script src="/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+        <script src="/Themes/default/lib/cookie/jquery.cookie.js"></script>
+        <script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+        <script src="/Themes/default/lib/function.js"></script>
+    </head>
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    <script type="text/javascript">
+
+        function show_list() {
+            showTopContentWindow("show_list", "/Finance/OrderFinance/List", "财务管理", 1000, 500);
+        }
+
+    </script>
+    <body>
+        <div class="" style="width:231px; height:116px;overflow:hidden; border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;">
+            <div class="bs-glyphicons">
+                <ul class="bs-glyphicons-list">
+
+                    <li onclick="show_list();">
+                        <span class="glyphicon glyphicon-usd"></span>
+                        <span class="glyphicon-class">按订单统计</span>
+                    </li>
+					<li onclick="show_list();">
+                        <span class="glyphicon glyphicon-euro"></span>
+                        <span class="glyphicon-class">按流水统计</span>
+                    </li>
+                    <div style="clear:both"></div>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+

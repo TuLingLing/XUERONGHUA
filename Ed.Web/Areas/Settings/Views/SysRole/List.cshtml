@@ -1,0 +1,273 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花_角色信息管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+        
+        
+        
+        <!--去除顶层加载中 14-10-17 By 唐有炜-->
+        <script type="text/javascript">
+            //=============================================================
+            //去除顶层加载中
+            $(document).ready(function () {
+                //去除加载中
+                if (undefined != top.dialog.list["show_loading"]) {
+                    top.dialog.list["show_loading"].close().remove();
+                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
+                }
+            });
+            //=====================================================================
+        </script>
+
+        
+
+        <script type="text/javascript">
+            //全局变量
+            var sysrole_grid;
+
+            $(function () {
+
+                //初始化表格
+                InitSysRoleGrid();
+            });
+
+
+            function InitSysRoleGrid() {
+                sysrole_grid = $("#sysrole_grid_data").bootgrid({
+                    ajax: true,
+                    //post: function() {
+                    //return {
+                    //   field: $("#field").val()
+                    //};
+                    //},
+                    url: "/api/SysRoleApi/GetBootGridSysRoles",
+                    selection: true,
+                    multiSelect: true,
+                    rowSelect: false,
+                    keepSelection: true,
+                    rowCount: [10, 30, 50],
+                    templates: {
+                        header:
+                       "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\">"+
+                       @*"<div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return sysrole_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return sysrole_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +*@
+                            "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                            "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                    },
+                    labels: {
+                        all: "all", //checkbox全选的值
+                        search: "角色名称/角色描述",
+                        loading: "加载中...",
+                        noResults: "对不起，暂无符合条件的记录！",
+                        refresh: "刷新",
+                        infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                    },
+                    formatters: {
+                        "RoleType":function(column, row) {
+                            if (row.RoleType == 0) {
+                                return '超级管理员';
+                            } else {
+                                return '普通角色';
+                            }
+                        },
+                        "RoleIssys": function (column, row) {
+                            if (row.RoleIssys == 1) {
+                                return '是';
+                            } else {
+                                return '否';
+                            }
+                        },
+                        "commands": function (column, row) {
+                            return "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return sysrole_edit(" + row.Id + ");\" title=\"修改【自定义】\"><span class=\"glyphicon glyphicon-pencil\"></span></button>" +
+                                "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return sysrole_delete(" + row.Id + ");\" title=\"删除【自定义】\"><span class=\"glyphicon glyphicon-remove\"></span></button>";
+                        }
+                    }
+                }).on("loaded.rs.jquery.bootgrid", function (e) {
+                    //按钮提示
+                    $('.tip').tooltip({ placement: "bottom" });
+                    //按钮气泡
+                    $('.pop').popover({ html: true, trigger: "hover" });
+                    //showMsg("数据加载完毕！", "Success");
+                });
+            }
+
+
+            function sysrole_add() {
+                showTopWindow("sysrole_show_add", "/Settings/SysRole/Edit?actionType=Add", null, 800, 400, function () {
+                    var sysrole_form = $(top.window.frames["frm_sysrole_show_add"].document).find("#sysrole_form");
+                    //console.log(sysrole_form);
+                    var flag = top.window.document.getElementById("frm_sysrole_show_add").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(sysrole_form).serialize();
+                    //console.log((data));
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/SysRoleApi/AddSysRole",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_add_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                sysrole_grid.bootgrid("reload");
+                                showMsg("添加成功！", "Success");
+                            } else {
+                                showMsg("系统异常，添加失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+
+            function sysrole_edit(id) {
+                var url = "/Settings/SysRole/Edit?actionType=Edit&id=" + id;
+                //console.log(id);
+                showTopWindow("sysrole_show_edit", url, null, 800, 400, function () {
+                    var sysrole_form = $(top.window.frames["frm_sysrole_show_edit"].document).find("#sysrole_form");
+                    //console.log(sysrole_form);
+                    var flag = top.window.document.getElementById("frm_sysrole_show_edit").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(sysrole_form).serialize();
+                    //console.log((data));
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/SysRoleApi/EditSysRole",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                sysrole_grid.bootgrid("reload");
+                                //console.log(grid);
+
+                                showMsg("修改成功！", "Success");
+                            } else {
+                                showMsg("系统异常，修改失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+
+
+                });
+
+                //必须有这个，阻止刷新
+                return false;
+            }
+
+            function sysrole_multi_delete() {
+                var ids = get_selected_ids("sysrole_grid_data");
+                //console.log(ids);
+                if (ids == "") {
+                    showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+                    return false;
+                }
+                //return false;
+                sysrole_delete(ids);
+            }
+
+            function sysrole_delete(ids) {
+                showTopDialog("sysrole_show_delete", "<div class='dialog_alert'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+                    $.ajax({
+                        type: "DELETE",
+                        cache: false,
+                        url: "/api/SysRoleApi/DeleteSysRole?ids=" + ids,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_delete_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                sysrole_grid.bootgrid("reload");
+                                showMsg("删除成功！", "Success");
+                            } else {
+                                showMsg("系统异常，删除失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_delete_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+        </script>
+ </head>
+    <body>
+
+<div>
+    <table id="sysrole_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+        <thead>
+            <tr>
+	      <th data-column-id="RoleName" data-header-align="center"  data-formatter="RoleName" data-order="desc">角色名称</th>
+		  <th data-column-id="RoleType" data-header-align="center"  data-formatter="RoleType" data-order="desc">角色类型</th>
+		  <th data-column-id="RoleIssys" data-header-align="center"  data-formatter="RoleIssys" data-order="desc">是否内置</th>
+		 @* <th data-column-id="RoleOrder" data-header-align="center"  data-formatter="RoleOrder" data-order="desc">角色排序</th>*@
+		  <th data-column-id="RoleDesc" data-header-align="center"  data-formatter="RoleDesc" data-order="desc">角色描述</th>
+		  @*<th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>*@
+		    </tr>
+        </thead>
+    </table>
+</div>
+
+</body>
+</html>
+
+

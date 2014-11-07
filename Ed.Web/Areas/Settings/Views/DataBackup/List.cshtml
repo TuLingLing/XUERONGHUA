@@ -1,0 +1,234 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>雪绒花_数据库备份还原管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+    
+    
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    
+
+    <script type="text/javascript">
+    //全局变量
+    var databackup_grid;
+
+    $(function () {
+
+        //初始化表格
+        InitdatabackupGrid();
+    });
+
+
+    function InitdatabackupGrid() {
+        var i = 0;
+        databackup_grid = $("#databackup_grid_data").bootgrid({
+            ajax: true,
+            url: "/api/DataBackupApi/GetBootGridDataBackups",
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            rowCount: [10, 30, 50],
+            navigation:3,
+            templates: {
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"备份\" onclick=\" databackup_backup(); \"><span class=\"glyphicon glyphicon-cloud-download\"></span>备份</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\" databackup_muti_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                    @*"<div class=\"search form-group\"><div class=\"input-group\"></div></div>" +*@
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+            },
+            labels: {
+                all: "all", //checkbox全选的值
+                search: "请输入名称",
+                loading: "加载中...",
+                noResults: "对不起，暂无符合条件的记录！",
+                refresh: "刷新",
+                infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+            },
+            formatters: {
+                "commands": function (column, row) {
+                    return "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"databackup_restore('" + row.OriginalPath + "');\" title=\"还原\"><span class=\"glyphicon glyphicon-cloud-upload\"></span></button>" +
+                    "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"databackup_download('" + row.OriginalPath + "')\" title=\"下载到本地\"><span class=\"glyphicon glyphicon-download-alt\"></span></button>" +
+                        "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"databackup_delete('" + row.OriginalPath + "');\" title=\"删除文件\"><span class=\"glyphicon glyphicon-remove\"></span></button>";
+                }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function (e) {
+            //隐藏底部
+            $("#databackup_grid_data-footer").hide();
+            //按钮提示
+            $('.tip').tooltip({ placement: "bottom" });
+            //按钮气泡
+            $('.pop').popover({ html: true, trigger: "hover" });
+            //showMsg("数据加载完毕！", "Success");
+        });
+    }
+
+    function databackup_backup() {
+        showTopDialog("databackup_backup", "<div class='dialog_confirm'>确认备份数据库吗？</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/DataBackupApi/Backup",
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_backup_loding", "<div class='dialog_loading'>数据库备份中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        top.dialog.list["show_backup_loding"].close().remove();
+                        databackup_grid.bootgrid("reload");
+                        showMsg(result.Msg, "Success");
+                        //showMsg("数据库备份成功！", "Success");
+                    } else {
+                        //showMsg("系统异常，数据库备份失败！", "Error");
+                        showMsg(result.Msg,  "Error");
+                    }
+                },
+                error: function () {
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+
+    function databackup_download(filename) {
+        window.open("/Backup/" + filename);
+    }
+
+    function databackup_restore(filename) {
+        showTopDialog("databackup_restore", "<div class='dialog_confirm'>确认欢迎数据库吗？</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/DataBackupApi/Restore?filename=" + filename,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_restore_loding", "<div class='dialog_loading'>数据库还原中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        top.dialog.list["show_restore_loding"].close().remove();
+                        //刷新数据
+                        databackup_grid.bootgrid("reload");
+                        showMsg(result.Msg,  "Success");
+                        //showMsg("数据库备份成功！", "Success");
+                    } else {
+                        //showMsg("系统异常，数据库备份失败！", "Error");
+                        showMsg(result.Msg,  "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_restore_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    function databackup_muti_delete() {
+        var filenames = get_selected_ids("databackup_grid_data");
+        //console.log(filenames);
+        if (filenames == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        databackup_delete(filenames);
+    }
+
+    function databackup_delete(filenames) {
+
+        //console.log(ids);
+        //return false;
+        showTopDialog("show_databackup_delete", "<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/DataBackupApi/Delete?filenames=" + filenames,
+                dataType: "json",
+                beforeSend: function () {
+                    //showMsg("添加中，请稍后...");
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        databackup_grid.bootgrid("reload");
+                        showMsg("删除成功！", "Success");
+                    } else {
+                        showMsg("系统异常，删除失败！", "Error");
+                    }
+                },
+                error: function () {
+                    showMsg("网络连接错误", "Error");
+                }
+            });
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+    </script>
+</head>
+<body>
+    <div>
+        <table id="databackup_grid_data" class="table table-condensed table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th data-column-id="OriginalPath" data-header-align="center" data-formatter="OriginalPath" data-order="desc">备份文件名称</th>
+                    <th data-column-id="FullPath" data-header-align="center" data-formatter="FullPath" data-sortable="false">完整路径</th>
+                    <th data-column-id="OriginalPath" data-identifier="true" data-formatter="commands" data-sortable="false" data-header-css-class="wid140">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+</body>
+</html>

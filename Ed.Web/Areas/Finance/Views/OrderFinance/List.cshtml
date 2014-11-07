@@ -1,0 +1,259 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花_首页</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+        
+        
+        <!--去除顶层加载中 14-10-17 By 唐有炜-->
+        <script type="text/javascript">
+            //=============================================================
+            //去除顶层加载中
+            $(document).ready(function () {
+                //去除加载中
+                if (undefined != top.dialog.list["show_loading"]) {
+                    top.dialog.list["show_loading"].close().remove();
+                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
+                }
+            });
+            //=====================================================================
+        </script>
+
+        
+
+        <script type="text/javascript">
+        //全局变量
+        var orderfinance_grid;
+
+        $(function() {
+
+            //初始化表格
+            InitOrderFinanceGrid();
+        });
+
+
+        function  InitOrderFinanceGrid() {
+            orderfinance_grid = $("#orderfinance_grid_data").bootgrid({
+                ajax: true,
+                //post: function() {
+                     //return {
+                     //   field: $("#field").val()
+                    //};
+                //},
+                url: "/api/OrderFinanceApi/GetBootGridOrderFinances",
+                selection: true,
+                multiSelect: true,
+                rowSelect: false,
+                keepSelection: true,
+                rowCount: [10, 30, 50],
+                templates: {
+                    header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\">" +
+                        "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                        "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                },
+                labels: {
+                    all: "all", //checkbox全选的值
+                    search: "请输入名称",
+                    loading: "加载中...",
+                    noResults: "对不起，暂无符合条件的记录！",
+                    refresh: "刷新",
+                    infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                },
+                formatters: {
+				
+				FinType: function(column, row) {
+                            return GetOptionValue(row.FinType, "1|预付定金,2|中期收款,2|其他款项");
+                        },
+				FinPayment: function(column, row) {
+                            return "<span style='color:red;font-weight: bold;'>"+row.FinPayment+"</span>";
+                        }
+                }
+            }).on("loaded.rs.jquery.bootgrid", function(e) {
+                //按钮提示
+                $('.tip').tooltip({placement:"bottom"});
+                //按钮气泡
+                $('.pop').popover({ html: true, trigger: "hover" });
+                //showMsg("数据加载完毕！", "Success");
+            });
+        }
+
+
+        function orderfinance_add() {
+            showTopWindow("orderfinance_show_add", "/Finance/OrderFinance/Edit?actionType=Add", null, 800, 400, function () {
+                var orderfinance_form = $(top.window.frames["frm_orderfinance_show_add"].document).find("#orderfinance_form");
+                //console.log(orderfinance_form);
+                var flag = top.window.document.getElementById("frm_orderfinance_show_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+                 var data = $(orderfinance_form).serialize();
+                //console.log((data));
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/OrderFinanceApi/AddOrderFinance",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function() {
+                       showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function() {
+                        //d.close().remove();
+                    },
+                    success: function(result) {
+					    top.dialog.list["show_add_loding"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            orderfinance_grid.bootgrid("reload");
+                            showMsg("添加成功！", "Success");
+                        } else {
+                            showMsg("系统异常，添加失败！", "Error");
+                        }
+                    },
+                    error: function() {
+					    top.dialog.list["show_edit_loding"].close().remove();
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+
+            });
+            //必须有这个，阻止刷新
+            return false;
+        }
+
+        function orderfinance_edit(id) {
+             var url = "/Finance/OrderFinance/Edit?actionType=Edit&id=" + id;
+            //console.log(id);
+            showTopWindow("orderfinance_show_edit", url, null, 800, 400, function() {
+                 var orderfinance_form = $(top.window.frames["frm_orderfinance_show_edit"].document).find("#orderfinance_form");
+                //console.log(orderfinance_form);
+                var flag = top.window.document.getElementById("frm_orderfinance_show_edit").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+                 var data = $(orderfinance_form).serialize();
+                //console.log((data));
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/OrderFinanceApi/EditOrderFinance",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function() {
+                       showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function() {
+                        //d.close().remove();
+                    },
+                    success: function(result) {
+					top.dialog.list["show_edit_loding"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            orderfinance_grid.bootgrid("reload");
+                            //console.log(grid);
+
+                            showMsg("修改成功！", "Success");
+                        } else {
+                            showMsg("系统异常，修改失败！", "Error");
+                        }
+                    },
+                    error: function() {
+					    top.dialog.list["show_edit_loding"].close().remove();
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+
+
+            });
+
+            //必须有这个，阻止刷新
+            return false;
+        }
+
+		function orderfinance_multi_delete() {
+        var ids = get_selected_ids("orderfinance_grid_data");
+        //console.log(ids);
+        if (ids == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        orderfinance_delete(ids);
+         }
+
+        function orderfinance_delete(ids) {
+            showTopDialog("orderfinance_show_delete","<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>","温馨提示",400, 75,function () {
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url:"/api/OrderFinanceApi/DeleteOrderFinance?ids="+ids,
+                    dataType: "json",
+                    beforeSend: function() {
+                         showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function() {
+                        //d.close().remove();
+                    },
+                    success: function(result) {
+					    top.dialog.list["show_delete_loding"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            orderfinance_grid.bootgrid("reload");
+                            showMsg("删除成功！", "Success");
+                        } else {
+                            showMsg("系统异常，删除失败！", "Error");
+                        }
+                    },
+                    error: function() {
+					    top.dialog.list["show_delete_loding"].close().remove();
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+            });
+            //必须有这个，阻止刷新
+            return false;
+        }
+    </script>
+ </head>
+    <body>
+
+<div>
+    <table id="orderfinance_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+        <thead>
+            <tr>
+	    
+		  <th data-column-id="Id" data-header-align="center" data-align="center" data-formatter="OrderId" data-order="desc">订单编号</th>
+		  <th data-column-id="FinType" data-header-align="center" data-align="center" data-formatter="FinType" data-order="desc">收款类型</th>
+		  <th data-column-id="FinPayment" data-header-align="center" data-align="center" data-formatter="FinPayment" data-order="desc">收款金额</th>
+		  <th data-column-id="FinAddtime" data-header-align="center" data-align="center" data-formatter="FinAddtime" data-order="desc">收款时间</th>
+		  <th data-column-id="FinCreater" data-header-align="center" data-align="center" data-formatter="FinCreater" data-order="desc">收款人</th>
+		    </tr>
+        </thead>
+    </table>
+</div>
+
+</body>
+</html>
+
+

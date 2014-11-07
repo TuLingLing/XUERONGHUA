@@ -1,0 +1,302 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花_首页</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+    <script type="text/javascript">
+        //全局变量
+        var yuesaoorder_grid;
+
+        $(function() {
+
+            //初始化表格
+            InitYuesaoOrderGrid();
+        });
+
+
+        function  InitYuesaoOrderGrid() {
+            yuesaoorder_grid = $("#yuesaoorder_grid_data").bootgrid({
+                ajax: true,
+                post: function() {
+                     return {
+                         searchType: 2//1 数值 2 搜索条件
+                    };
+                //},
+                url: "/api/YuesaoOrderApi/GetBootGridYuesaoOrders",
+                selection: true,
+                multiSelect: true,
+                rowSelect: false,
+                keepSelection: true,
+                rowCount: [10, 30, 50],
+                templates: {
+                    header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return yuesaoorder_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return yuesaoorder_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                        "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                        "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                },
+                labels: {
+                    all: "all", //checkbox全选的值
+                    search: "请输入名称",
+                    loading: "加载中...",
+                    noResults: "对不起，暂无符合条件的记录！",
+                    refresh: "刷新",
+                    infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                },
+                formatters: {
+                    "commands": function(column, row) {
+                        return  "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return yuesaoorder_edit(" + row.Id + ");\" title=\"修改【自定义】\"><span class=\"glyphicon glyphicon-pencil\"></span></button>" +
+                            "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return yuesaoorder_delete(" + row.Id + ");\" title=\"删除【自定义】\"><span class=\"glyphicon glyphicon-remove\"></span></button>";
+                    }
+                }
+            }).on("loaded.rs.jquery.bootgrid", function(e) {
+                //按钮提示
+                $('.tip').tooltip({placement:"bottom"});
+                //按钮气泡
+                $('.pop').popover({ html: true, trigger: "hover" });
+                //showMsg("数据加载完毕！", "Success");
+            });
+        }
+
+
+        function yuesaoorder_add() {
+            showTopWindow("yuesaoorder_show_add", "/Settings/YuesaoOrder/Edit?actionType=Add", null, 800, 400, function () {
+                var yuesaoorder_form = $(top.window.frames["frm_yuesaoorder_show_add"].document).find("#yuesaoorder_form");
+                //console.log(yuesaoorder_form);
+                var flag = top.window.document.getElementById("frm_yuesaoorder_show_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+                 var data = $(yuesaoorder_form).serialize();
+                //console.log((data));
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/YuesaoOrderApi/AddYuesaoOrder",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function() {
+                       showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function() {
+                        //d.close().remove();
+                    },
+                    success: function(result) {
+					    top.dialog.list["show_add_loding"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            yuesaoorder_grid.bootgrid("reload");
+                            showMsg("添加成功！", "Success");
+                        } else {
+                            showMsg("系统异常，添加失败！", "Error");
+                        }
+                    },
+                    error: function() {
+					    top.dialog.list["show_edit_loding"].close().remove();
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+
+            });
+            //必须有这个，阻止刷新
+            return false;
+        }
+
+        function yuesaoorder_edit(id) {
+             var url = "/Settings/YuesaoOrder/Edit?actionType=Edit&id=" + id;
+            //console.log(id);
+            showTopWindow("yuesaoorder_show_edit", "修改信息", "title", 800, 400, function() {
+                 var yuesaoorder_form = $(top.window.frames["frm_yuesaoorder_show_edit"].document).find("#yuesaoorder_form");
+                //console.log(yuesaoorder_form);
+                var flag = top.window.document.getElementById("frm_yuesaoorder_show_edit").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+                 var data = $(yuesaoorder_form).serialize();
+                //console.log((data));
+                
+				 showTopConfirm("确认提交该记录吗？", "温馨提示", function() {
+				$.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/YuesaoOrderApi/EditYuesaoOrder",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function() {
+                       showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function() {
+                        //d.close().remove();
+                    },
+                    success: function(result) {
+					top.dialog.list["show_edit_loding"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            yuesaoorder_grid.bootgrid("reload");
+                            //console.log(grid);
+
+                            showMsg("修改成功！", "Success");
+                        } else {
+                            showMsg("系统异常，修改失败！", "Error");
+                        }
+                    },
+                    error: function() {
+					    top.dialog.list["show_edit_loding"].close().remove();
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+
+            },function() {
+                //top.dialog.list["pregnanterinfo_show_edit"].close().remove();
+            });
+            return false;
+        });
+
+            //必须有这个，阻止刷新
+            return false;
+        }
+
+		function yuesaoorder_multi_delete() {
+        var ids = get_selected_ids("yuesaoorder_grid_data");
+        //console.log(ids);
+        if (ids == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        yuesaoorder_delete(ids);
+         }
+
+        function yuesaoorder_delete(ids) {
+            showTopDialog("yuesaoorder_show_delete","<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>","温馨提示",400, 75,function () {
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url:"/api/YuesaoOrderApi/DeleteYuesaoOrder?ids="+ids,
+                    dataType: "json",
+                    beforeSend: function() {
+                         showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function() {
+                        //d.close().remove();
+                    },
+                    success: function(result) {
+					    top.dialog.list["show_delete_loding"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            yuesaoorder_grid.bootgrid("reload");
+                            showMsg("删除成功！", "Success");
+                        } else {
+                            showMsg("系统异常，删除失败！", "Error");
+                        }
+                    },
+                    error: function() {
+					    top.dialog.list["show_delete_loding"].close().remove();
+                        showMsg("网络连接错误！", "Error");
+                    }
+                });
+            });
+            //必须有这个，阻止刷新
+            return false;
+        }
+
+
+		//回收站
+		         function clientinfo_trash() {
+                var ids = get_selected_ids("clientinfo_grid_data");
+                //console.log(ids);
+                if (ids == "") {
+                    showTopMsg("请选择你要删除的记录！", "错误提示", "Error");
+                    return false;
+                }
+                //console.log(ids);
+                //return false;
+                showTopDialog("show_clientinfo_trash", "<div class='dialog_confirm'>确认将选中记录放入回收站吗？</div>", "温馨提示", 400, 75, function () {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "/api/ClientInfoApi/UpdateClientInfoStatus?ids=" + ids + "&status=1",
+                        //data: { ids: ids },
+                        dataType: "json",
+                        beforeSend: function () {
+                            //showMsg("添加中，请稍后...");
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                clientinfo_grid.bootgrid("reload");
+                                showMsg("客户放入回收站成功！", "Success");
+                            } else {
+                                showMsg("系统异常，客户放入回收站失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            showTopMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+    </script>
+ </head>
+    <body>
+
+<div style="margin: 0px 20px;">
+    <table id="yuesaoorder_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+        <thead>
+            <tr>
+	       		  <th data-column-id="OrderCode" data-header-align="center" data-align="center" data-formatter="OrderCode" data-order="desc">order_code</th>
+		  <th data-column-id="YorderCode" data-header-align="center" data-align="center" data-formatter="YorderCode" data-order="desc">yorder_code</th>
+		  <th data-column-id="YorderChildbirth" data-header-align="center" data-align="center" data-formatter="YorderChildbirth" data-order="desc">yorder_childbirth</th>
+		  <th data-column-id="YorderHospital" data-header-align="center" data-align="center" data-formatter="YorderHospital" data-order="desc">yorder_hospital</th>
+		  <th data-column-id="YorderHaddress" data-header-align="center" data-align="center" data-formatter="YorderHaddress" data-order="desc">yorder_haddress</th>
+		  <th data-column-id="YorderRequire" data-header-align="center" data-align="center" data-formatter="YorderRequire" data-order="desc">yorder_require</th>
+		  <th data-column-id="YorderNote" data-header-align="center" data-align="center" data-formatter="YorderNote" data-order="desc">yorder_note</th>
+		  <th data-column-id="YorderAge" data-header-align="center" data-align="center" data-formatter="YorderAge" data-order="desc">yorder_age</th>
+		  <th data-column-id="YorderLevel" data-header-align="center" data-align="center" data-formatter="YorderLevel" data-order="desc">yorder_level</th>
+		  <th data-column-id="YorderPrice" data-header-align="center" data-align="center" data-formatter="YorderPrice" data-order="desc">yorder_price</th>
+		  <th data-column-id="YorderCons" data-header-align="center" data-align="center" data-formatter="YorderCons" data-order="desc">yorder_cons</th>
+		  <th data-column-id="YorderZodiac" data-header-align="center" data-align="center" data-formatter="YorderZodiac" data-order="desc">yorder_zodiac</th>
+		  <th data-column-id="YorderAlter" data-header-align="center" data-align="center" data-formatter="YorderAlter" data-order="desc">yorder_alter</th>
+		  <th data-column-id="YorderYuesao" data-header-align="center" data-align="center" data-formatter="YorderYuesao" data-order="desc">yorder_yuesao</th>
+ 
+	
+		  <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>
+
+ 
+		    </tr>
+        </thead>
+    </table>
+</div>
+
+</body>
+</html>
+
+
+

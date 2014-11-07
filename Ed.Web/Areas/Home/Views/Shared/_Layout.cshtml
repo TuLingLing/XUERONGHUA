@@ -1,0 +1,53 @@
+﻿@{
+    int nowYear = DateTime.Now.Year;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <!--[if lt IE 8]> <script type="text/javascript"> window.location.href = "/ie6update.html"; </script> <![endif]-->
+        <!--seo开始-->
+        @RenderSection("seo")
+        <!--seo结束-->
+
+        <!--页面头部开始-->
+        @RenderSection("head")
+        <!--页面头部结束-->
+    </head>
+    <body>
+        <!--公共头部开始-->
+      
+        
+        
+        
+        <!--侧栏导航-->
+
+        <ul class="sidebar">
+            <li><a href="index.html"><img src="images/btn_06.png" /><span>主页</span></a></li>
+            <li><a href="kehuguanli.html"><img src="images/home_btn_03.png" /><span>客户管理</span></a></li>
+            <li><a href="dingdanguanli.html"><img src="images/home_btn_05.png" /><span>订单管理</span></a></li>
+            <li><a href="danganguanli.html"><img src="images/home_btn_07.png" /><span>月嫂管理</span></a></li>
+            <li><a href="#"><img src="images/home_btn_09.png" /><span>财务信息</span></a></li>
+            <li><a href="#"><img src="images/home_btn_11.png" /><span>系统设置</span></a></li>
+        </ul>
+        
+        
+        
+        
+        
+        
+        
+
+        <!--公共头部结束-->
+        <!--内容区域开始-->
+        @RenderBody()
+        <!--内容区域结束-->
+        <!--公共底部开始-->
+        <div id="footer">
+            <div class="copyright"> copyright © 2013-@nowYear ucs123.com All Rights Reserved.</div>
+        </div>
+        <!--公共底部结束-->
+        @RenderSection("script")
+        <!--js结束-->
+    </body>
+</html>

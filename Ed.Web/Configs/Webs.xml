@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
+  <!--loginController-->
+  <object id="loginController" type="Ed.Web.Areas.Account.Controllers.LoginController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="AccountService" ref="accountService" />
+  </object>
+
+
+  <!--defaultController-->
+  <object id="defaultController" type="Ed.Web.Areas.Home.Controllers.DefaultController, Ed.Web" singleton="false">
+     </object>
+
+
+
+  <!--mainController-->
+  <object id="mainController" type="Ed.Web.Areas.Home.Controllers.MainController, Ed.Web" singleton="false">
+  </object>
+
+
+  <!--clientInfoIndexController-->
+  <object id="clientInfoIndexController" type="Ed.Web.Areas.Customer.Controllers.IndexController, Ed.Web" singleton="false">
+  </object>
+  <!--clientInfoController-->
+  <object id="clientInfoController" type="Ed.Web.Areas.Customer.Controllers.ClientInfoController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="ClientInfoService" ref="clientInfoService" />
+  </object>
+
+
+  <!--orderIndexController-->
+  <object id="orderIndexController" type="Ed.Web.Areas.Order.Controllers.IndexController, Ed.Web" singleton="false">
+  </object>
+  <!--orderController-->
+  <object id="orderController" type="Ed.Web.Areas.Order.Controllers.OrderController, Ed.Web" singleton="false">
+    <property name="OrderService" ref="orderService" />
+  </object>
+
+
+
+  <!--orderFinanceController-->
+  <object id="orderFinanceController" type="Ed.Web.Areas.Finance.Controllers.OrderFinanceController, Ed.Web" singleton="false">
+    <property name="OrderFinanceService" ref="orderFinanceService" />
+  </object>
+
+  <!--yuesaoOrderController-->
+  <object id="yuesaoOrderController" type="Ed.Web.Areas.Order.Controllers.YuesaoOrderController, Ed.Web" singleton="false">
+    <property name="YuesaoOrderService" ref="yuesaoOrderService" />
+    <property name="ClientInfoService" ref="clientInfoService" />
+    <property name="OrderService" ref="orderService" />
+      <property name="PregnanterInfoService" ref="pregnanterInfoService" />
+    <property name="SysUserService" ref="sysUserService" />
+  </object>
+
+
+
+
+  <!--pregnanterInfoIndexController-->
+  <object id="pregnanterInfoIndexController" type="Ed.Web.Areas.Yuesao.Controllers.IndexController, Ed.Web" singleton="false">
+   </object>
+  <!--pregnanterInfoController-->
+  <object id="pregnanterInfoController" type="Ed.Web.Areas.Yuesao.Controllers.PregnanterInfoController, Ed.Web" singleton="false">
+     <property name="SysUserService" ref="sysUserService" />
+    <property name="SysDepartmentService" ref="sysDepartmentService" />
+    <property name="PregnanterInfoService" ref="pregnanterInfoService" />
+     <property name="PregnanterServiceRecordService" ref="pregnanterServiceRecordService" />
+  <property name="PregnanterEvaluationService" ref="pregnanterEvaluationService" />
+  </object>
+
+
+  <!--pregnanterEvaluationController-->
+  <object id="pregnanterEvaluationController" type="Ed.Web.Areas.Yuesao.Controllers.PregnanterEvaluationController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="PregnanterEvaluationService" ref="pregnanterEvaluationService" />
+  </object>
+
+  <!--pregnanterMaintenanceController-->
+  <object id="pregnanterMaintenanceController" type="Ed.Web.Areas.Yuesao.Controllers.PregnanterMaintenanceController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="PregnanterMaintenanceService" ref="pregnanterMaintenanceService" />
+  </object>
+
+  <!--pregnanterServiceRecordController-->
+  <object id="pregnanterServiceRecordController" type="Ed.Web.Areas.Yuesao.Controllers.PregnanterServiceRecordController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="PregnanterServiceRecordService" ref="pregnanterServiceRecordService" />
+  </object>
+
+
+  <!--financeIndexController-->
+  <object id="financeIndexController" type="Ed.Web.Areas.Finance.Controllers.IndexController, Ed.Web" singleton="false">
+  </object>
+
+
+  <!--settingsIndexController-->
+  <object id="settingsIndexController" type="Ed.Web.Areas.Settings.Controllers.IndexController, Ed.Web" singleton="false">
+  </object>
+
+
+  <!--sysDepartmentController-->
+  <object id="sysDepartmentController" type="Ed.Web.Areas.Settings.Controllers.SysDepartmentController, Ed.Web" singleton="false">
+    <property name="SysDepartmentService" ref="sysDepartmentService" />
+  </object>
+  
+  <!--sysLogController-->
+  <object id="sysLogController" type="Ed.Web.Areas.Settings.Controllers.SysLogController, Ed.Web" singleton="false">
+    <property name="SysLogService" ref="sysLogService" />
+  </object>
+
+  <!--sysPowerController-->
+  <object id="sysPowerController" type="Ed.Web.Areas.Settings.Controllers.SysPowerController, Ed.Web" singleton="false">
+    <property name="SysPowerService" ref="sysPowerService" />
+  </object>
+
+  <!--sysRoleController-->
+  <object id="sysRoleController" type="Ed.Web.Areas.Settings.Controllers.SysRoleController, Ed.Web" singleton="false">
+    <property name="SysRoleService" ref="sysRoleService" />
+  </object>
+
+  <!--sysUserController-->
+  <object id="sysUserController" type="Ed.Web.Areas.Settings.Controllers.SysUserController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+  </object>
+  
+  <!--dataBackupController-->
+  <object id="dataBackupController" type="Ed.Web.Areas.Settings.Controllers.DataBackupController, Ed.Web" singleton="false">
+  </object>
+</objects>

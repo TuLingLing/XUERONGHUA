@@ -1,0 +1,288 @@
+﻿@using Ed.Common;
+@using Ed.Web.Helpers
+@{
+    Layout=null;
+    //准备资料
+    var life_pics = (object[])Utils.StringToObjectArray(Model.PInfoLifeimg, ',');
+    //证书资料
+    var cert_pics = (object[])Utils.StringToObjectArray(Model.PInfoCertimg, ',');
+    var services = (List<Ed.Entity.TPregnanterServiceRecord>)ViewBag.ServiceRecord;
+    var evals = (List<System.Collections.Generic.Dictionary<string, object>>)ViewBag.Eval;
+}
+@model Ed.Entity.TPregnanterInfo
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>雪绒花_月嫂信息查看页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+@Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+@Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+<script src="~/Themes/default/base/js/city.js"></script>
+<link media="screen" type="text/css" href="~/Themes/default/yuesao/zoom.css" rel="stylesheet">
+<style type="text/css">
+        .yuesao_basic{ width:100%; height:130px;margin-bottom:10px;}
+        .commontable tr{ line-height:28px;}
+        .commontable th{width:80px; text-align:right; border-bottom:1px dotted #BEB8B8;}
+		.commontable td{border-bottom:1px dotted #BEB8B8;}
+        .commontable tr .kuai{height:40px; width:100%; background-color:#f97803; color:#fff; line-height:40px; font-size:20px;}
+        .commontable tr .kuai span{ margin-left:20px; font-weight:bold; font-size:16px;}
+        .commontable tr .kuai b{ font-size:14px; font-weight:normal; margin-left:20px;}
+        .tab-pane .commontable tr{ height:auto; margin:5px 0px;}
+        .tab-pane .commontable tr th{ width:70px; font-weight:bold;}
+        .tab-pane .list_img{ width:100%; height:auto;}
+		.tab-pane .list_img ul{ margin:0px; padding:0px; margin-top:10px;}
+		.tab-pane .list_img li{list-style: none;margin:0px; padding:0px}
+        .tab-pane .list_img a{ display:block; float:left; height:150px; overflow:hidden; margin-left:-10px; margin-top:-10px;}
+        .tab-pane .list_img a img{ height:128px; width:auto; margin:10px; border:1px solid #ccc;}
+		
+#S_PInfoClass span{padding:2px 10px; color:#FFFFFF; background-color:#e94967; line-height:24px; margin-right:10px;}
+#S_PInfoEdu span{ padding:2px 10px; color:#FFFFFF; background-color:#009900; line-height:24px; margin-right:10px;}
+#S_PInfoCert span{padding:2px 10px; color:#FFFFFF; background-color:#0099FF; line-height:24px; margin-right:10px;}
+.yuesao_status{position:absolute; width:150px; height:50px; font-size:24px; font-weight:bold; line-height:50px;text-align:center;top:90px; right:150px;-moz-transform: rotate(10deg);-webkit-transform: rotate(10deg);}
+.zhuangtai{ border:3px solid red;color:#F00;}
+
+
+	.comment_box{}
+	.comment_box ol{ padding:0px;}
+	.comment_box .base_tit{border-bottom:1px solid #DADADA;color:#444;font-size:13px;padding-bottom:5px; margin-bottom:0px;}
+	.comment_list li{padding:10px 0;border-bottom:1px solid #EEE;}
+	.comment_list li .xing{color:#FF6600;text-align:center;}
+	.comment_list li .inner{padding:10px; background-color:#FEFFF4; border:1px solid #F3F3F3;; width:100%;}
+	.comment_list li .inner p{ line-height:20px;}
+	.comment_list li .inner .meta{padding-top:3px;color:#999;border:none;}
+	.comment_list li .inner .meta span{ margin-right:20px;}
+	
+	.service_box{}
+	.service_box ol{ padding:0px;}
+	.service_box .base_tit{border-bottom:1px solid #DADADA;color:#444;font-size:13px;padding-bottom:5px; margin-bottom:0px;}
+	.service_list li .sertype{ float:left; width:60px; height:60px; background-color:#328EB4; color:#FFFFFF; border:1px solid #328EB4; text-align:center; font-size:14px; padding:10px;}
+	.service_list li .inner{ float:left; width:630px; height:60px; border:1px solid #328EB4 ; border-left:none; padding:0px 10px; line-height:28px;}
+	.service_list li .inner .rili span{ color:#328EB4; font-weight:bold; font-size:14px;}
+	.service_list li .inner p{ margin-bottom:0px;}
+    </style>
+<!--去除顶层加载中 14-10-17 By 唐有炜-->
+<script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+<script type="text/javascript">
+        $(function() {
+            var city = get_city_names("@Model.PInfoCity");
+            var addr = city;
+            $("#PInfoAddress").html(addr);
+			
+			var xx = $("#PInfoEdu").val().split(",");
+			$.each(xx, function(i, val) {
+			$("#S_PInfoEdu").append("<span>"+val+"</span>");})
+			
+			var xxx = $("#PInfoCert").val().split(",");
+			$.each(xxx, function(i, val) {
+			$("#S_PInfoCert").append("<span>"+val+"</span>");})
+			
+			var xxxx = $("#PInfoClass").val().split(",");
+			$.each(xxxx, function(i, val) {
+			$("#S_PInfoClass").append("<span>"+val+"</span>");})
+        });
+    </script>
+</head><body>
+<!--表单错误提示区-->
+<div tabindex="-1" id="msgprint" class="warning" style="position: fixed; width: 90%; display: none;">您的表单包含错误，请检查！</div>
+<div class="yuesao_basic">
+  <div class="yuesao_status zhuangtai">@Html.OptionsPalse(@Model.PInfoLevel,"1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★")</div>
+  <table width="700" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+    <tbody>
+      <tr>
+        <td rowspan="4" style="width: 160px"><img  id="p_info_photopre" src="@Model.PInfoPhoto" title="" alt="" width="150px" height="130px;"></td>
+        <th>姓名：</th>
+        <td>@Model.PInfoName</td>
+        <th>年龄：</th>
+        <td>@Model.PInfoAge</td>
+        <th>民族：</th>
+        <td>@Model.PInfoNational</td>
+      </tr>
+      <tr>
+        <th>星座：</th>
+        <td>@Model.PInfoXingzuo</td>
+        <th>属相：</th>
+        <td>@Model.PInfoShuxiang</td>
+        <th>从业年限：</th>
+        <td>@Html.OptionsPalse(@Model.PInfoEdage,"1|1年以下,2|1-3年,3|3-5年,4|5-7年,5|7-9年,6|9年以上")</td>
+      </tr>
+      <tr>
+        <th>户口所在：</th>
+        <td>@Model.PInfoPermanent</td>
+        <th>现住地址：</th>
+        <td colspan="3"><span id="PInfoAddress">@Model.PInfoAddress</span></td>
+      </tr>
+      <tr>
+        <td colspan="6"><div class="kuai"> <span>@Model.PInfoPrice 元/月</span> <b> @Html.OptionsPalse(@Model.PInfoState,"1|预定开启...,2|关闭状态,0|放入回收站/待审核") </div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="tab-content">
+  <ul class="nav nav-tabs" id="formTab">
+    <li class="active"><a href="#basic-info" data-toggle="tab">详细信息</a></li>
+    <li><a href="#service-info" data-toggle="tab">服务记录</a></li>
+    <li><a href="#judge-info" data-toggle="tab">评价记录</a></li>
+  </ul>
+  <div class="tab-pane active" id="basic-info">
+    <div style="height:15px;"></div>
+    <table width="700" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+      <tbody>
+        <tr>
+          <th>月嫂编号：</th>
+          <td style="color: #ff6a00;">@Model.PInfoCode</td>
+          <th>身份证号：</th>
+          <td colspan="3">@Model.PInfoIdcard</td>
+        </tr>
+        <tr>
+          <th>特别技能：</th>
+          <td id="S_PInfoClass"></td>
+          <th>最高学历：</th>
+          <td>@Html.OptionsPalse(@Model.PInfoEducation,"1|本科及以上,2|大专,3|高中,4|初中及以下")</td>
+          <th>婚姻状况：</th>
+          <td>@Html.OptionsPalse(@Model.PInfoMarriage,"1|已婚,2|未婚,3|保密")</td>
+        </tr>
+      @Html.HiddenFor(model => model.PInfoCert)
+      @Html.HiddenFor(model => model.PInfoEdu)
+	  @Html.HiddenFor(model => model.PInfoClass)
+      <tr>
+        <th>提供证件：</th>
+        <td colspan="5" id="S_PInfoCert"></td>
+      </tr>
+      <tr>
+        <th>学习课程：</th>
+        <td colspan="5" id="S_PInfoEdu"></td>
+      </tr>
+      <tr>
+        <th>参加培训：</th>
+        <td colspan="5" >@Html.Raw(@Html.NullPalse(Model.PInfoTrain).ToString().Replace("\n", "<br/>"))</td>
+      </tr>
+      <tr>
+        <th>获得奖励：</th>
+        <td colspan="5">@Html.Raw(@Html.NullPalse(Model.PInfoReward).ToString().Replace("\n", "<br/>"))</td>
+      </tr>
+      <tr>
+        <th>特长爱好：</th>
+        <td colspan="5">@Model.PInfoHobby</td>
+      </tr>
+      <tr>
+        <td colspan="6">&nbsp;</td>
+      </tr>
+      <tr>
+        <th colspan="2" style="text-align:left;">月嫂生活照片</th>
+        <td colspan="4" style=" color:#333; text-align:right;">点击图片可看大图&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="6"><div class="list_img">
+            <ul class="gallery">
+              @foreach (var life_pic in life_pics)
+              {
+              try
+              {
+              var life_infos = life_pic.ToString().Split('|');
+              
+              var big = life_infos[1];
+              var small = life_infos[2];
+              var des = life_infos[3] ?? "暂无描述...";
+              <li> <a class="pic" href="@big" title=""><img src="@small" alt="" width="auto" height="200px;"></a> </li>
+              }
+              catch
+              {
+              }
+              }
+              <div style="clear:both;"></div>
+            </ul>
+          </div></td>
+      </tr>
+      <tr>
+        <td colspan="6">&nbsp;</td>
+      </tr>
+      <tr>
+        <th colspan="2" style="text-align:left;">月嫂资格证汇总</th>
+        <td colspan="4" style=" color:#333; text-align:right;">点击图片可看大图&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="6"><div class="list_img">
+            <ul class="gallery">
+              @foreach (var cert_pic in cert_pics)
+              {
+              try
+              {
+              var cert_infos = cert_pic.ToString().Split('|');
+              var big = cert_infos[1];
+              var small = cert_infos[2];
+              var des = cert_infos[3] ?? "暂无描述...";
+              <li> <a class="pic" href="@big" title=""><img src="@small" alt="" width="auto" height="200px;"></a> </li>
+              }
+              catch
+              {
+              }
+              }
+              <div style="clear:both;"></div>
+            </ul>
+            <script src="~/Themes/default/yuesao/zoom.min.js"></script>
+          </div></td>
+      </tr>
+      </tbody>
+      
+    </table>
+  </div>
+  <div class="tab-pane" id="service-info">
+    <div class="service_box">
+      <h4 class="base_tit">共有 @services.Count 条月嫂服务日程信息</h4>
+  
+        <ol class="service_list">
+            @foreach (var service in services)
+            {
+            <li>
+                <div class="sertype">月嫂服务</div>
+                <div class="inner">
+                    <div class="rili">开始：<span>@Html.DateTimeNullPalse(service.PServiceBegin).ToString("yyyy-MM-dd")</span> 结束：<span>@Html.DateTimeNullPalse(service.PServiceEnd).ToString("yyyy-MM-dd")</span></div>
+                    <div class="note">
+                        <p>备注：@service.PServiceNote</p>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+            </li>
+            }
+        </ol>
+   
+        
+        
+        
+        
+
+    </div>
+  </div>
+  <div class="tab-pane" id="judge-info">
+    <div class="comment_box">
+      <h4 class="base_tit">共有 @evals.Count 位为此月嫂进行评价</h4>
+        <ol id="comment_list" class="comment_list">
+            @foreach (var evaltion in evals)
+            {
+                <li>
+                    <div class="inner">
+                        <p>@Html.GetValue(evaltion,"PEvaContent")</p>
+                        <div class="meta"><span class="blue">评价人：@Html.GetValue(evaltion, "PEvaPerson")</span><span class="time">@DateTime.Parse(@Html.GetValue(evaltion, "PEvaTime").ToString()).ToString("yyyy-MM-dd")</span>评价级别：<span class="xing">@Html.OptionsPalse(int.Parse(@Html.GetValue(evaltion, "PEvaLevel").ToString()), "1|★,2|★★,3|★★★")</span></div>
+                    </div>
+                </li>
+            }
+           
+           
+        </ol>
+    </div>
+  </div>
+</div>
+</body>
+</html>

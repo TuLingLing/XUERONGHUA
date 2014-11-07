@@ -1,0 +1,697 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CFCE4637-D984-45ED-8C49-A7CC4803065D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ed.T4</RootNamespace>
+    <AssemblyName>Ed.T4</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ELinq, Version=0.6.1.0, Culture=neutral, PublicKeyToken=de4bad8fb4637582, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ELinq.0.6.1\lib\net40\ELinq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLite, Version=0.9.5.7, Culture=neutral, PublicKeyToken=f086dca6795b5aa4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NLite.0.9.5.7\lib\net40\NLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\packages\Spring.Core.2.0.0-RC1\lib\net40\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.2\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dao\Impl\EdDaoImpl.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TClientInfoDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TClientMaintenanceDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TOrderDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TOrderFinanceDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TPregnanterEvaluationDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TPregnanterInfoDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TPregnanterMaintenanceDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TPregnanterServiceRecordDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TSysDepartmentDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TSysLogDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TSysModuleDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TSysPowerDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TSysRoleDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TSysUserDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Impl\TYuesaoOrderDaoImpl.cs">
+      <DependentUpon>EdDaoImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITableDao.cs" />
+    <Compile Include="Dao\ITClientInfoDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITClientMaintenanceDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITOrderDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITOrderFinanceDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITPregnanterEvaluationDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITPregnanterInfoDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITPregnanterMaintenanceDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITPregnanterServiceRecordDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITSysDepartmentDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITSysLogDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITSysModuleDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITSysPowerDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITSysRoleDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITSysUserDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\ITYuesaoOrderDao.cs">
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\IViewDao.cs" />
+    <Compile Include="Dao\EdIDao.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdIDao.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\BootGrid.cs" />
+    <Compile Include="Entity\EdDBContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EdEnums.cs" />
+    <Compile Include="Entity\Field.cs" />
+    <Compile Include="Entity\Node.cs" />
+    <Compile Include="Entity\ResponseMessage.cs" />
+    <Compile Include="Entity\TClientInfo.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TClientMaintenance.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TOrder.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TOrderFinance.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TPregnanterEvaluation.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TPregnanterInfo.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TPregnanterMaintenance.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TPregnanterServiceRecord.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TSysDepartment.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TSysLog.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TSysModule.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TSysPower.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TSysRole.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TSysUser.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\TYuesaoOrder.cs">
+      <DependentUpon>EdDBContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\EdIService.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IClientInfoService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IClientMaintenanceService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\ClientInfoServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\ClientMaintenanceServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\EdServiceImpl.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\OrderFinanceServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\OrderServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\PregnanterEvaluationServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\PregnanterInfoServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\PregnanterMaintenanceServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\PregnanterServiceRecordServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\SysDepartmentServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\SysLogServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\SysModuleServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\SysPowerServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\SysRoleServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\SysUserServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Impl\YuesaoOrderServiceImpl.cs">
+      <DependentUpon>EdServiceImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IOrderFinanceService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IOrderService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IPregnanterEvaluationService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IPregnanterInfoService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IPregnanterMaintenanceService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IPregnanterServiceRecordService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\ISysDepartmentService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\ISysLogService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\ISysModuleService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\ISysPowerService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\ISysRoleService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\ISysUserService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IYuesaoOrderService.cs">
+      <DependentUpon>EdIService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\ClientInfoApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\ClientInfoController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\ClientMaintenanceApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\ClientMaintenanceController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\EdApiController.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\EdControllers.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\OrderApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\OrderController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\OrderFinanceApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\OrderFinanceController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterEvaluationApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterEvaluationController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterInfoApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterInfoController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterMaintenanceApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterMaintenanceController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterServiceRecordApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\PregnanterServiceRecordController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysDepartmentApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysDepartmentController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysLogApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysLogController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysModuleApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysModuleController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysPowerApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysPowerController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysRoleApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysRoleController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysUserApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\SysUserController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\YuesaoOrderApiController.cs">
+      <DependentUpon>EdApiController.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Controllers\YuesaoOrderController.cs">
+      <DependentUpon>EdControllers.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Dao\Impl\EdDaoImpl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdDaoImpl.cs</LastGenOutput>
+    </None>
+    <None Include="Dao\EdIDao.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdIDao.cs</LastGenOutput>
+    </None>
+    <None Include="Entity\EdDBContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdDBContext.cs</LastGenOutput>
+    </None>
+    <None Include="MultipleOutputHelper.ttinclude" />
+    <None Include="packages.config" />
+    <None Include="Service\EdIService.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdIService.cs</LastGenOutput>
+    </None>
+    <None Include="Service\Impl\EdServiceImpl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdServiceImpl.cs</LastGenOutput>
+    </None>
+    <None Include="Web\Configs\Daos.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Daos.xml</LastGenOutput>
+    </None>
+    <None Include="Web\Configs\Objects.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Objects.txt</LastGenOutput>
+    </None>
+    <None Include="Web\Configs\Services.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Services.xml</LastGenOutput>
+    </None>
+    <None Include="Web\Configs\Webs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Webs.xml</LastGenOutput>
+    </None>
+    <None Include="Web\Controllers\EdApiController.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdApiController.cs</LastGenOutput>
+    </None>
+    <None Include="Web\Controllers\EdControllers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdControllers.cs</LastGenOutput>
+    </None>
+    <None Include="Web\Views\ClientInfo\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\ClientInfo\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\ClientInfo\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\ClientMaintenance\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\ClientMaintenance\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\ClientMaintenance\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\EdIndexViews.cshtml">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\EdIndexViews.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdIndexViews.cshtml</LastGenOutput>
+    </None>
+    <None Include="Web\Views\EdEditViews.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdEditViews.cshtml</LastGenOutput>
+    </None>
+    <None Include="Web\Views\EdEditViews.cshtml">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\EdListViews.cshtml">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\EdListViews.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EdListViews.cshtml</LastGenOutput>
+    </None>
+    <None Include="Web\Views\OrderFinance\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\OrderFinance\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\OrderFinance\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\Order\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\Order\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\Order\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterEvaluation\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterEvaluation\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterEvaluation\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterInfo\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterInfo\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterInfo\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterMaintenance\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterMaintenance\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterMaintenance\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterServiceRecord\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterServiceRecord\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\PregnanterServiceRecord\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysDepartment\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysDepartment\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysDepartment\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysLog\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysLog\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysLog\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysModule\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysModule\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysPower\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysPower\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysPower\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysRole\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysRole\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysRole\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysUser\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysUser\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\SysUser\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\YuesaoOrder\Edit.cshtml">
+      <DependentUpon>EdEditViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\YuesaoOrder\Index.cshtml">
+      <DependentUpon>EdIndexViews.tt</DependentUpon>
+    </None>
+    <None Include="Web\Views\YuesaoOrder\List.cshtml">
+      <DependentUpon>EdListViews.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ed.Common\Ed.Common.csproj">
+      <Project>{23f12307-4354-4f59-bb72-639deff0155b}</Project>
+      <Name>Ed.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ed.Web\Ed.Web.csproj">
+      <Project>{78326d94-91b2-4e8a-a261-91f7c6ee7c8e}</Project>
+      <Name>Ed.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\Views\SysModule\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web\Configs\Daos.xml">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Daos.tt</DependentUpon>
+    </Content>
+    <Content Include="Web\Configs\Objects.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Objects.tt</DependentUpon>
+    </Content>
+    <Content Include="Web\Configs\Objects.xml" />
+    <Content Include="Web\Configs\Services.xml">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Services.tt</DependentUpon>
+    </Content>
+    <Content Include="Web\Configs\Webs.xml">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Webs.tt</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

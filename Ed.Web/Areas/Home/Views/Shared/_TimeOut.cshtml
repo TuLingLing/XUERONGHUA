@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "登陆超时_雪绒花";
+    Layout = null;
+}
+
+<link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+
+<script src="/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+<script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+<script src="/Themes/default/lib/function.js"></script>
+<script type="text/javascript">
+    $(function() {
+        showTopContentDialog("show_time_out", "<div class='dialog_error'>登陆超时，请重新登录！</div>","登陆超时", 400, 95);
+        setTimeout(function () {
+            top.dialog.list["show_time_out"].close().remove();
+            top.location.href = "/Account/Login";
+        }, 2000);
+    } );
+</script>

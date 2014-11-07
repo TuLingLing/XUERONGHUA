@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{12F138B4-4B15-4266-88F4-48A9AD977F56}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ed.Service</RootNamespace>
+    <AssemblyName>Ed.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NLite">
+      <HintPath>..\packages\NLite.0.9.5.7\lib\net40\NLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IAccountService.cs" />
+    <Compile Include="IClientInfoService.cs" />
+    <Compile Include="IClientMaintenanceService.cs" />
+    <Compile Include="Impl\AccountServiceImpl.cs" />
+    <Compile Include="Impl\ClientInfoServiceImpl.cs" />
+    <Compile Include="Impl\ClientMaintenanceServiceImpl.cs" />
+    <Compile Include="Impl\OrderFinanceServiceImpl.cs" />
+    <Compile Include="Impl\OrderServiceImpl.cs" />
+    <Compile Include="Impl\PregnanterEvaluationServiceImpl.cs" />
+    <Compile Include="Impl\PregnanterInfoServiceImpl.cs" />
+    <Compile Include="Impl\PregnanterMaintenanceServiceImpl.cs" />
+    <Compile Include="Impl\PregnanterServiceRecordServiceImpl.cs" />
+    <Compile Include="Impl\SiteConfigServiceImpl.cs" />
+    <Compile Include="Impl\SysDepartmentServiceImpl.cs" />
+    <Compile Include="Impl\SysLogServiceImpl.cs" />
+    <Compile Include="Impl\SysPowerServiceImpl.cs" />
+    <Compile Include="Impl\SysRoleServiceImpl.cs" />
+    <Compile Include="Impl\SysUserServiceImpl.cs" />
+    <Compile Include="Impl\UploadServiceImpl.cs" />
+    <Compile Include="Impl\YuesaoOrderServiceImpl.cs" />
+    <Compile Include="IOrderFinanceService.cs" />
+    <Compile Include="IOrderService.cs" />
+    <Compile Include="IPregnanterEvaluationService.cs" />
+    <Compile Include="IPregnanterInfoService.cs" />
+    <Compile Include="IPregnanterMaintenanceService.cs" />
+    <Compile Include="IPregnanterServiceRecordService.cs" />
+    <Compile Include="ISiteConfigService.cs" />
+    <Compile Include="ISysDepartmentService.cs" />
+    <Compile Include="ISysLogService.cs" />
+    <Compile Include="ISysPowerService.cs" />
+    <Compile Include="ISysRoleService.cs" />
+    <Compile Include="ISysUserService.cs" />
+    <Compile Include="IUploadService.cs" />
+    <Compile Include="IYuesaoOrderService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ed.Common\Ed.Common.csproj">
+      <Project>{23f12307-4354-4f59-bb72-639deff0155b}</Project>
+      <Name>Ed.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ed.Dao\Ed.Dao.csproj">
+      <Project>{8851a84f-5f01-4a61-92e9-abf5edee831d}</Project>
+      <Name>Ed.Dao</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ed.Entity\Ed.Entity.csproj">
+      <Project>{c49340b7-730e-4fb7-a236-ce209eb3baff}</Project>
+      <Name>Ed.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

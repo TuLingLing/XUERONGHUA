@@ -1,0 +1,218 @@
+﻿@using System.Web.Optimization
+@model dynamic
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>雪绒花_操作日志管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    
+    
+    
+    <script type="text/javascript">
+    //全局变量
+    var syslog_grid;
+
+    $(function () {
+
+        //初始化表格
+        InitSysLogGrid();
+    });
+
+
+    function InitSysLogGrid() {
+        syslog_grid = $("#syslog_grid_data").bootgrid({
+            ajax: true,
+            //post: function() {
+            //return {
+            //   field: $("#field").val()
+            //};
+            //},
+            url: "/api/SysLogApi/GetBootGridSysLogs",
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            rowCount: [10, 30, 50],
+            templates: {
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return syslog_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return syslog_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                    "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+            },
+            labels: {
+                all: "all", //checkbox全选的值
+                search: "请输入名称",
+                loading: "加载中...",
+                noResults: "对不起，暂无符合条件的记录！",
+                refresh: "刷新",
+                infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+            },
+            formatters: {
+                "LogAction": function (column, row) {
+                    switch (row.LogAction) {
+                        case "Login":
+                            return "登陆";
+                            break;
+                        default:
+                            return "";
+                    }
+                },
+                "UserLname": function (column, row) { return row.UserLname; },
+                "LogRemark": function (column, row) {
+                    return "<div class=\"pop\" data-toggle=\"popover\" data-title=\"详细信息\" data-content=\"" + row.LogRemark + "\">" + shortString(row.LogRemark, 12, '...') + "</div>";
+                },
+                "commands": function (column, row) {
+                    return "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"syslog_delete(" + row.Id + ");\" title=\"删除【" + row.UserLname + "】的日志\"><span class=\"glyphicon glyphicon-remove\"></span></button>";
+                }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function (e) {
+            //按钮提示
+            $('.tip').tooltip({ placement: "bottom" });
+            //按钮气泡
+            $('.pop').popover({ html: true, trigger: "hover" });
+            //showMsg("数据加载完毕！", "Success");
+        });
+    }
+
+
+    function syslog_add() {
+        showTopWindow("syslog_show_add", "/Settings/SysLog/Edit?actionType=Add", null, 800, 400, function () {
+            var syslog_form = $(top.window.frames["frm_syslog_show_add"].document).find("#syslog_form");
+            //console.log(syslog_form);
+            var flag = top.window.document.getElementById("frm_syslog_show_add").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(syslog_form).serialize();
+            //console.log((data));
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/SysLogApi/AddSysLog",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_add_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        syslog_grid.bootgrid("reload");
+                        showMsg("添加成功！", "Success");
+                    } else {
+                        showMsg("系统异常，添加失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+
+   
+    function syslog_multi_delete() {
+        var ids = get_selected_ids("syslog_grid_data");
+        //console.log(ids);
+        if (ids == "") {
+            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            return false;
+        }
+        //return false;
+        syslog_delete(ids);
+    }
+
+    function syslog_delete(ids) {
+        showTopDialog("syslog_show_delete", "<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: "/api/SysLogApi/DeleteSysLog?ids=" + ids,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_delete_loding", "<div class='dialog_loading'>删除中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        syslog_grid.bootgrid("reload");
+                        showMsg("删除成功！", "Success");
+                    } else {
+                        showMsg("系统异常，删除失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_delete_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+        });
+        //必须有这个，阻止刷新
+        return false;
+    }
+    </script>
+
+
+
+
+</head>
+<body>
+
+    <div>
+        <table id="syslog_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+            <thead>
+                <tr>
+                    <th data-column-id="LogTime" data-header-align="center" data-formatter="UserLname" data-header-css-class="wid140" data-order="desc">用户名</th>
+                    <th data-column-id="LogAction" data-header-align="center" data-formatter="LogAction" data-order="desc">执行操作</th>
+                    <th data-column-id="LogRemark" data-header-align="center" data-formatter="LogRemark" data-order="desc">操作说明</th>
+                   @* <th data-column-id="LogIp" data-header-align="center" data-formatter="LogIp" data-order="desc">登录IP</th>
+                    <th data-column-id="LogPlace" data-header-align="center" data-formatter="LogPlace" data-order="desc">登录地区</th
+                    *@
+                    <th data-column-id="LogTime" data-header-align="center" data-formatter="LogTime" data-order="desc">登陆时间</th>
+                    <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false" data-header-css-class="wid90">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+</body>
+</html>

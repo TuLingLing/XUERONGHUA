@@ -1,0 +1,109 @@
+﻿@using Ed.Common
+@model dynamic
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <title>flash上传头像组件</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css" media="screen">
+            html, body {height: 100%;background-color: #ffffff; height:450px; overflow:hidden;}
+            #flashContent {width: 100%;height: 100%;}
+        </style>
+        <link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet">
+        <script src="/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+        <script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+        <script src="/Themes/default/lib/function.js"></script>
+        <!--去除顶层加载中-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+
+    </head>
+    <body>
+        <div id="altContent"></div>
+        @*  <div>
+      <input type="button" onclick="swfobject.getObjectById('FaustCplus').jscall_updateAvatar(); " value="JS Call Upload"/>
+        </div>*@
+        <div id="avatar_priview"></div>
+        <input type="hidden" id="status" value="false" />
+
+        <script type="text/javascript" src="/Themes/default/lib/capture/swfobject.js"></script>
+        <script type="text/javascript">
+    //服务器调用文件名
+    var filename = '@Html.Raw(RandomHelper.GetRamCode()+".jpg")';
+    //返回上传界面
+    var returnFileName = '/Upload/@DateTime.Now.ToString("yyyyMM")/@DateTime.Now.ToString("dd")/' + filename;
+
+            function get_status() {
+                return $("#status").val();
+            }
+
+            function get_url() {
+                return returnFileName;
+            }
+            function uploadevent(status) {
+                status += '';
+                switch (status) {
+                    case '1':
+                        $("#status").val("true");
+                        showTopMsg('上传成功!', '温馨提示', 'Success');
+                case '2':
+                    //if (confirm('JS调用！')) {
+                      return 1;
+                    //} else {
+                    //    return 0;
+                    //}
+                    break;
+                case '-1':
+                    //alert('取消！');
+                    //window.location.href = "#";
+                    break;
+                case '-2':
+                    //alert('上传失败！');
+                    //window.location.href = "#";
+                    showTopMsg('上传失败!', '错误提示', 'Error');
+                    break;
+                default:
+                    //alert(typeof (status) + ' ' + status);
+                }
+            }
+
+            var flashvars = {
+                "jsfunc": "uploadevent",//js回调函数
+                //"pSize":"162|162|100|100|40|40|10|10",
+                "pid": "75642723",
+                "uploadSrc": true,
+                "showBrow": true,//显示本地浏览
+                "showCame": true,//显示摄像头
+                "uploadUrl": "/Tools/CaptureUploadApi/?filename="+filename, //后台上传处理url
+                "imgUrl": "/Themes/default/home/images/nophoto.gif"//默认图片
+            };
+            var params = {
+                menu: "false",
+                scale: "noScale",
+                allowFullscreen: "true",
+                allowScriptAccess: "always",
+                wmode: "transparent",
+                bgcolor: "#FFFFFF"
+            };
+            var attributes = {
+                id: "FaustCplus"
+            };
+            swfobject.embedSWF("/Themes/default/lib/capture/FaustCplus.swf", "altContent", "650", "500", "9.0.0", "expressInstall.swf", flashvars, params, attributes);
+        </script>
+    </body>
+</html>

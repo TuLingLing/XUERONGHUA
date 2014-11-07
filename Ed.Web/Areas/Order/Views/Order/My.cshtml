@@ -1,0 +1,362 @@
+﻿@using System.Web.Optimization
+@using Ed.Entity
+@model dynamic
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>雪绒花_订单管理_我的订单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+@Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+<!--去除顶层加载中 14-10-17 By 唐有炜-->
+<script type="text/javascript">
+            //=============================================================
+            //去除顶层加载中
+            $(document).ready(function () {
+                //去除加载中
+                if (undefined != top.dialog.list["show_loading"]) {
+                    top.dialog.list["show_loading"].close().remove();
+                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
+                }
+            });
+            //=====================================================================
+        </script>
+<script type="text/javascript">
+            //全局变量
+            var order_grid;
+
+            $(function () {
+
+                //初始化表格
+                InitOrderGrid();
+            });
+
+
+            function InitOrderGrid() {
+                order_grid = $("#order_grid_data").bootgrid({
+                    ajax: true,
+                    post: function () {
+                        return {
+                            OrderCreater: "@Session[EdKeys.SESSION_USER_ID]"
+                        };
+                    },
+                    url: "/api/OrderApi/GetBootGridOrders",
+                    selection: true,
+                    multiSelect: true,
+                    rowSelect: false,
+                    keepSelection: true,
+                    rowCount: [10, 30, 50],
+                    templates: {
+                        header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"\" onclick=\"return order_trash(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-remove\"></span>作废该订单</button><button class=\"btn btn-default tip\" title=\"\" onclick=\"return order_ing(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-minus\"></span>更改为执行中</button><button class=\"btn btn-default tip\" title=\"\" onclick=\"return order_finish(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-ok\"></span>更改为订单完成</button></div>" +
+                    "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
+                    "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                    },
+                    labels: {
+                        all: "all", //checkbox全选的值
+                        search: "请输入名称",
+                        loading: "加载中...",
+                        noResults: "对不起，暂无符合条件的记录！",
+                        refresh: "刷新",
+                        infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                    },
+                    formatters: {
+					ClientId: function(colum, row) {
+                       return  row.ClientName+"<span style='color:green;font-weight:bold;margin-left:5px; font-size:13px;'>"+row.ClientTel1+"</span>";
+                        },
+                        OrderStatus: function (colum, row) {
+                            switch (row.OrderStatus) {
+                                case 0:
+                                    return "<span style=\"color:orange\">已作废</span>";
+                                case 1:
+                                    return "<span style=\"color:red\">待处理</span>";
+                                case 2:
+                                    return "<span style=\"color:#b806a9\">待执行</span>";
+                                case 3:
+                                    return "<span style=\"color:#2701e9\">执行中</span>";
+                                case 4:
+                                    return "<span style=\"color:#e90122\">订单完成</span>";
+                                default:
+                                    return "";
+                                    break;
+                            }
+                        },
+                        OrderEnd: function (column, row) {
+                            switch (row.OrderStatus) {
+                                case 1:
+                                    return "<span style=\"color:red\">预定 </span>" + row.OrderBegin + "至" + row.OrderEnd;
+                                case 2:
+                                    return "<span style=\"color:green\">服务 </span>" + row.OrderBegin + "至" + row.OrderEnd;
+                                default:
+                                    return "";
+                                    break;
+                            }
+                        },
+						OrderPrepaid:function (column, row) {
+						var xx="<span style='color:#9c0218;'>未结清</span>";
+						if(row.OrderPrepaid-row.OrderSumMoney>=0)
+						{
+						if(row.OrderPrepaid>=0&&row.OrderSumMoney<=0)
+						{
+						xx="<span style='color:green;'>已付定金</span>";
+						}
+						else
+						{
+						xx="付款完成";}
+						}
+						else
+						{
+						
+						}
+                        return xx;
+                        },
+                        "OrderCreater": function (column, row) {
+                            return row.OrderCreaterName;
+                        },
+                        "OrderWeihu": function (column, row) {
+                            return row.OrderWeihuName;
+                        },
+                        OrderType: function (column, row) {
+                            return GetOptionValue(row.OrderType, "1|月嫂服务,2|育婴师服务,3|催乳师服务");
+                        },
+                        "commands": function (column, row) {
+						if(row.OrderSumMoney-row.OrderPrepaid>=0)
+						{
+						return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style='color:blue;margin-right:10px;'>查看</a>";
+						}
+						else
+						{
+						    return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style='color:blue;margin-right:10px;'>查看</a><a href='javascript:money_back(\"" + row.OrderCode + "\")'  style=\"color:red\">收款</a>";
+						}
+                            
+                        }
+                    }
+                }).on("loaded.rs.jquery.bootgrid", function (e) {
+                    //按钮提示
+                    $('.tip').tooltip({ placement: "bottom" });
+                    //按钮气泡
+                    $('.pop').popover({ html: true, trigger: "hover" });
+                    //showMsg("数据加载完毕！", "Success");
+                });
+            }
+   
+             //订单预览界面
+            function order_show(order_code) {
+                showTopWindow("show_view", "/Order/YuesaoOrder/ViewYuesao?order_code=" + order_code, "查看订单", 900, 450,function (){},function (){});
+            }
+          
+
+            //收款
+            function money_back(order_code) {
+                showTopWindow("orderfinance_show_add", "/Finance/OrderFinance/Edit?actionType=Add&order_code=" + order_code, null, 600, 250, function () {
+                    var orderfinance_form = $(top.window.frames["frm_orderfinance_show_add"].document).find("#orderfinance_form");
+                    //console.log(orderfinance_form);
+                    var flag = top.window.document.getElementById("frm_orderfinance_show_add").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(orderfinance_form).serialize();
+                    //console.log((data));
+
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/OrderFinanceApi/AddYuesaoOrderFinanceTran",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_add_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                showMsg("收款成功！", "Success");
+                            } else {
+                                showMsg("系统异常，收款成功！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+            
+            //状态更改为回收站
+            function order_trash() {
+                var ids = get_selected_ids("order_grid_data");
+                //console.log(ids);
+                if (ids == "") {
+                    showTopMsg("请选择你要放入回收站的记录！", "错误提示", "Error");
+                    return false;
+                }
+                //console.log(ids);
+                //return false;
+                showTopDialog("show_order_trash", "<div class='dialog_confirm'>确认将选中记录放入回收站吗？</div>", "温馨提示", 400, 75, function () {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "/api/OrderApi/UpdateOrderStatus?ids=" + ids + "&status=0",
+                        //data: { ids: ids },
+                        dataType: "json",
+                        beforeSend: function () {
+                            //showMsg("添加中，请稍后...");
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                showMsg("订单放入回收站成功！", "Success");
+                            } else {
+                                showMsg("系统异常，订单放入回收站失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            showTopMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+
+            //状态更改为执行中
+            function order_ing() {
+                var ids = get_selected_ids("order_grid_data");
+                //console.log(ids);
+                if (ids == "") {
+                    showTopMsg("请选择你要更改为执行中的记录！", "错误提示", "Error");
+                    return false;
+                }
+                //console.log(ids);
+                //return false;
+
+
+                //已经完成的订单不能更改为执行中
+                if (ids.indexOf(4)>0) {
+                    showTopMsg("您选择的订单包含已经完成的订单，已经完成的订单不能更改为执行中！", "错误提示", "Error");
+                    return false;
+                }
+
+
+                showTopDialog("show_order_img", "<div class='dialog_confirm'>确认将选中记录更改为执行中吗？</div>", "温馨提示", 400, 75, function () {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "/api/OrderApi/UpdateOrderStatus?ids=" + ids + "&status=3",
+                        //data: { ids: ids },
+                        dataType: "json",
+                        beforeSend: function () {
+                            //showMsg("添加中，请稍后...");
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                showMsg("订单更改为执行中成功！", "Success");
+                            } else {
+                                showMsg("系统异常，订单更改为执行中失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            showTopMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+
+             //状态更改为已完成
+            function order_finish() {
+                var ids = get_selected_ids("order_grid_data");
+                //console.log(ids);
+                if (ids == "") {
+                    showTopMsg("请选择你要更改为完成的记录！", "错误提示", "Error");
+                    return false;
+                }
+                //console.log(ids);
+                //return false;
+
+                showTopDialog("show_order_finish", "<div class='dialog_confirm'>确认将选中记录更改为完成吗？</div>", "温馨提示", 400, 75, function () {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "/api/OrderApi/UpdateOrderStatus?ids=" + ids + "&status=4",
+                        //data: { ids: ids },
+                        dataType: "json",
+                        beforeSend: function () {
+                            //showMsg("添加中，请稍后...");
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                order_grid.bootgrid("reload");
+                                showMsg("订单更改为完成成功！", "Success");
+                            } else {
+                                showMsg("系统异常，订单更改为完成失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            showTopMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }
+        </script>
+</head>
+<body>
+<div>
+  <table id="order_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+    <thead>
+      <tr>
+        <th data-column-id="OrderCode" data-header-align="center"  data-formatter="OrderCode" data-order="desc" data-header-css-class="wid140">订单编号</th>
+		<th data-column-id="OrderType" data-header-align="center"  data-formatter="OrderType" data-order="desc">订单类型</th>
+        <th data-column-id="ClientId" data-header-align="center"  data-formatter="ClientId" data-order="desc" data-header-css-class="wid160">客户</th>
+        <th data-column-id="OrderEnd" data-header-align="center"  data-formatter="OrderEnd" data-order="desc" data-header-css-class="wid200">服务时间</th>
+        <th data-column-id="OrderStatus" data-header-align="center"  data-formatter="OrderStatus" data-order="desc">订单状态</th>
+        <th data-column-id="OrderPrepaid" data-header-align="center"  data-formatter="OrderPrepaid" data-order="desc">付款状态</th>
+        <th data-column-id="OrderProcesstime" data-header-align="center"  data-formatter="OrderProcesstime" data-order="desc">处理日期</th>
+        <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>
+      </tr>
+    </thead>
+  </table>
+</div>
+</body>
+</html>

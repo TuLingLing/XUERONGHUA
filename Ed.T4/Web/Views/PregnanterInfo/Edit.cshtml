@@ -1,0 +1,534 @@
+﻿@using System.Web.Optimization
+@using Ed.Web.Helpers
+@model Ed.Entity.TPregnanterInfo
+@{
+    Layout = null;
+    //页面类型
+    var actionType = ViewBag.ActionType;
+}
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>添加/修改</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+ 
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+
+    <!--my97DatePicker-->
+    <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <!--省市数据-->
+    <script src="/Themes/default/base/js/city.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+	
+    <script type="text/javascript">
+        $(function () {
+            validate_form();
+        });
+
+
+            //表单验证
+        function validate_form() {
+            //表单验证
+            $("#pregnanterinfo_form").validate({
+                 invalidHandler: function (e, validator) {
+                        var msg = "有 " + validator.numberOfInvalids() + " 项填写有误，请检查！";
+                        $("#msgprint").html(msg).show().focus();
+                        setTimeout(function () {
+                            $("#msgprint").fadeOut(500);
+                            //如果动画结束则删除节点
+                            if (!$("#msgprint").is(":animated")) {
+                                $("#msgprint").hide();
+                            }
+                        }, 1000);
+                    },
+                    focusInvalid: false,
+                    errorPlacement: function (error, element) {
+                        var errorMsg = error[0].innerHTML;
+                        var elementName = element[0].name;
+                         $("#" + elementName).formtip(errorMsg);
+                        $("#" + elementName).attr("placeholder", errorMsg);
+                    },
+                    success: function (element) {
+                        var elem = $(element)[0].htmlFor;
+                        $("#" + elem).poshytip('disable');
+                        $("#" + elem).poshytip('destroy');
+                        $("#" + elem).removeClass("error").addClass("success");
+                    }
+            });
+        }
+
+
+
+
+
+
+
+
+
+                //表单验证方法，供父窗口调用
+        function form_valid() {
+            if ($("#pregnanterinfo_form").valid()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+    </script>
+
+
+
+
+</head>
+<body>
+    <form id="pregnanterinfo_form" name="pregnanterinfo_form">
+         <!--id-->
+          	
+		      @Html.HiddenFor(model => model.Id)
+         
+       
+           <!--表单错误提示区-->
+        <div tabindex="-1" id="msgprint" class="warning" style="position: fixed; width: 90%; display: none;">您的表单包含错误，请检查！</div>
+        <div class="tab-content">
+            <ul class="nav nav-tabs" id="formTab">
+                <li class="active"><a href="#tab-info" data-toggle="tab">Tab1</a></li>
+                 </ul>
+            <div class="tab-pane active" id="tab-info">
+              <div style="height:15px;"></div>
+
+			   <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
+			    <tbody>
+
+
+
+		     			 			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoCode：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoCode, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoName：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoName, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoPhoto：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoPhoto, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoIdcard：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoIdcard, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoNational：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoNational, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoBirthday：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoBirthday, new { @class = "form-control Wdate required dateISO",  Value = (Html.DateTimeNullPalse(Model.PInfoBirthday)).ToString("yyyy-MM-dd"), onclick = "WdatePicker()",@minlength="10",@maxlength="10",@style = "width: 200px; ",@placeholder="字段提示"})
+															
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoAge：</th>
+                    <td>
+					
+			              						 								  @Html.TextBoxFor(model => model.PInfoAge, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoXingzuo：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoXingzuo, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoShuxiang：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoShuxiang, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoEdage：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoEdage, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+								
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoType：</th>
+                    <td>
+					
+			              						 								  @Html.TextBoxFor(model => model.PInfoType, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoLevel：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoLevel, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+								
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoPrice：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoPrice, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoState：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoState, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+								
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoEducation：</th>
+                    <td>
+					
+			              						 								  @Html.TextBoxFor(model => model.PInfoEducation, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoMarriage：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoMarriage, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+								
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoHobby：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoHobby, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoClass：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoClass, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoCity：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoCity, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoAddress：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoAddress, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoCert：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoCert, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoTrain：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoTrain, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoEdu：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoEdu, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoPermanent：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoPermanent, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoReward：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoReward, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoLifeimg：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoLifeimg, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoCertimg：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoCertimg, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoNote：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoNote, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoTel：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoTel, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoContacter1：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoContacter1, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoRelation1：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoRelation1, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoWorkunit1：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoWorkunit1, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoReltel1：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoReltel1, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoContact2：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoContact2, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoRelation2：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoRelation2, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoWorkunit2：</th>
+                    <td>
+					
+				
+						
+			              						 							  @Html.TextBoxFor(model => model.PInfoWorkunit2, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoRelTel2：</th>
+                    <td>
+					
+			              						 							  @Html.TextBoxFor(model => model.PInfoRelTel2, new { @class = "form-control", @style = "width: 200px; ",@placeholder="字段提示"})
+							  	
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoCreateperson：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoCreateperson, new { @class = "form-control number", @style = "width: 200px; ",@placeholder="字段提示"})
+								
+					
+
+                    </td>
+
+                </tr>
+								  			 			 				   <tr>
+                	<th><span class="must">*</span>PInfoLastdate：</th>
+                    <td>
+					
+			              						 							@Html.TextBoxFor(model => model.PInfoLastdate, new { @class = "form-control Wdate required dateISO",  Value = (Html.DateTimeNullPalse(Model.PInfoLastdate)).ToString("yyyy-MM-dd"), onclick = "WdatePicker()",@minlength="10",@maxlength="10",@style = "width: 200px; ",@placeholder="字段提示"})
+															
+                    </td>
+               				  			 			     
+				   <th><span class="must">*</span>PInfoCreatedate：</th>
+                    <td>
+					
+				
+						
+			              						 							@Html.TextBoxFor(model => model.PInfoCreatedate, new { @class = "form-control Wdate required dateISO",  Value = (Html.DateTimeNullPalse(Model.PInfoCreatedate)).ToString("yyyy-MM-dd"), onclick = "WdatePicker()",@minlength="10",@maxlength="10",@style = "width: 200px; ",@placeholder="字段提示"})
+															
+					
+
+                    </td>
+
+                </tr>
+								  				 </tbody>
+			     </table>
+            </div>
+          
+
+         
+        </div>
+
+    </form>
+
+</body>
+</html>
+

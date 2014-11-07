@@ -1,0 +1,149 @@
+﻿@using Ed.Entity
+@using Ed.Web.Helpers
+@model List<Dictionary<string, object>> 
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>雪绒花 - 默认主页面</title>
+    <link href="~/Themes/default/base/css/globle.css" rel="stylesheet" />
+    <link href="~/Themes/default/home/css/index.css" rel="stylesheet" type="text/css">
+    <script src="~/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+    <link href="~/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" type="text/css">
+    <script src="~/Themes/default/lib/function.js"></script>
+    <script src="~/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+</head>
+<body>
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中,自动选择模块
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+            var mid = "@ViewBag.MoudleId";
+            switch (mid) {
+                case "1":
+                    show_client();
+                    break;
+                case "2":
+                    show_order();
+                    break;
+                case "3":
+                    show_yuesao();
+                    break;
+                case "4":
+                    show_finance();
+                    break;
+                case "5":
+                    show_settings();
+                    break;
+                default:
+                    break;
+            }
+
+
+        });
+        //=====================================================================
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $(".current-nav").mouseenter(function () {
+                $(this).fadeOut(100, function () { $(".sidebar").animate({ left: "0" }, 300); });
+            });
+            $(".sidebar").mouseleave(function () {
+                $(this).animate({ left: "-140px" }, 300, function () { $(".current-nav").fadeIn(0); });
+            });
+            var n;
+            $(".sidebar li").hover(function () {
+                n = $(this).index();
+                $(".sidebar li img").eq(n).animate({ width: "70px", paddingTop: "0px" }, 200).animate({ width: "60px", paddingTop: "5px" }, 200);
+            }, function () {
+                n = $(this).index();
+                $(".sidebar li img").eq(n).animate({ width: "50px", paddingTop: "10px" }, 0);
+            });
+        });
+        function show_client() {
+            if (undefined != dialog.list["show_content"]) {
+                dialog.list["show_content"].close().remove(); 
+            }
+            $("#g_mod_name").html("客户管理");
+            showContentWindow("show_content", "/customer/index/", null,231,245);
+        }
+      
+        function show_order() {
+            if (undefined != dialog.list["show_content"]) {
+                dialog.list["show_content"].close().remove();
+            }
+            $("#g_mod_name").html("订单管理");
+            showContentWindow("show_content", "/Order/index", null,231,245);
+        }
+        function show_yuesao() {
+            if (undefined != dialog.list["show_content"]) {
+                dialog.list["show_content"].close().remove();
+            }
+            $("#g_mod_name").html("月嫂管理");
+            showContentWindow("show_content", "/yuesao/index", null,231, 245);
+        }
+        function show_finance() {
+            if (undefined != top.dialog.list["show_content"]) {
+                top.dialog.list["show_content"].close().remove();
+            }
+            $("#g_mod_name").html("财务信息");
+            showContentWindow("show_content", "/Finance/Index/Index", null,231, 120);
+        }
+
+        function show_settings() {
+            if (undefined != dialog.list["show_content"]) {
+                dialog.list["show_content"].close().remove();
+            }
+            $("#g_mod_name").html("系统设置");
+            showContentWindow("show_content", "/settings/index", null,231, 360);
+        }
+    </script>
+    <!--固定顶部部分 开始-->
+    <div class="header clearfix">
+        <a href="javascript:void(0);" class="current-nav" style="display: block;" id="h_tit">
+            <em class="menu-more-ico"></em><span id="g_mod_name">@Html.OptionsPalse((int)ViewBag.MoudleId, "1|客户管理,2|订单管理,3|月嫂管理,4|财务信息,5|系统设置")</span>
+        </a>
+        <div class="vh-avator-area">
+            <div class="gl-lang-container">
+                <div class="account-avator"><div class="account-avator-bg"></div></div>
+                <span class="account-name" id="g_username">@Session[EdKeys.SESSION_USER_NAME]（<b>@Session[EdKeys.SESSION_ROLE_NAME]</b>）<a href="/Account/Login/Logout/">安全退出</a></span>
+            </div>
+        </div>
+    </div>
+    <!--固定顶部部分 结束-->
+    <!--侧栏导航-->
+    <ul class="sidebar">
+        <li><a href="/"><img src="~/Themes/default/home/images/btn_06.png"><span>主页</span></a></li>
+         @if (Html.LoadModulePowers(@Model, "Customer"))
+         {
+             <li><a href="javascript:show_client();"><img src="~/Themes/default/home/images/home_btn_03.png"><span>客户管理</span></a></li>
+         }
+                @if (Html.LoadModulePowers(@Model, "Order"))
+                {
+        <li><a href="javascript:show_order();"><img src="~/Themes/default/home/images/home_btn_05.png"><span>订单管理</span></a></li> 
+                    }
+                @if (Html.LoadModulePowers(@Model, "Yuesao"))
+                {
+        <li><a href="javascript:show_yuesao();"><img src="~/Themes/default/home/images/home_btn_07.png"><span>月嫂管理</span></a></li> }
+                    @if (Html.LoadModulePowers(@Model, "Finance"))
+                    {
+        <li><a href="javascript:show_finance();"><img src="~/Themes/default/home/images/home_btn_09.png"><span>财务信息</span></a></li> 
+                        }
+                        @if (Html.LoadModulePowers(@Model, "Settings"))
+                        {
+                            <li><a href="javascript:show_settings();"><img src="~/Themes/default/home/images/home_btn_11.png"><span>系统设置</span></a></li>
+                            }
+    </ul>
+</body>
+</html>

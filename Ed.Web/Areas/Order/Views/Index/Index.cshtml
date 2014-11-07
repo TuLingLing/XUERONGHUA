@@ -1,0 +1,96 @@
+﻿@model List<Dictionary<string,object>>
+@using Ed.Entity
+@using Ed.Web.Helpers
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>雪绒花_订单管理首页</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="/Themes/default/lib/bootstrap/css/bootstrap-3.2.0.css" rel="stylesheet" />
+        <link href="/Themes/default/lib/bootstrap/assets/css/docs.css" rel="stylesheet" />
+        <link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+        <script src="/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+        <script src="/Themes/default/lib/cookie/jquery.cookie.js"></script>
+        <script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+        <script src="/Themes/default/lib/function.js"></script>
+    </head>
+  <!--去除顶层加载中 14-10-17 By 唐有炜-->
+<script type="text/javascript">
+    //=============================================================
+    //去除顶层加载中
+    $(document).ready(function () {
+        //去除加载中
+        if (undefined != top.dialog.list["show_loading"]) {
+            top.dialog.list["show_loading"].close().remove();
+            //showTopMsg("页面加载成功！", "温馨提示", "Success");
+        }
+    });
+    //=====================================================================
+</script>
+ <script type="text/javascript">
+     function show_add() {
+         showTopContentWindow("show_add", "/Order/YuesaoOrder/AddClient/","1. 选择订单类型并确认客户信息", 500, 200);
+     }
+     function show_my() {
+         showTopContentWindow("show_list_my", "/Order/Order/My",'@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1000, 500);
+     }
+	 function show_do() {
+         showTopContentWindow("show_list", "/Order/Order/Do","待处理订单信息管理", 1000, 500);
+     }
+	 function show_list() {
+         showTopContentWindow("show_list", "/Order/Order/List", "全部订单信息管理", 1000, 500);
+     }
+	 function show_out() {
+         showTopContentWindow("show_list", "/Order/Order/Out", "已作废订单信息管理", 1000, 500);
+     }
+ </script>
+<body>
+    <div class="" style=" width:231px;overflow:hidden; border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;">
+        <div class="bs-glyphicons">
+            <ul class="bs-glyphicons-list">
+                @if (Html.LoadModulePowers(@Model, "Order_add"))
+                {
+                    <li onclick=" show_add(); ">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="glyphicon-class">新增订单</span>
+                    </li>
+                }
+                 @if (Html.LoadModulePowers(@Model, "Order_my"))
+                 {
+                     <li onclick=" show_my(); ">
+                         <span class="glyphicon glyphicon-home"></span>
+                         <span class="glyphicon-class">我的订单</span>
+                     </li>
+                 }
+                  @if (Html.LoadModulePowers(@Model, "Order_do"))
+                  {
+                      <li onclick=" show_do(); ">
+                          <span class="glyphicon glyphicon-wrench"></span>
+                          <span class="glyphicon-class">待处理订单</span>
+                      </li>
+                  }
+                    @if (Html.LoadModulePowers(@Model, "Order_list"))
+                    {
+                        <li onclick=" show_list(); ">
+                            <span class="glyphicon glyphicon-list"></span>
+                            <span class="glyphicon-class">全部订单</span>
+                        </li>
+                    }
+                      @if (Html.LoadModulePowers(@Model, "Order_out"))
+                      {
+                          <li onclick=" show_out(); ">
+                              <span class="glyphicon glyphicon-remove"></span>
+                              <span class="glyphicon-class">作废订单</span>
+                          </li>
+                      }
+                <div style="clear:both"></div>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
