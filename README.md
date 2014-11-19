@@ -22,7 +22,10 @@
 
 更新历史
 ======
-
+2014-11-19  
+----------   
+>1、实现月嫂手动评分并自动计算总分
+>2、数据库字段添加(p_info_scert,p_info_sedu,p_info_squality,p_info_sknowledge,p_info_sservice,P_info_spicture,P_info_scomment,p_info_stotal)
 
 关键点
 =====
@@ -32,7 +35,7 @@
 程序发布
 =============================
 >1、.NET MVC项目Session需要额外配置        
- `
+
 <system.web>  
   <sessionState mode="StateServer" stateConnectionString="tcpip=127.0.0.1:42424" sqlConnectionString="data source=127.0.0.1;Trusted_Connection=yes" cookieless="false" timeout="720" />   
   </system.web>  
