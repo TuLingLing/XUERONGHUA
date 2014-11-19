@@ -25,7 +25,6 @@
 2014-11-19  
 ----------   
 >1、实现月嫂手动评分并自动计算总分
->2、数据库字段添加(p_info_scert,p_info_sedu,p_info_squality,p_info_sknowledge,p_info_sservice,P_info_spicture,P_info_scomment,p_info_stotal)
 
 关键点
 =====

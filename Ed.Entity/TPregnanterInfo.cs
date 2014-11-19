@@ -97,9 +97,12 @@ namespace Ed.Entity
 		public String PInfoKnowledge { get;set; }
 		[Column("p_info_service")]
 		public String PInfoService { get;set; }
- 
- 
- 
+        [Column("P_info_spicture")]
+        public Int32? PInfoSpicture { get; set; }
+        [Column("P_info_scomment")]
+        public Int32? PInfoScomment { get; set; }
+        [Column("p_info_stotal")]
+        public Int32? PInfoStotal { get; set; }   
 	}
   
 }

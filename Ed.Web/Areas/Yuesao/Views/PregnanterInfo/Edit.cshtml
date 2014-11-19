@@ -40,12 +40,14 @@
     <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
     <!--省市数据-->
     <script src="/Themes/default/base/js/city.js" type="text/javascript"></script>
-
+    <!--自动计算分值js-->
+    <script language="javascript" src="/Themes/default/yuesao/score.js" type="text/javascript"></script>
 
     <!--上传样式-->
      <style type="text/css">
     .zhengjian .upload-btn{background: url(/Themes/default/base/images/btn_upload.png);width:217px; height:40px;}
     .shenghuo .upload-btn{background: url(/Themes/default/base/images/btn_upload2.png);width:217px; height:40px;}
+    .shenghuo { width:230px; float:left;}
     </style>
     
     <!--初始化-->
@@ -227,7 +229,7 @@
 
     //表单验证方法，供父窗口调用
     function form_valid() {
-        if ($("#pregnanterinfo_form1").valid()) {
+        if ($("#pregnanterinfo_form1").valid() && $("#pregnanterinfo_form2").valid()) {
             return true;
         } else {
             return false;
@@ -857,6 +859,25 @@
     }
     </script>
 
+    
+    <script type="text/javascript">
+            //自动计算分值
+        function score(obj)
+        {
+            var PInfoScert=0, PInfoSedu=0, PInfoSquality=0, PInfoSknowledge=0, PInfoSservice=0, PInfoSpicture=0, PInfoScomment=0, PInfoStotal=0;
+            if ($("#PInfoScert").val() != null && $("#PInfoScert").val() != "") { PInfoScert = parseInt($("#PInfoScert").val()); }
+            if ($("#PInfoSedu").val() != null && $("#PInfoSedu").val() != "") { PInfoSedu = parseInt($("#PInfoSedu").val()); }
+            if ($("#PInfoSquality").val() != null && $("#PInfoSquality").val() != "") { PInfoSquality = parseInt($("#PInfoSquality").val()); }
+            if ($("#PInfoSknowledge").val() != null && $("#PInfoSknowledge").val() != "") { PInfoSknowledge = parseInt($("#PInfoSknowledge").val()); }
+            if ($("#PInfoSservice").val() != null && $("#PInfoSservice").val() != "") { PInfoSservice = parseInt($("#PInfoSservice").val()); }
+                //PInfoSpicture = $("#PInfoScert").val();
+                //PInfoScomment = $("#PInfoScert").val();
+                PInfoStotal = PInfoScert + PInfoSedu + PInfoSquality + PInfoSknowledge + PInfoSservice;
+                $("#PInfoStotal").val(PInfoStotal);
+        }
+
+    </script>
+
 </head>
 <body>
     <!--表单错误提示区-->
@@ -993,9 +1014,11 @@
                                 @Html.DropDownListFor(model => model.PInfoLevel, @Html.BuildSelectList("1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★", @Html.LoadDefaultValue(Model.PInfoLevel, "0").ToString()), new { @class = "form-control required", @style = "width:160px", Value = "4" })
 
 								
-								@Html.TextBoxFor(model => model.PInfoPrice, new { @class = "form-control required number", @style = "width: 188px; ",@maxlength=8, @placeholder ="请输入月嫂价格" })
+								@Html.TextBoxFor(model => model.PInfoPrice, new { @class = "form-control required number", @style = "width:78px; ",@maxlength=8, @placeholder ="月嫂价格" })
 								
                                 @Html.DropDownListFor(model => model.PInfoState, @Html.BuildSelectList("1|开启预定,2|关闭状态,0|放入回收站", @Html.LoadDefaultValue(Model.PInfoState, "1").ToString()), new { @class = "form-control required", @style = "width:160px", Value = "1" })
+                                总得分：
+                                @Html.TextBoxFor(model => model.PInfoStotal, new { @class = "form-control number isreadonly", @style = "width:60px;font-size:14px;", @maxlength = 8, @placeholder = "总分", @onfocus = "this.blur();", Value = @Html.LoadDefaultValue(Model.PInfoStotal, "0") })
                             </td>
                         </tr>
                     </tbody>
@@ -1008,72 +1031,77 @@
                     <tbody>
                     <tr>
                     <td>基本信息</td>
+                        <td>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="身份证件" name="C_PInfoCert" id="C_PInfoCert" />身份证件</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家庭成员" name="C_PInfoCert" />家庭成员</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert" />宗教信仰</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="健康证明" name="C_PInfoCert" />健康证明</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="学历证书" name="C_PInfoCert" />学历证书</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="体检证书" name="C_PInfoCert" />体检证书</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="职业宣言" name="C_PInfoCert" />职业宣言</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="入户照片" name="C_PInfoCert" />入户照片</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="上岗记录" name="C_PInfoCert" />上岗记录</label>
+                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="客户反馈" name="C_PInfoCert" />客户反馈</label>
+                            @Html.HiddenFor(model => model.PInfoCert, new { @class = "form-control" })
+                        </td>
+                    <td>产后护理</td>
                     <td>
-                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="身份证书" name="C_PInfoCert"/>身份证书</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="学历证书" name="C_PInfoCert"/>学历证书</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="健康证明" name="C_PInfoCert"/>健康证明</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="体检证书" name="C_PInfoCert"/>体检证书</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家庭成员" name="C_PInfoCert"/>家庭成员</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="行业经验" name="C_PInfoCert"/>行业经验</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婚姻状况" name="C_PInfoCert"/>婚姻状况</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert"/>宗教信仰</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="行业道德" name="C_PInfoCert"/>行业道德</label>
-								@Html.HiddenFor(model => model.PInfoCert, new {@class = "form-control" })</td>
-                    <td>产妇护理</td>
-                    <td>
-                     <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理辅导" name="C_PInfoQuality"/>心理辅导</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理" name="C_PInfoQuality"/>乳房护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="子宫按摩" name="C_PInfoQuality"/>子宫按摩</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="恶露观察" name="C_PInfoQuality"/>恶露观察</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="侧切护理" name="C_PInfoQuality"/>侧切护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产妇擦涂" name="C_PInfoQuality"/>产妇擦涂</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="喂养指导" name="C_PInfoQuality"/>喂养指导</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="腹带打绑" name="C_PInfoQuality"/>腹带打绑</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产后操" name="C_PInfoQuality"/>产后操</label>
+                     <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理中级" name="C_PInfoQuality"/>日常护理中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理高级" name="C_PInfoQuality"/>日常护理高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="康复指导中级" name="C_PInfoQuality"/>康复指导中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="康复指导高级" name="C_PInfoQuality"/>康复指导高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导中级" name="C_PInfoQuality"/>心理疏导中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导高级" name="C_PInfoQuality"/>心理疏导高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理中级" name="C_PInfoQuality"/>乳房护理中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理高级" name="C_PInfoQuality"/>乳房护理高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母乳喂养中级" name="C_PInfoQuality"/>母乳喂养中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母乳喂养高级" name="C_PInfoQuality"/>母乳喂养高级</label>
 								@Html.HiddenFor(model => model.PInfoQuality, new {@class = "form-control" })
                     </td>
                     <td>婴儿护理</td>
                     <td>
-                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="黄疸观察" name="C_PInfoService"/>黄疸观察</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="脐带护理" name="C_PInfoService"/>脐带护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="二便观察" name="C_PInfoService"/>二便观察</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练" name="C_PInfoService"/>视听训练</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿喂养" name="C_PInfoService"/>婴儿喂养</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="湿疹护理" name="C_PInfoService"/>湿疹护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="红臀护理" name="C_PInfoService"/>红臀护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿抚触" name="C_PInfoService"/>婴儿抚触</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动操" name="C_PInfoService"/>被动操</label>
+                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿观察中级" name="C_PInfoService"/>婴儿观察中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿观察高级" name="C_PInfoService"/>婴儿观察高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理中级" name="C_PInfoService"/>日常护理中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理高级" name="C_PInfoService"/>日常护理高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练中级" name="C_PInfoService"/>视听训练中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练高级" name="C_PInfoService"/>视听训练高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="洗澡抚触中级" name="C_PInfoService"/>洗澡抚触中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="洗澡抚触高级" name="C_PInfoService"/>洗澡抚触高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动训练中级" name="C_PInfoService"/>被动训练中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动训练高级" name="C_PInfoService"/>被动训练高级</label>
 								@Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
                     </td>
-                    <td>专业家务</td>
-                    <td><label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="餐具清洗消毒" name="C_PInfoKnowledge"/>餐具清洗消毒</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="奶具清洗消毒" name="C_PInfoKnowledge"/>奶具清洗消毒</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="尿布清洗消毒" name="C_PInfoKnowledge"/>尿布清洗消毒</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="衣物清洗消毒" name="C_PInfoKnowledge"/>衣物清洗消毒</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="卧室清洗消毒" name="C_PInfoKnowledge"/>卧室清洗消毒</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="厨房清洗消毒" name="C_PInfoKnowledge"/>厨房清洗消毒</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="月子餐的制作" name="C_PInfoKnowledge"/>月子餐的制作</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养康复方案" name="C_PInfoKnowledge"/>营养康复方案</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿洗浴护理" name="C_PInfoKnowledge"/>婴儿洗浴护理</label>
+                    <td>综合素质</td>
+                    <td><label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="普通话中级" name="C_PInfoKnowledge"/>普通话中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="普通话高级" name="C_PInfoKnowledge"/>普通话高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表中级" name="C_PInfoKnowledge"/>仪容仪表中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表高级" name="C_PInfoKnowledge"/>仪容仪表高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="环境卫生中级" name="C_PInfoKnowledge"/>环境卫生中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="环境卫生高级" name="C_PInfoKnowledge"/>环境卫生高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="物品清洁中级" name="C_PInfoKnowledge"/>物品清洁中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="物品清洁高级" name="C_PInfoKnowledge"/>物品清洁高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作中级" name="C_PInfoKnowledge"/>营养餐制作中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作高级" name="C_PInfoKnowledge"/>营养餐制作高级</label>
 								@Html.HiddenFor(model => model.PInfoKnowledge, new {@class = "form-control" })</td>
                    <td>
-                    高端技能
+                    专项技能
                     </td>
                     <td>
-                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴技能" name="C_PInfoEdu"/>育婴技能</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="催乳技能" name="C_PInfoEdu"/>催乳技能</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="推拿技能" name="C_PInfoEdu"/>推拿技能</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="游泳抚触" name="C_PInfoEdu"/>游泳抚触</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胎护理" name="C_PInfoEdu"/>双胎护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="早产护理" name="C_PInfoEdu"/>早产护理</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养搭配" name="C_PInfoEdu"/>营养搭配</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产后理疗" name="C_PInfoEdu"/>产后理疗</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="异常处理" name="C_PInfoEdu"/>异常处理</label>
+                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴师考核" name="C_PInfoEdu"/>育婴师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="催乳师考核" name="C_PInfoEdu"/>催乳师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="推拿师考核" name="C_PInfoEdu"/>推拿师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养师考核" name="C_PInfoEdu"/>营养师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="理疗师考核" name="C_PInfoEdu"/>理疗师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="瑜伽师考核" name="C_PInfoEdu"/>瑜伽师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导考核" name="C_PInfoEdu"/>心理疏导考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿游泳考核" name="C_PInfoEdu"/>婴儿游泳考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胎早产护理" name="C_PInfoEdu"/>双胎早产护理</label>
+                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产妇异常护理" name="C_PInfoEdu"/>产妇异常护理</label>
 								@Html.HiddenFor(model => model.PInfoEdu, new {@class = "form-control" })
                     </td>
                     </tr>
-                    
-                        
+
                         <!--<tr>
                             <th>基本信息：</th>
                             <td colspan="3">
@@ -1105,7 +1133,7 @@
 								</td>
                         </tr>
                          <tr>
-                     
+
                             <th>服务意识：</th>
                             <td colspan="3">
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="职业道德" name="C_PInfoService"/>职业道德</label>
@@ -1118,7 +1146,7 @@
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="服务赠言" name="C_PInfoService"/>服务赠言</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母婴誓言" name="C_PInfoService"/>母婴誓言</label>
 								@Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
-								</td> 
+								</td>
                         </tr>
                         <tr>
                          <th>高端技能：</th>
@@ -1187,16 +1215,16 @@
                         </tr>-->
                     </tbody>
                 </table>
-                
+
                 <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect" style="margin-top:10px;"> <tbody>
                 <tr>
                             <th>参加培训：</th>
                             <td>
-                                @Html.TextAreaFor(model => model.PInfoTrain, new { @class = "form-control", @style = "width:270px;height:80px;", @placeholder = "格式为：2014年8月 参加雪绒花 小儿推拿培训" })
+                                @Html.TextAreaFor(model => model.PInfoTrain, new { @class = "form-control", @style = "width:270px;height:60px;", @placeholder = "格式为：2014年8月 参加雪绒花 小儿推拿培训" })
                             </td>
                             <th>获得奖励：</th>
                             <td>
-                                @Html.TextAreaFor(model => model.PInfoReward, new { @class = "form-control", @style = "width:270px;height:80px;", @placeholder = "格式为：2014年8月 获得省级 家协表彰" })
+                                @Html.TextAreaFor(model => model.PInfoReward, new { @class = "form-control", @style = "width:270px;height:60px;", @placeholder = "格式为：2014年8月 获得省级 家协表彰" })
                             </td>
                         </tr>
                         <tr>
@@ -1231,19 +1259,22 @@
         <div class="tab-pane" id="card-info">
             <div style="height:15px;"></div>
             <form id="pregnanterinfo_form3">
-               <!--个人资料-->
+                <!--个人资料-->
                 <div class="upload-box shenghuo" id="PInfoLifeimg">
                     <span class="upload-progress"></span>
                 </div>
-
-               <div class="photo-list">
+                <div style="float:left">
+                    @Html.TextBoxFor(model => model.PInfoSpicture, new { @class = "form-control required number", @style = "width:180px;color:blue;" })
+                </div>
+                <div class="clear"></div>
+                <div class="photo-list">
                     <ul>
                         @foreach (var life_pic in life_pics)
                         {
                             try
                             {
                                 var life_infos = life_pic.ToString().Split('|');
-                                
+
                                 var big = life_infos[1];
                                 var small = life_infos[2];
                                 var des = life_infos[3] ?? "暂无描述...";
@@ -1265,16 +1296,16 @@
                         }
                     </ul>
                 </div>
-                
-                
+
+
                 <!--证书-->
-                 <div class="upload-box zhengjian" id="PInfoCertimg">
-                     <span class="upload-progress"></span>
+                <div class="upload-box zhengjian" id="PInfoCertimg">
+                    <span class="upload-progress"></span>
                 </div>
-                
+
                 <div class="photo-list">
                     <ul>
-                            @foreach (var cert_pic in cert_pics)
+                        @foreach (var cert_pic in cert_pics)
                         {
                             try
                             {
@@ -1351,3 +1382,4 @@
 </html>
 
 
+                        </script>

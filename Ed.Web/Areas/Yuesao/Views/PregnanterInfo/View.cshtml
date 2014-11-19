@@ -192,11 +192,11 @@
                         <table border="0" cellpadding="0" cellspacing="0">
                             <tbody>
                                 @{
-                                    var pInfoCertDegree =(Model.PInfoCert==null)?"0%":Math.Round((Html.LoadDefaultValue(Model.PInfoCert,"0").ToString().Split(',').Length) / 9.00, 2).ToString("P0");
-                                    var pInfoQualityDegree = (Model.PInfoQuality == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoQuality, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
-                                    var pInfoService = (Model.PInfoService == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoService, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
-                                    var pInfoEdu = (Model.PInfoEdu == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoEdu, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
-                                    var pInfoKnowledge = (Model.PInfoKnowledge == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoKnowledge, "0").ToString().Split(',').Length) / (double)9, 2).ToString("P0");
+                                    var pInfoCertDegree =(Model.PInfoCert==null)?"0%":Math.Round((Html.LoadDefaultValue(Model.PInfoCert,"0").ToString().Split(',').Length) / 10.00, 2).ToString("P0");
+                                    var pInfoQualityDegree = (Model.PInfoQuality == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoQuality, "0").ToString().Split(',').Length) / (double)10, 2).ToString("P0");
+                                    var pInfoService = (Model.PInfoService == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoService, "0").ToString().Split(',').Length) / (double)10, 2).ToString("P0");
+                                    var pInfoEdu = (Model.PInfoEdu == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoEdu, "0").ToString().Split(',').Length) / (double)10, 2).ToString("P0");
+                                    var pInfoKnowledge = (Model.PInfoKnowledge == null) ? "0%" : Math.Round((double)(Html.LoadDefaultValue(Model.PInfoKnowledge, "0").ToString().Split(',').Length) / (double)10, 2).ToString("P0");
                                 }
                                 <tr>
                                     <td class="text">基本信息</td>
@@ -418,75 +418,81 @@
                     <tbody>
                         <tr>
                             <th>基本信息</th>
-                            <th>产妇护理</th>
+                            <th>产后护理</th>
                             <th>婴儿护理</th>
-                            <th>专业家务</th>
-                            <th>高端技能</th> 
+                            <th>综合素质</th>
+                            <th>专项技能</th> 
                         </tr>
                         <tr>
                             <td>
                                 <ul id="cert">
-                                    <li>身份证书</li>
-                                    <li>学历证书</li>
-                                    <li>健康证明</li>
-                                    <li>体检证书</li>
+                                    <li>身份证件</li>
                                     <li>家庭成员</li>
-                                    <li>行业经验</li>
-                                    <li>婚姻状况</li>
                                     <li>宗教信仰</li>
-                                    <li>行业道德</li>
+                                    <li>健康证明</li>
+                                    <li>学历证书</li>
+                                    <li>体检证书</li>
+                                    <li>职业宣言</li>
+                                    <li>入户照片</li>
+                                    <li>上岗记录</li>
+                                    <li>客户反馈</li>
+                                    
                                 </ul>
                             </td>
                             <td>
                                 <ul id="quality">
-                                    <li class="check">心理辅导</li>
-                                    <li>乳房护理</li>
-                                    <li>子宫按摩</li>
-                                    <li>恶露观察</li>
-                                    <li>侧切护理</li>
-                                    <li>产妇擦涂</li>
-                                    <li>喂养指导</li>
-                                    <li>腹带打绑</li>
-                                    <li>产后操</li>
+                                    <li class="check">日常护理中级</li>
+                                    <li>日常护理高级</li>
+                                    <li>康复指导中级</li>
+                                    <li>康复指导高级</li>
+                                    <li>心理疏导中级</li>
+                                    <li>心理疏导高级</li>
+                                    <li>乳房护理中级</li>
+                                    <li>乳房护理高级</li>
+                                    <li>母乳喂养中级</li>
+                                    <li>母乳喂养高级</li>
                                 </ul>
                             </td>
                             <td>
                                 <ul id="service">
-                                    <li>黄疸观察</li>
-                                    <li class="check">脐带护理</li>
-                                    <li class="check">二便观察</li>
-                                    <li>视听训练</li>
-                                    <li class="check">婴儿喂养</li>
-                                    <li>湿疹护理</li>
-                                    <li class="check">红臀护理</li>
-                                    <li>婴儿抚触</li>                               
-                                    <li>被动操</li>
+                                    <li>婴儿观察中级</li>
+                                    <li class="check">婴儿观察高级</li>
+                                    <li class="check">日常护理中级</li>
+                                    <li>日常护理高级</li>
+                                    <li class="check">视听训练中级</li>
+                                    <li>视听训练高级</li>
+                                    <li class="check">洗澡抚触中级</li>
+                                    <li>洗澡抚触高级</li>                               
+                                    <li>被动训练中级</li>
+                                    <li>被动训练高级</li>
                                 </ul>
                             </td>
                             <td>
                                 <ul id="knowledge">
-                                    <li>餐具清洗消毒</li>
-                                    <li>奶具清洗消毒</li>
-                                    <li>尿布清洗消毒</li>
-                                    <li>衣物清洗消毒</li>
-                                    <li>卧室清洗消毒</li>异常处理
-                                    <li>厨房清洗消毒</li>
-                                    <li>月子餐的制作</li>
-                                    <li>营养康复方案</li>
-                                    <li>婴儿洗浴护理</li>
+                                    <li>普通话中级</li>
+                                    <li>普通话高级</li>
+                                    <li>仪容仪表中级</li>
+                                    <li>仪容仪表高级</li>
+                                    <li>环境卫生中级</li>
+                                    <li>环境卫生高级</li>
+                                    <li>物品清洁中级</li>
+                                    <li>物品清洁高级</li>
+                                    <li>营养餐制作中级</li>
+                                    <li>营养餐制作高级</li>
                                 </ul>
                             </td>
                             <td>
                                 <ul id="edu">
-                                    <li>育婴技能</li>
-                                    <li>催乳技能</li>
-                                    <li>推拿技能</li>
-                                    <li>游泳抚触</li>
-                                    <li>双胎护理</li>
-                                    <li>早产护理</li>
-                                    <li>营养搭配</li>
-                                    <li>产后理疗</li>
-                                    <li>异常处理</li>
+                                    <li>育婴师考核</li>
+                                    <li>催乳师考核</li>
+                                    <li>推拿师考核</li>
+                                    <li>营养师考核</li>
+                                    <li>理疗师考核</li>
+                                    <li>瑜伽师考核</li>
+                                    <li>心理疏导考核</li>
+                                    <li>婴儿游泳考核</li>
+                                    <li>双胎早产护理</li>
+                                     <li>产妇异常护理</li>
                                 </ul>
                             </td>
                         </tr>

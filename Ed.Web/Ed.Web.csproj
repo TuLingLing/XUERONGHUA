@@ -472,6 +472,7 @@
     <Content Include="Themes\default\yuesao\Images\xueronghua.gif" />
     <Content Include="Themes\default\yuesao\img\icons\arrows.png" />
     <Content Include="Themes\default\yuesao\img\icons\close.png" />
+    <Content Include="Themes\default\yuesao\score.js" />
     <Content Include="Themes\default\yuesao\zoom.css" />
     <Content Include="Themes\default\yuesao\zoom.min.js" />
     <Content Include="watermark.png" />
