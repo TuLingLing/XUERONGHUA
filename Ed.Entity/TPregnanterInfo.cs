@@ -106,7 +106,3 @@ namespace Ed.Entity
 	}
   
 }
-
-
-
-

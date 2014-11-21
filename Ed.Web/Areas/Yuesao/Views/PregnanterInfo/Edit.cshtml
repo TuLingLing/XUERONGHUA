@@ -47,7 +47,6 @@
      <style type="text/css">
     .zhengjian .upload-btn{background: url(/Themes/default/base/images/btn_upload.png);width:217px; height:40px;}
     .shenghuo .upload-btn{background: url(/Themes/default/base/images/btn_upload2.png);width:217px; height:40px;}
-    .shenghuo { width:230px; float:left;}
     </style>
     
     <!--初始化-->
@@ -859,25 +858,6 @@
     }
     </script>
 
-    
-    <script type="text/javascript">
-            //自动计算分值
-        function score(obj)
-        {
-            var PInfoScert=0, PInfoSedu=0, PInfoSquality=0, PInfoSknowledge=0, PInfoSservice=0, PInfoSpicture=0, PInfoScomment=0, PInfoStotal=0;
-            if ($("#PInfoScert").val() != null && $("#PInfoScert").val() != "") { PInfoScert = parseInt($("#PInfoScert").val()); }
-            if ($("#PInfoSedu").val() != null && $("#PInfoSedu").val() != "") { PInfoSedu = parseInt($("#PInfoSedu").val()); }
-            if ($("#PInfoSquality").val() != null && $("#PInfoSquality").val() != "") { PInfoSquality = parseInt($("#PInfoSquality").val()); }
-            if ($("#PInfoSknowledge").val() != null && $("#PInfoSknowledge").val() != "") { PInfoSknowledge = parseInt($("#PInfoSknowledge").val()); }
-            if ($("#PInfoSservice").val() != null && $("#PInfoSservice").val() != "") { PInfoSservice = parseInt($("#PInfoSservice").val()); }
-                //PInfoSpicture = $("#PInfoScert").val();
-                //PInfoScomment = $("#PInfoScert").val();
-                PInfoStotal = PInfoScert + PInfoSedu + PInfoSquality + PInfoSknowledge + PInfoSservice;
-                $("#PInfoStotal").val(PInfoStotal);
-        }
-
-    </script>
-
 </head>
 <body>
     <!--表单错误提示区-->
@@ -908,36 +888,36 @@
                             </td>
                             <th><span class="must">*</span>月嫂姓名：</th>
                             <td>
-                                @Html.TextBoxFor(model => model.PInfoName, new { @class = "form-control required", @style = "width:100px; ", @maxlength=16,@placeholder = "姓名" })
+                                @Html.TextBoxFor(model => model.PInfoName, new { @class = "form-control required", @style = "width:100px; ", @maxlength = 16, @placeholder = "姓名" })
                                 @Html.TextBoxFor(model => model.PInfoNational, new { @class = "form-control", Value = @Html.LoadDefaultValue(Model.PInfoNational, "汉族"), @style = "width:114px; ", @placeholder = "民族", @maxlength = 10 })
                             </td>
                             <td rowspan="4" style="width:170px;">
                                 <div style="width:150px; height:155px; background-color:#fff">
-                                     <!--裁切上传开始-->
-                                   <img id="p_info_photopre" src='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="150px" height="118px;"  />
-                                   <button class="btn btn-primary" style="width:150px;" onclick="return do_photo_capture(this);">点击打开上传窗口</button>
-                                   <input type="hidden" id="PInfoPhoto" name="PInfoPhoto" value='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' />
-                            <!--裁切上传结束-->           
+                                    <!--裁切上传开始-->
+                                    <img id="p_info_photopre" src='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="150px" height="118px;" />
+                                    <button class="btn btn-primary" style="width:150px;" onclick="return do_photo_capture(this);">点击打开上传窗口</button>
+                                    <input type="hidden" id="PInfoPhoto" name="PInfoPhoto" value='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' />
+                                    <!--裁切上传结束-->
                                     <!--单文件上传开始-->
-                                   @* <img id="p_info_photopre" src='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="150px" height="130px;" />
-                                    <div style="width:130px; height:25px; overflow:hidden;">
-                                        <input type="hidden" id="PInfoPhoto" name="PInfoPhoto" value='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' />
-                                        <a href="javascript:;" class="files">
-                                            <input type="file" style="width: 130px;" id="file_p_info_photo" name="file_p_info_photo" onchange=" PicUpload('pregnanterinfo_form1', 'file_p_info_photo', 'PInfoPhoto', 'p_info_photopre'); " />
-                                        </a>*@
-                                        <!--单文件上传结束-->
-                                    </div>
-                                
+                                    @* <img id="p_info_photopre" src='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="150px" height="130px;" />
+                                        <div style="width:130px; height:25px; overflow:hidden;">
+                                            <input type="hidden" id="PInfoPhoto" name="PInfoPhoto" value='@Html.LoadDefaultPic(Model.PInfoPhoto, "/Themes/default/home/images/nophoto.gif")' />
+                                            <a href="javascript:;" class="files">
+                                                <input type="file" style="width: 130px;" id="file_p_info_photo" name="file_p_info_photo" onchange=" PicUpload('pregnanterinfo_form1', 'file_p_info_photo', 'PInfoPhoto', 'p_info_photopre'); " />
+                                            </a>*@
+                                    <!--单文件上传结束-->
+                                </div>
+
                             </td>
                         </tr>
                         <tr>
                             <th><span class="must">*</span>月嫂手机：</th>
                             <td>
-                                @Html.TextBoxFor(model => model.PInfoTel, new { @class = "form-control required phone", @style = "width: 200px; ",@maxlength=12, @placeholder = "" })
+                                @Html.TextBoxFor(model => model.PInfoTel, new { @class = "form-control required phone", @style = "width: 200px; ", @maxlength = 12, @placeholder = "" })
                             </td>
                             <th><span class="must">*</span>身份证号：</th>
                             <td>
-                                @Html.TextBoxFor(model => model.PInfoIdcard, new { @class = "form-control required idcard",@maxlength=18, @style = "width: 218px; ", @placeholder = "可自动生成生日,年龄,星座,属相" })
+                                @Html.TextBoxFor(model => model.PInfoIdcard, new { @class = "form-control required idcard", @maxlength = 18, @style = "width: 218px; ", @placeholder = "可自动生成生日,年龄,星座,属相" })
                             </td>
                         </tr>
                         <tr>
@@ -951,26 +931,28 @@
                         </tr>
                         <tr>
                             <th>从业年限：</th>
-                            <td> @Html.DropDownListFor(model => model.PInfoEdage, @Html.BuildSelectList("1|1年以下,2|1-3年,3|3-7年,4|7年以上", @Html.LoadDefaultValue(Model.PInfoEdage, "").ToString()), new { @class = "form-control required", Value = ""})
-                            @Html.DropDownListFor(model => model.PInfoEducation, @Html.BuildSelectList("1|本科及以上,2|大专,3|高中,4|初中及以下", @Html.LoadDefaultValue(Model.PInfoEducation, "").ToString()), new { @class = "form-control", @style = "width: 110px;", Value = "" })
+                            <td>
+                                @Html.DropDownListFor(model => model.PInfoEdage, @Html.BuildSelectList("1|1年以下,2|1-3年,3|3-7年,4|7年以上", @Html.LoadDefaultValue(Model.PInfoEdage, "").ToString()), new { @class = "form-control required", Value = "" })
+                                @Html.DropDownListFor(model => model.PInfoEducation, @Html.BuildSelectList("1|本科及以上,2|大专,3|高中,4|初中及以下", @Html.LoadDefaultValue(Model.PInfoEducation, "").ToString()), new { @class = "form-control", @style = "width: 110px;", Value = "" })
                             </td>
                             <th>特别技能：</th>
                             <td>
-							<!--@Html.TextBoxFor(model => model.PInfoClass, new { @class = "form-control", @style = "width: 218px; ", @maxlength=10,@placeholder = "" })-->
-								<label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胞胎" name="C_PInfoClass" />双胞胎</label>
+                                <!--@Html.TextBoxFor(model => model.PInfoClass, new { @class = "form-control", @style = "width: 218px; ", @maxlength=10,@placeholder = "" })-->
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胞胎" name="C_PInfoClass" />双胞胎</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="早产儿" name="C_PInfoClass" />早产儿</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴师" name="C_PInfoClass"/>育婴师</label>
-								@Html.HiddenFor(model => model.PInfoClass, new {@class = "form-control"})
-							</td>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴师" name="C_PInfoClass" />育婴师</label>
+                                @Html.HiddenFor(model => model.PInfoClass, new { @class = "form-control" })
+                            </td>
 
-							
-							
+
+
                         </tr>
                         <tr>
                             <th>户口所在地：</th>
-                            <td>@Html.TextBoxFor(model => model.PInfoPermanent, new { @class = "form-control", @style = "width: 96px; ", @maxlength = 100, @placeholder = "" })
-                            @Html.DropDownListFor(model => model.PInfoMarriage, @Html.BuildSelectList("1|已婚,2|未婚,3|保密", @Html.LoadDefaultValue(Model.PInfoMarriage, "").ToString()), new { @class = "form-control", @style = "width: 100px;", Value = "" })
-                            
+                            <td>
+                                @Html.TextBoxFor(model => model.PInfoPermanent, new { @class = "form-control", @style = "width: 96px; ", @maxlength = 100, @placeholder = "" })
+                                @Html.DropDownListFor(model => model.PInfoMarriage, @Html.BuildSelectList("1|已婚,2|未婚,3|保密", @Html.LoadDefaultValue(Model.PInfoMarriage, "").ToString()), new { @class = "form-control", @style = "width: 100px;", Value = "" })
+
                             </td>
                             <th>现住省市：</th>
                             <td colspan="2">
@@ -985,7 +967,7 @@
                                 </select>
 
                                 <!--@Html.TextBoxFor(model => model.PInfoCity, new { @class = "form-control", @style = "width:200px; ",@placeholder=""})-->
-                                @Html.TextBoxFor(model => model.PInfoAddress, new { @class = "form-control", @style = "width: 380px; margin-top: 5px;",@maxlength=100, @placeholder = "" })
+                                @Html.TextBoxFor(model => model.PInfoAddress, new { @class = "form-control", @style = "width: 380px; margin-top: 5px;", @maxlength = 100, @placeholder = "" })
                             </td>
                         </tr>
 
@@ -1013,9 +995,9 @@
 
                                 @Html.DropDownListFor(model => model.PInfoLevel, @Html.BuildSelectList("1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★", @Html.LoadDefaultValue(Model.PInfoLevel, "0").ToString()), new { @class = "form-control required", @style = "width:160px", Value = "4" })
 
-								
-								@Html.TextBoxFor(model => model.PInfoPrice, new { @class = "form-control required number", @style = "width:78px; ",@maxlength=8, @placeholder ="月嫂价格" })
-								
+
+                                @Html.TextBoxFor(model => model.PInfoPrice, new { @class = "form-control required number", @style = "width:78px; ", @maxlength = 8, @placeholder = "月嫂价格" })
+
                                 @Html.DropDownListFor(model => model.PInfoState, @Html.BuildSelectList("1|开启预定,2|关闭状态,0|放入回收站", @Html.LoadDefaultValue(Model.PInfoState, "1").ToString()), new { @class = "form-control required", @style = "width:160px", Value = "1" })
                                 总得分：
                                 @Html.TextBoxFor(model => model.PInfoStotal, new { @class = "form-control number isreadonly", @style = "width:60px;font-size:14px;", @maxlength = 8, @placeholder = "总分", @onfocus = "this.blur();", Value = @Html.LoadDefaultValue(Model.PInfoStotal, "0") })
@@ -1029,78 +1011,80 @@
             <div style="height:15px;"></div><form id="pregnanterinfo_form2">
                 <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect">
                     <tbody>
-                    <tr>
-                    <td>基本信息</td>
-                        <td>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="身份证件" name="C_PInfoCert" id="C_PInfoCert" />身份证件</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家庭成员" name="C_PInfoCert" />家庭成员</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert" />宗教信仰</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="健康证明" name="C_PInfoCert" />健康证明</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="学历证书" name="C_PInfoCert" />学历证书</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="体检证书" name="C_PInfoCert" />体检证书</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="职业宣言" name="C_PInfoCert" />职业宣言</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="入户照片" name="C_PInfoCert" />入户照片</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="上岗记录" name="C_PInfoCert" />上岗记录</label>
-                            <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="客户反馈" name="C_PInfoCert" />客户反馈</label>
-                            @Html.HiddenFor(model => model.PInfoCert, new { @class = "form-control" })
-                        </td>
-                    <td>产后护理</td>
-                    <td>
-                     <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理中级" name="C_PInfoQuality"/>日常护理中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理高级" name="C_PInfoQuality"/>日常护理高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="康复指导中级" name="C_PInfoQuality"/>康复指导中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="康复指导高级" name="C_PInfoQuality"/>康复指导高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导中级" name="C_PInfoQuality"/>心理疏导中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导高级" name="C_PInfoQuality"/>心理疏导高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理中级" name="C_PInfoQuality"/>乳房护理中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理高级" name="C_PInfoQuality"/>乳房护理高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母乳喂养中级" name="C_PInfoQuality"/>母乳喂养中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母乳喂养高级" name="C_PInfoQuality"/>母乳喂养高级</label>
-								@Html.HiddenFor(model => model.PInfoQuality, new {@class = "form-control" })
-                    </td>
-                    <td>婴儿护理</td>
-                    <td>
-                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿观察中级" name="C_PInfoService"/>婴儿观察中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿观察高级" name="C_PInfoService"/>婴儿观察高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理中级" name="C_PInfoService"/>日常护理中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理高级" name="C_PInfoService"/>日常护理高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练中级" name="C_PInfoService"/>视听训练中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练高级" name="C_PInfoService"/>视听训练高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="洗澡抚触中级" name="C_PInfoService"/>洗澡抚触中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="洗澡抚触高级" name="C_PInfoService"/>洗澡抚触高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动训练中级" name="C_PInfoService"/>被动训练中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动训练高级" name="C_PInfoService"/>被动训练高级</label>
-								@Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
-                    </td>
-                    <td>综合素质</td>
-                    <td><label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="普通话中级" name="C_PInfoKnowledge"/>普通话中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="普通话高级" name="C_PInfoKnowledge"/>普通话高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表中级" name="C_PInfoKnowledge"/>仪容仪表中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表高级" name="C_PInfoKnowledge"/>仪容仪表高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="环境卫生中级" name="C_PInfoKnowledge"/>环境卫生中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="环境卫生高级" name="C_PInfoKnowledge"/>环境卫生高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="物品清洁中级" name="C_PInfoKnowledge"/>物品清洁中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="物品清洁高级" name="C_PInfoKnowledge"/>物品清洁高级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作中级" name="C_PInfoKnowledge"/>营养餐制作中级</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作高级" name="C_PInfoKnowledge"/>营养餐制作高级</label>
-								@Html.HiddenFor(model => model.PInfoKnowledge, new {@class = "form-control" })</td>
-                   <td>
-                    专项技能
-                    </td>
-                    <td>
-                    <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴师考核" name="C_PInfoEdu"/>育婴师考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="催乳师考核" name="C_PInfoEdu"/>催乳师考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="推拿师考核" name="C_PInfoEdu"/>推拿师考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养师考核" name="C_PInfoEdu"/>营养师考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="理疗师考核" name="C_PInfoEdu"/>理疗师考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="瑜伽师考核" name="C_PInfoEdu"/>瑜伽师考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导考核" name="C_PInfoEdu"/>心理疏导考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿游泳考核" name="C_PInfoEdu"/>婴儿游泳考核</label>
-                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胎早产护理" name="C_PInfoEdu"/>双胎早产护理</label>
-                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产妇异常护理" name="C_PInfoEdu"/>产妇异常护理</label>
-								@Html.HiddenFor(model => model.PInfoEdu, new {@class = "form-control" })
-                    </td>
-                    </tr>
+                        <tr>
+                            <td>基本信息</td>
+                            <td>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="身份证件" name="C_PInfoCert" id="C_PInfoCert" />身份证件</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="家庭成员" name="C_PInfoCert" />家庭成员</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert" />宗教信仰</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="健康证明" name="C_PInfoCert" />健康证明</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="学历证书" name="C_PInfoCert" />学历证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="体检证书" name="C_PInfoCert" />体检证书</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="职业宣言" name="C_PInfoCert" />职业宣言</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="入户照片" name="C_PInfoCert" />入户照片</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="上岗记录" name="C_PInfoCert" />上岗记录</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="客户反馈" name="C_PInfoCert" />客户反馈</label>
+                                @Html.HiddenFor(model => model.PInfoCert, new { @class = "form-control" })
+                            </td>
+                            <td>产后护理</td>
+                            <td>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理中级" name="C_PInfoQuality" />日常护理中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理高级" name="C_PInfoQuality" />日常护理高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="康复指导中级" name="C_PInfoQuality" />康复指导中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="康复指导高级" name="C_PInfoQuality" />康复指导高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导中级" name="C_PInfoQuality" />心理疏导中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导高级" name="C_PInfoQuality" />心理疏导高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理中级" name="C_PInfoQuality" />乳房护理中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="乳房护理高级" name="C_PInfoQuality" />乳房护理高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母乳喂养中级" name="C_PInfoQuality" />母乳喂养中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母乳喂养高级" name="C_PInfoQuality" />母乳喂养高级</label>
+                                @Html.HiddenFor(model => model.PInfoQuality, new { @class = "form-control" })
+                            </td>
+                            <td>婴儿护理</td>
+                            <td>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿观察中级" name="C_PInfoService" />婴儿观察中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿观察高级" name="C_PInfoService" />婴儿观察高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理中级" name="C_PInfoService" />日常护理中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="日常护理高级" name="C_PInfoService" />日常护理高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练中级" name="C_PInfoService" />视听训练中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="视听训练高级" name="C_PInfoService" />视听训练高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="洗澡抚触中级" name="C_PInfoService" />洗澡抚触中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="洗澡抚触高级" name="C_PInfoService" />洗澡抚触高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动训练中级" name="C_PInfoService" />被动训练中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="被动训练高级" name="C_PInfoService" />被动训练高级</label>
+                                @Html.HiddenFor(model => model.PInfoService, new { @class = "form-control" })
+                            </td>
+                            <td>综合素质</td>
+                            <td>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="普通话中级" name="C_PInfoKnowledge" />普通话中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="普通话高级" name="C_PInfoKnowledge" />普通话高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表中级" name="C_PInfoKnowledge" />仪容仪表中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="仪容仪表高级" name="C_PInfoKnowledge" />仪容仪表高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="环境卫生中级" name="C_PInfoKnowledge" />环境卫生中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="环境卫生高级" name="C_PInfoKnowledge" />环境卫生高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="物品清洁中级" name="C_PInfoKnowledge" />物品清洁中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="物品清洁高级" name="C_PInfoKnowledge" />物品清洁高级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作中级" name="C_PInfoKnowledge" />营养餐制作中级</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养餐制作高级" name="C_PInfoKnowledge" />营养餐制作高级</label>
+                                @Html.HiddenFor(model => model.PInfoKnowledge, new { @class = "form-control" })
+                            </td>
+                            <td>
+                                专项技能
+                            </td>
+                            <td>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="育婴师考核" name="C_PInfoEdu" />育婴师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="催乳师考核" name="C_PInfoEdu" />催乳师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="推拿师考核" name="C_PInfoEdu" />推拿师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养师考核" name="C_PInfoEdu" />营养师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="理疗师考核" name="C_PInfoEdu" />理疗师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="瑜伽师考核" name="C_PInfoEdu" />瑜伽师考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理疏导考核" name="C_PInfoEdu" />心理疏导考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婴儿游泳考核" name="C_PInfoEdu" />婴儿游泳考核</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="双胎早产护理" name="C_PInfoEdu" />双胎早产护理</label>
+                                <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产妇异常护理" name="C_PInfoEdu" />产妇异常护理</label>
+                                @Html.HiddenFor(model => model.PInfoEdu, new { @class = "form-control" })
+                            </td>
+                        </tr>
 
                         <!--<tr>
                             <th>基本信息：</th>
@@ -1114,7 +1098,7 @@
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="婚姻状况" name="C_PInfoCert"/>婚姻状况</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="宗教信仰" name="C_PInfoCert"/>宗教信仰</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="资格证书" name="C_PInfoCert"/>资格证书</label>
-								@Html.HiddenFor(model => model.PInfoCert, new {@class = "form-control" })
+                                @Html.HiddenFor(model => model.PInfoCert, new {@class = "form-control" })
                             </td>
                         </tr>
                         <tr>
@@ -1129,8 +1113,8 @@
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="说普通话" name="C_PInfoQuality"/>说普通话</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="沟通技能" name="C_PInfoQuality"/>沟通技能</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="厨艺实操" name="C_PInfoQuality"/>厨艺实操</label>
-								@Html.HiddenFor(model => model.PInfoQuality, new {@class = "form-control" })
-								</td>
+                                @Html.HiddenFor(model => model.PInfoQuality, new {@class = "form-control" })
+                                </td>
                         </tr>
                          <tr>
 
@@ -1145,8 +1129,8 @@
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="客户心愿" name="C_PInfoService"/>客户心愿</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="服务赠言" name="C_PInfoService"/>服务赠言</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="母婴誓言" name="C_PInfoService"/>母婴誓言</label>
-								@Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
-								</td>
+                                @Html.HiddenFor(model => model.PInfoService, new {@class = "form-control" })
+                                </td>
                         </tr>
                         <tr>
                          <th>高端技能：</th>
@@ -1160,8 +1144,8 @@
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="游泳抚触" name="C_PInfoEdu"/>游泳抚触</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="心理咨询" name="C_PInfoEdu"/>心理咨询</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="营养配餐" name="C_PInfoEdu"/>营养配餐</label>
-								@Html.HiddenFor(model => model.PInfoEdu, new {@class = "form-control" })
-								</td>
+                                @Html.HiddenFor(model => model.PInfoEdu, new {@class = "form-control" })
+                                </td>
                         </tr>
                         <tr>
                         <th>育婴知识：</th>
@@ -1175,8 +1159,8 @@
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="产后形体操" name="C_PInfoKnowledge"/>产后形体操</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="喂养的指导" name="C_PInfoKnowledge"/>喂养的指导</label>
                                 <label class="checkbox-inline"><input class="c_note_item" type="checkbox" value="湿疹的处理" name="C_PInfoKnowledge"/>湿疹的处理</label>
-								@Html.HiddenFor(model => model.PInfoKnowledge, new {@class = "form-control" })
-								</td>
+                                @Html.HiddenFor(model => model.PInfoKnowledge, new {@class = "form-control" })
+                                </td>
                         </tr>
                         <tr>
                             <th>参加培训：</th>
@@ -1216,8 +1200,9 @@
                     </tbody>
                 </table>
 
-                <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect" style="margin-top:10px;"> <tbody>
-                <tr>
+                <table width="800" border="0" cellspacing="0" cellpadding="0" class="commontable shortSelect" style="margin-top:10px;">
+                    <tbody>
+                        <tr>
                             <th>参加培训：</th>
                             <td>
                                 @Html.TextAreaFor(model => model.PInfoTrain, new { @class = "form-control", @style = "width:270px;height:60px;", @placeholder = "格式为：2014年8月 参加雪绒花 小儿推拿培训" })
@@ -1252,7 +1237,8 @@
                                 @Html.TextBoxFor(model => model.PInfoRelTel2, new { @class = "form-control", @style = "width:180px;color:blue;", @placeholder = "电话" })
                             </td>
                         </tr>
-                </tbody> </table>
+                    </tbody>
+                </table>
             </form>
         </div>
 
@@ -1260,13 +1246,13 @@
             <div style="height:15px;"></div>
             <form id="pregnanterinfo_form3">
                 <!--个人资料-->
+                <div style=" margin-bottom:10px; color:red;">
+                    赶快来为月嫂生活照评分吧：@Html.TextBoxFor(model => model.PInfoSpicture, new { @class = "form-control", @style = "width:80px;color:blue;font-size:14px;font-weight:bold;", @onchange = "yanzheng(this)" }) 分
+                    @Html.HiddenFor(model => model.PInfoScomment, new { @class = "form-control" })
+                </div>
                 <div class="upload-box shenghuo" id="PInfoLifeimg">
                     <span class="upload-progress"></span>
                 </div>
-                <div style="float:left">
-                    @Html.TextBoxFor(model => model.PInfoSpicture, new { @class = "form-control required number", @style = "width:180px;color:blue;" })
-                </div>
-                <div class="clear"></div>
                 <div class="photo-list">
                     <ul>
                         @foreach (var life_pic in life_pics)
@@ -1334,51 +1320,57 @@
             </form>
         </div>
 
-        @if(actionType=="Edit"){
-        <div class="tab-pane" id="service-info">
-            <table id="pregnanterservicerecord_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
-                <thead>
-                    <tr>
-                        <th data-column-id="PServiceType" data-header-align="center" data-formatter="PServiceType" data-order="desc">日程类型</th>
-                        <th data-column-id="Id"  data-identifier="true" data-header-align="center" data-formatter="PServiceBegin" data-order="desc">开始时间</th>
-                        <th data-column-id="PServiceEnd" data-header-align="center" data-formatter="PServiceEnd" data-order="desc">结束时间</th>
-                        <th data-column-id="PServiceNote" data-header-align="center" data-formatter="PServiceNote" data-order="desc">日程备注</th>
-                        <th data-column-id="PServiceCreateTime" data-header-align="center" data-formatter="PServiceCreateTime" data-order="desc">添加时间</th>
-                        <th data-column-id="PServiceCreater" data-header-align="center" data-formatter="PServiceCreater" data-order="desc">添加人</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        @if (actionType == "Edit")
+        {
+            <div class="tab-pane" id="service-info">
+                <table id="pregnanterservicerecord_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                    <thead>
+                        <tr>
+                            <th data-column-id="PServiceType" data-header-align="center" data-formatter="PServiceType" data-order="desc">日程类型</th>
+                            <th data-column-id="Id" data-identifier="true" data-header-align="center" data-formatter="PServiceBegin" data-order="desc">开始时间</th>
+                            <th data-column-id="PServiceEnd" data-header-align="center" data-formatter="PServiceEnd" data-order="desc">结束时间</th>
+                            <th data-column-id="PServiceNote" data-header-align="center" data-formatter="PServiceNote" data-order="desc">日程备注</th>
+                            <th data-column-id="PServiceCreateTime" data-header-align="center" data-formatter="PServiceCreateTime" data-order="desc">添加时间</th>
+                            <th data-column-id="PServiceCreater" data-header-align="center" data-formatter="PServiceCreater" data-order="desc">添加人</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
 
-        <div class="tab-pane" id="weihu-info">
-            <table id="pregnantermaintenance_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
-                <thead>
-                    <tr>
-                        <th data-column-id="PMainType" data-header-align="center" data-formatter="PMainType" data-order="desc" data-header-css-class="wid120">维护类型</th>
-                        <th data-column-id="PMainContent" data-header-align="center" data-formatter="PMainContent" data-order="desc">维护内容</th>
-                        <th data-column-id="PMainCreater" data-header-align="center" data-formatter="PMainCreater" data-order="desc" data-header-css-class="wid90">维护人</th>
-                        <th  data-column-id="Id"  data-identifier="true"  data-header-align="center" data-formatter="PMainCreatTime" data-order="desc"  data-header-css-class="wid90">维护时间</th>
-                    </tr>
-                </thead>
-            </table>
+            <div class="tab-pane" id="weihu-info">
+                <table id="pregnantermaintenance_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                    <thead>
+                        <tr>
+                            <th data-column-id="PMainType" data-header-align="center" data-formatter="PMainType" data-order="desc" data-header-css-class="wid120">维护类型</th>
+                            <th data-column-id="PMainContent" data-header-align="center" data-formatter="PMainContent" data-order="desc">维护内容</th>
+                            <th data-column-id="PMainCreater" data-header-align="center" data-formatter="PMainCreater" data-order="desc" data-header-css-class="wid90">维护人</th>
+                            <th data-column-id="Id" data-identifier="true" data-header-align="center" data-formatter="PMainCreatTime" data-order="desc" data-header-css-class="wid90">维护时间</th>
+                        </tr>
+                    </thead>
+                </table>
 
-        </div>
+            </div>
 
-        <div class="tab-pane" id="judge-info">
-            <table id="pregnanterevaluation_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
-                <thead>
-                    <tr>
-                        <th data-column-id="PEvaLevel" data-header-align="center" data-formatter="PEvaLevel" data-order="desc" data-header-css-class="wid90">评价级别</th>
-                        <th data-column-id="PEvaContent" data-header-align="center" data-formatter="PEvaContent" data-order="desc">评价内容</th>
-                        <th data data-column-id="Id"  data-identifier="true"  data-header-align="center" data-formatter="PEvaTime" data-order="desc" data-header-css-class="wid120">评价时间</th>
-                        <th data-column-id="PEvaPerson" data-header-align="center" data-formatter="PEvaPerson" data-order="desc" data-header-css-class="wid90">评价人</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+            <div class="tab-pane" id="judge-info">
+
+                <div style=" margin-top:10px; color:red;">
+                    赶快来为月嫂获得的评价记录进行评分吧：<input class="form-control" id="test_PInfoScomment" name="test_PInfoScomment" onchange="yanzheng2(this)" style="width:80px;color:blue;font-size:14px;font-weight:bold;" type="text" value="0" /> 分
+                </div>
+                <table id="pregnanterevaluation_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
+                    <thead>
+                        <tr>
+                            <th data-column-id="PEvaLevel" data-header-align="center" data-formatter="PEvaLevel" data-order="desc" data-header-css-class="wid90">评价级别</th>
+                            <th data-column-id="PEvaContent" data-header-align="center" data-formatter="PEvaContent" data-order="desc">评价内容</th>
+                            <th data=data data-column-id="Id" data-identifier="true" data-header-align="center" data-formatter="PEvaTime" data-order="desc" data-header-css-class="wid120">评价时间</th>
+                            <th data-column-id="PEvaPerson" data-header-align="center" data-formatter="PEvaPerson" data-order="desc" data-header-css-class="wid90">评价人</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         }
-        </div>
+    </div>
 </body>
+
 </html>
 
 
