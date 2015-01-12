@@ -72,7 +72,54 @@ namespace Ed.Web.Areas.Customer.Controllers
 
         #endregion
 
-        #region 添加、修改页面  
+        #region 添加、修改页面
+
+        ////GET: URL
+        ////actionType (Add,Edit)
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult Add(string actionType, int? id)
+        {
+            //actionType
+            ViewBag.ActionType = actionType;
+
+            //修改
+            if (actionType == EdEnums.ActionEnum.Edit.ToString())
+            {
+                if (null == id)
+                {
+                    ViewData["Msg"] = "参数非法（id不能为空）";
+                    return View("_Error");
+                }
+                var model = ClientInfoService.GetClientInfo(temp => temp.Id == id);
+                //查询创建者的信息   
+
+                var sysUser =
+                    SysUserService.GetFields("new(Id,UserLname,UserTname)",
+                        String.Concat(new[] { "Id=", model.ClientCreater.ToString() })).ToList().FirstOrDefault();
+                ViewBag.SysUser = sysUser;
+
+                return View("Add", model);
+            }
+            //添加
+            else if (actionType == EdEnums.ActionEnum.Add.ToString())
+            {
+                var clientInfo = new TClientInfo();
+                //返回当前登录用户（同时也是创建者）
+                ViewBag.SysUser = new TSysUser()
+                {
+                    Id = int.Parse(Session[EdKeys.SESSION_USER_ID].ToString()),
+                    UserTname = Session[EdKeys.SESSION_USER_NAME].ToString()
+                };
+                return View("Add", clientInfo);
+            }
+            else
+            {
+                ViewData["Msg"] = "参数非法（actipnType不能为空）";
+                return View("_Error");
+            }
+        }
+
 
         ////GET: URL
         ////actionType (Add,Edit)
@@ -92,14 +139,16 @@ namespace Ed.Web.Areas.Customer.Controllers
                     return View("_Error");
                 }
                 var model = ClientInfoService.GetClientInfo(temp => temp.Id == id);
-                //查询创建者的信息
-                var sysUser =
-                    SysUserService.GetFields("new(Id,UserLname,UserTname)",
-                        String.Concat(new[] {"Id=", model.ClientCreater.ToString()})).ToList().FirstOrDefault();
-                ViewBag.SysUser = sysUser;
+                //查询创建者的信息   
+              
+                    var sysUser =
+                        SysUserService.GetFields("new(Id,UserLname,UserTname)",
+                            String.Concat(new[] { "Id=", model.ClientCreater.ToString() })).ToList().FirstOrDefault();
+                    ViewBag.SysUser = sysUser;
+                                                   
                 return View("Edit", model);
             }
-                //添加
+            //添加
             else if (actionType == EdEnums.ActionEnum.Add.ToString())
             {
                 var clientInfo = new TClientInfo();
@@ -119,7 +168,54 @@ namespace Ed.Web.Areas.Customer.Controllers
         }
 
         #endregion
+    
+        #region 添加、修改页面
 
+        ////GET: URL
+        ////actionType (Add,Edit)
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult XEdit(string actionType, int? id)
+        {
+            //actionType
+            ViewBag.ActionType = actionType;
+
+            //修改
+            if (actionType == EdEnums.ActionEnum.Edit.ToString())
+            {
+                if (null == id)
+                {
+                    ViewData["Msg"] = "参数非法（id不能为空）";
+                    return View("_Error");
+                }
+                var model = ClientInfoService.GetClientInfo(temp => temp.Id == id);
+                //查询创建者的信息
+                var sysUser =
+                    SysUserService.GetFields("new(Id,UserLname,UserTname)",
+                        String.Concat(new[] { "Id=", model.ClientCreater.ToString() })).ToList().FirstOrDefault();
+                ViewBag.SysUser = sysUser;
+                return View("XEdit", model);
+            }
+            //添加
+            else if (actionType == EdEnums.ActionEnum.Add.ToString())
+            {
+                var clientInfo = new TClientInfo();
+                //返回当前登录用户（同时也是创建者）
+                ViewBag.SysUser = new TSysUser()
+                {
+                    Id = int.Parse(Session[EdKeys.SESSION_USER_ID].ToString()),
+                    UserTname = Session[EdKeys.SESSION_USER_NAME].ToString()
+                };
+                return View("XEdit", clientInfo);
+            }
+            else
+            {
+                ViewData["Msg"] = "参数非法（actipnType不能为空）";
+                return View("_Error");
+            }
+        }
+
+        #endregion
         #region   查看页面  141028 By 唐有炜
 
         //GET: URL   /Customer/ClientInfo/ShowTransferUsers/

@@ -33,11 +33,14 @@
     //=====================================================================
 </script>
  <script type="text/javascript">
-     function show_add() {
-         showTopContentWindow("show_add", "/Order/YuesaoOrder/AddClient/","1. 选择订单类型并确认客户信息", 500, 200);
+     function show_add_yuesao() {
+         showTopContentWindow("show_add_yuesao", "/Order/YuesaoOrder/AddClient/", "1.确认客户信息", 500, 200);
+     }
+     function show_add_yingshi() {
+         showTopContentWindow("show_add_yingshi", "/Order/YingshiOrder/AddClient/", "1.确认客户信息", 500, 200);
      }
      function show_my() {
-         showTopContentWindow("show_list_my", "/Order/Order/My",'@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1000, 500);
+         showTopContentWindow("show_list_my", "/Order/Order/My",'@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1100, 500);
      }
 	 function show_do() {
          showTopContentWindow("show_list", "/Order/Order/Do","待处理订单信息管理", 1000, 500);
@@ -53,13 +56,20 @@
     <div class="" style=" width:231px;overflow:hidden; border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;">
         <div class="bs-glyphicons">
             <ul class="bs-glyphicons-list">
-                @if (Html.LoadModulePowers(@Model, "Order_add"))
+             @*   @if (Html.LoadModulePowers(@Model, "Order_add_yuesao"))
                 {
-                    <li onclick=" show_add(); ">
+                    <li onclick=" show_add_yuesao(); ">
                         <span class="glyphicon glyphicon-plus"></span>
-                        <span class="glyphicon-class">新增订单</span>
+                        <span class="glyphicon-class">新增月嫂订单</span>
                     </li>
                 }
+                 @if (Html.LoadModulePowers(@Model, "Order_add_yingshi"))
+                {
+                    <li onclick=" show_add_yingshi(); ">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="glyphicon-class">新增育婴师订单</span>
+                    </li>
+                }*@
                  @if (Html.LoadModulePowers(@Model, "Order_my"))
                  {
                      <li onclick=" show_my(); ">

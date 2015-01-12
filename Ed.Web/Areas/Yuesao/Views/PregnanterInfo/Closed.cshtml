@@ -88,7 +88,7 @@
                             return row.PInfoAge + "岁";
                         },
                         PInfoType: function (column, row) {
-                            return GetOptionValue(row.PInfoType, "0|普通月嫂,1|员工制月嫂,2|其他类型");
+                            return GetOptionValue(row.PInfoType, "0|普通,1|员工制,2|其他类型");
                         },
 
                         PInfoLevel: function (clumn, row) {
@@ -109,6 +109,17 @@
                                     return "<span style=\"color:#ddc104\">★★★★★★★</span>";
                                 default:
                                     return "";
+                                    break;
+                            }
+                        },
+                        PInfoFenlei: function (column, row) {
+                            switch (row.PInfoFenlei) {
+                                case 0:
+                                    return "月嫂";
+                                case 1:
+                                    return "育婴师";
+                                case 2:
+                                    return "双向";                                                        
                                     break;
                             }
                         },
@@ -148,8 +159,6 @@
         //console.log(id);
         showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂",720, 400);
 
-        //必须有这个，阻止刷新
-        return false;
     }
 
     function pregnanterinfo_open() {
@@ -180,6 +189,7 @@
                     var status = result.Status;
                     if (status == true || status == "true" || status == "True") {
                         //刷新数据
+                        top.dialog.list["show_pregnanterinfo_open"].close().remove();
                         pregnanterinfo_grid.bootgrid("reload");
                         showMsg("月嫂开启预定成功！", "Success");
                     } else {
@@ -190,9 +200,10 @@
                     showTopMsg("网络连接错误!", "错误提示", "Error");
                 }
             });
+            //必须有这个，阻止刷新
+            return false;
         });
-        //必须有这个，阻止刷新
-        return false;
+       
     }
   
     
@@ -254,10 +265,7 @@
                 //top.dialog.list["pregnanterinfo_show_edit"].close().remove();
             });
             return false;
-        });
-
-        //必须有这个，阻止刷新
-        return false;
+        });        
     }
 
 
@@ -289,6 +297,7 @@
                     var status = result.Status;
                     if (status == true || status == "true" || status == "True") {
                         //刷新数据
+                        top.dialog.list["show_pregnanterinfo_trash"].close().remove();
                         pregnanterinfo_grid.bootgrid("reload");
                         showMsg("月嫂放入回收站成功！", "Success");
                     } else {
@@ -299,9 +308,10 @@
                     showTopMsg("网络连接错误!", "错误提示", "Error");
                 }
             });
+            //必须有这个，阻止刷新
+            return false;
         });
-        //必须有这个，阻止刷新
-        return false;
+       
     }
     
     
@@ -320,6 +330,7 @@
                     <th data-column-id="PInfoTel" data-header-align="center" data-formatter="PInfoTel" data-order="desc">手机</th>
                     <th data-column-id="PInfoType" data-header-align="center" data-formatter="PInfoType" data-order="desc">类型</th>
                     <th data-column-id="PInfoLevel" data-header-align="center" data-formatter="PInfoLevel" data-order="desc">等级</th>
+                    <th data-column-id="PInfoFenlei" data-header-align="center" data-formatter="PInfoFenlei" data-order="desc">类别</th>
                     <th data-column-id="CurrentStatus" data-header-align="center" data-formatter="CurrentStatus" data-sortable="false">当前状态</th>
                     <th data-column-id="PInfoLastdate" data-header-align="center" data-align="center" data-formatter="PInfoLastdate" data-order="desc">未跟踪</th>
                     <th data-column-id="Id" data-header-align="center" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>

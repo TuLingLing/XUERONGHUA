@@ -153,6 +153,8 @@
     <Compile Include="Areas\Customer\Controllers\ClientMaintenanceApiController.cs" />
     <Compile Include="Areas\Customer\Controllers\ClientMaintenanceController.cs" />
     <Compile Include="Areas\Customer\Controllers\IndexController.cs" />
+    <Compile Include="Areas\Order\Controllers\CorderApiController.cs" />
+    <Compile Include="Areas\Order\Controllers\CoderController.cs" />
     <Compile Include="Areas\Customer\CustomerAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\FinanceApiController.cs" />
     <Compile Include="Areas\Finance\Controllers\FinanceController.cs" />
@@ -190,6 +192,8 @@
     <Compile Include="Areas\Order\Controllers\YuesaoOrderController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Order\Controllers\YingshiOrderApiController.cs" />
+    <Compile Include="Areas\Order\Controllers\YingshiOrderController.cs" />
     <Compile Include="Areas\Order\OrderAreaRegistration.cs" />
     <Compile Include="Areas\Settings\Controllers\DataBackupApiController.cs" />
     <Compile Include="Areas\Settings\Controllers\DataBackupController.cs" />
@@ -209,6 +213,16 @@
     <Compile Include="Areas\Tools\Controllers\CaptureUploadController.cs" />
     <Compile Include="Areas\Tools\Controllers\UploadApiController.cs" />
     <Compile Include="Areas\Tools\ToolsAreaRegistration.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterEvaluationApiController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterInfoApiController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterInfoController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterMaintenanceApiController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterServiceRecordApiController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YIndexController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterEvaluationController.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterServiceRecordController.cs" />
+    <Compile Include="Areas\Yingshi\YingshiAreaRegistration.cs" />
+    <Compile Include="Areas\Yingshi\Controllers\YPregnanterMaintenanceController.cs" />
     <Compile Include="Areas\Yuesao\Controllers\IndexController.cs" />
     <Compile Include="Areas\Yuesao\Controllers\PregnanterEvaluationApiController.cs" />
     <Compile Include="Areas\Yuesao\Controllers\PregnanterEvaluationController.cs" />
@@ -308,10 +322,80 @@
     <Content Include="Areas\HelpPage\Images\orderedList8.png" />
     <Content Include="Areas\HelpPage\Images\orderedList9.png" />
     <Content Include="Areas\Home\Views\_ViewStart.cshtml" />
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\Common.Logging.dll" />
+    <Content Include="bin\Common.Logging.pdb" />
+    <Content Include="bin\Common.Logging.xml" />
+    <Content Include="bin\Ed.Common.dll" />
+    <Content Include="bin\Ed.Common.pdb" />
+    <Content Include="bin\Ed.Dao.dll" />
+    <Content Include="bin\Ed.Dao.pdb" />
+    <Content Include="bin\Ed.Entity.dll" />
+    <Content Include="bin\Ed.Entity.pdb" />
+    <Content Include="bin\Ed.Service.dll" />
+    <Content Include="bin\Ed.Service.pdb" />
+    <Content Include="bin\Ed.Web.dll" />
+    <Content Include="bin\Ed.Web.pdb" />
+    <Content Include="bin\ELinq.dll" />
+    <Content Include="bin\ELinq.xml" />
+    <Content Include="bin\Interop.SQLDMO.dll" />
+    <Content Include="bin\log4net.dll" />
+    <Content Include="bin\log4net.xml" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Microsoft.Web.Mvc.FixedDisplayModes.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Newtonsoft.Json.xml" />
+    <Content Include="bin\NLite.dll" />
+    <Content Include="bin\NLite.xml" />
+    <Content Include="bin\RouteDebug.dll" />
+    <Content Include="bin\Spring.Core.dll" />
+    <Content Include="bin\Spring.Core.pdb" />
+    <Content Include="bin\Spring.Core.xml" />
+    <Content Include="bin\Spring.Web.dll" />
+    <Content Include="bin\Spring.Web.Mvc4.dll" />
+    <Content Include="bin\Spring.Web.Mvc4.pdb" />
+    <Content Include="bin\Spring.Web.Mvc4.xml" />
+    <Content Include="bin\Spring.Web.pdb" />
+    <Content Include="bin\Spring.Web.xml" />
+    <Content Include="bin\System.Linq.Dynamic.dll" />
+    <Content Include="bin\System.Net.Http.dll" />
+    <Content Include="bin\System.Net.Http.Formatting.dll" />
+    <Content Include="bin\System.Net.Http.WebRequest.dll" />
+    <Content Include="bin\System.Net.Http.WebRequest.xml" />
+    <Content Include="bin\System.Net.Http.xml" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Helpers.xml" />
+    <Content Include="bin\System.Web.Http.dll" />
+    <Content Include="bin\System.Web.Http.WebHost.dll" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Mvc.xml" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.xml" />
+    <Content Include="bin\WebGrease.dll" />
+    <Content Include="bin\XmlDocument.xml" />
+    <Content Include="bin\zh-Hans\System.Net.Http.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Net.Http.WebRequest.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Web.Helpers.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Web.Mvc.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Web.Razor.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Web.WebPages.Razor.resources.dll" />
+    <Content Include="bin\zh-Hans\System.Web.WebPages.resources.dll" />
     <Content Include="Configs\Daos.xml" />
     <Content Include="Configs\Objects.xml" />
-    <Content Include="Configs\Services.xml" />
-    <Content Include="Configs\Webs.xml" />
+    <Content Include="Configs\Services.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configs\Webs.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
   </ItemGroup>
@@ -326,6 +410,60 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ie6update.html" />
+    <Content Include="Log\20141119.error.html" />
+    <Content Include="Log\20141119.html" />
+    <Content Include="Log\20141121.error.html" />
+    <Content Include="Log\20141121.html" />
+    <Content Include="Log\20141123.error.html" />
+    <Content Include="Log\20141123.html" />
+    <Content Include="Log\20141124.error.html" />
+    <Content Include="Log\20141124.html" />
+    <Content Include="Log\20141127.error.html" />
+    <Content Include="Log\20141127.html" />
+    <Content Include="Log\20141128.error.html" />
+    <Content Include="Log\20141128.html" />
+    <Content Include="Log\20141202.error.html" />
+    <Content Include="Log\20141202.html" />
+    <Content Include="Log\20141203.error.html" />
+    <Content Include="Log\20141203.html" />
+    <Content Include="Log\20141205.error.html" />
+    <Content Include="Log\20141205.html" />
+    <Content Include="Log\20141208.error.html" />
+    <Content Include="Log\20141208.html" />
+    <Content Include="Log\20141209.error.html" />
+    <Content Include="Log\20141209.html" />
+    <Content Include="Log\20141210.error.html" />
+    <Content Include="Log\20141210.html" />
+    <Content Include="Log\20141212.error.html" />
+    <Content Include="Log\20141212.html" />
+    <Content Include="Log\20141215.error.html" />
+    <Content Include="Log\20141215.html" />
+    <Content Include="Log\20141216.error.html" />
+    <Content Include="Log\20141216.html" />
+    <Content Include="Log\20141217.error.html" />
+    <Content Include="Log\20141217.html" />
+    <Content Include="Log\20141218.error.html" />
+    <Content Include="Log\20141218.html" />
+    <Content Include="Log\20141219.error.html" />
+    <Content Include="Log\20141219.html" />
+    <Content Include="Log\20141220.error.html" />
+    <Content Include="Log\20141220.html" />
+    <Content Include="Log\20141221.error.html" />
+    <Content Include="Log\20141221.html" />
+    <Content Include="Log\20141222.error.html" />
+    <Content Include="Log\20141222.html" />
+    <Content Include="Log\20141223.error.html" />
+    <Content Include="Log\20141223.html" />
+    <Content Include="Log\20141224.error.html" />
+    <Content Include="Log\20141224.html" />
+    <Content Include="Log\20141225.error.html" />
+    <Content Include="Log\20141225.html" />
+    <Content Include="Log\20141226.error.html" />
+    <Content Include="Log\20141226.html" />
+    <Content Include="Log\20141227.error.html" />
+    <Content Include="Log\20141227.html" />
+    <Content Include="Log\20141228.error.html" />
+    <Content Include="Log\20141228.html" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -556,14 +694,43 @@
     <Content Include="Areas\Home\Views\Main\Finance.cshtml" />
     <Content Include="Areas\Home\Views\Main\Order.cshtml" />
     <Content Include="Areas\Home\Views\Main\Seting.cshtml" />
+    <Content Include="Areas\Home\Views\Main\Yuangong.cshtml" />
     <Content Include="Areas\Home\Views\Main\Yuesao.cshtml" />
+    <Content Include="Areas\Home\Views\Main\Yingshi.cshtml" />
+    <Content Include="Areas\Customer\Views\ClientInfo\XEdit.cshtml" />
+    <Content Include="Areas\Order\Views\YingshiOrder\AddClient.cshtml" />
+    <Content Include="Areas\Order\Views\YingshiOrder\AddYingshi.cshtml" />
+    <Content Include="Areas\Order\Views\YingshiOrder\Edit.cshtml" />
+    <Content Include="Areas\Order\Views\YingshiOrder\ViewYingshi.cshtml" />
+    <Content Include="Areas\Order\Views\YingshiOrder\AddYingshiInfo.cshtml" />
+    <Content Include="Areas\Order\Views\Corder\ViewHuisuo.cshtml" />
+    <Content Include="Areas\Order\Views\Corder\AddZengzhiInfo1.cshtml" />
+    <Content Include="Areas\Settings\Views\SysUser\Lizhi.cshtml" />
+    <Content Include="Areas\Order\Views\Order\ShowTransferUsers.cshtml" />
+    <Content Include="Areas\Order\Views\Corder\ViewZengzhi.cshtml" />
+    <Content Include="Areas\Order\Views\Corder\AddHuisuoInfo.cshtml" />
+    <Content Include="Areas\Order\Views\Corder\AddZengzhiInfo.cshtml" />
+    <Content Include="Areas\Order\Views\YingshiOrder\SEdit.cshtml" />
+    <Content Include="Areas\Order\Views\YuesaoOrder\SEdit.cshtml" />
     <None Include="Areas\Tools\Views\CaptureUpload\Index.cshtml" />
     <Content Include="Areas\Tools\Web.config" />
+    <Content Include="Areas\Yingshi\Views\Index\Index.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterEvaluation\Edit.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterInfo\Closed.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterInfo\Edit.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterInfo\Trash.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterInfo\View.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterMaintenance\Edit.cshtml" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterServiceRecord\Edit.cshtml" />
+    <Content Include="Areas\Yingshi\Views\Web.config" />
+    <Content Include="Areas\Yingshi\Views\YPregnanterInfo\List.cshtml" />
     <None Include="Areas\Yuesao\Views\PregnanterMaintenance\Edit.cshtml" />
     <Content Include="XmlConfig\site.config" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="bin\Ed.Web.dll.config" />
+    <Content Include="bin\log4net.config" />
     <None Include="Properties\PublishProfiles\Ed.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -589,9 +756,9 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>58740</DevelopmentServerPort>
+          <DevelopmentServerPort>3033</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:58740/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

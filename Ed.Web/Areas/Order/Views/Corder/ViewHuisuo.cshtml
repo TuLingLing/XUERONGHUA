@@ -1,0 +1,167 @@
+﻿@using Ed.Entity
+@using Ed.Web.Helpers
+@{
+    //客户信息
+    var customer = (TClientInfo)ViewBag.Customer;
+    //月嫂信息
+    var yuesaoes = (List<TPregnanterInfo>)ViewBag.Yuesao;
+    //订单信息
+    var order = (TOrder)ViewBag.Order;
+    //下单人
+    string orderCreaterName = ViewBag.OrderCreaterName;
+    //维护人
+    string orderWeihuName = ViewBag.OrderWeihuName;
+
+    //月嫂订单信息
+    var yuesaoOrder = (TYuesaoOrder)ViewBag.yuesaoOrder;
+
+   //确定月嫂
+    var yorderYuesao = (TPregnanterInfo)ViewBag.YorderYuesao;
+    
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>雪绒花云服务_订单第三步输入客户信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+    <style type="text/css">
+.commontable { margin-top:20px;}
+.commontable td {padding:3px 5px; text-align:left; color:#726F6F; line-height:22px;}
+.commontable td.tit{background-color:#EBECEE;text-align:center; width:110px; color:#000;}
+.commontable th{ width:70px; text-align:right; font-weight:normal;}
+.commontable .yuesao_list .list{ display:block; line-height:30px; height:30px;width:100%; border:1px solid #ccc; margin-top:-1px; overflow:hidden;}
+.commontable .yuesao_list .list span{ display:block; float:left; width:15%; text-align:center; color:green;}
+.commontable .yuesao_list .list a{ margin-left:20px;}
+.commontable .yuesao_list .list span.green{ color:green;}
+
+.order_status{position:absolute; width:120px; height:50px; font-size:24px; font-weight:bold; line-height:50px;text-align:center;top:30px; right:20px;-moz-transform: rotate(30deg);-webkit-transform: rotate(30deg);}
+.daichuli{ border:3px solid red;color:#F00;}
+.daizhixing{ border:3px solid green;color:green;}
+.zhixingzhong{border:3px solid blue;color:blue;}
+.weihuzhong{border:3px solid gray;color:gray;}
+.jineng{font-size: 12px;padding: 2px 3px;color: #FFFFFF;background-color: #328eb4;margin-right: 5px;}
+</style>
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+		
+		
+		 function pregnanterinfo_view(id) {
+                var url = "/Yingshi/YPregnanterInfo/View?id=" + id;
+                //console.log(id);
+                showTopContentWindow("pregnanterinfo_show_view", url, "查看育婴师",810,500);
+            }
+         
+    </script>
+    </head><body>
+    <div class="order_status daichuli">@Html.OptionsPalse(@order.OrderStatus, "1|待处理,2|待执行, 3|待评价,4|待维护,0|回收站")</div>
+
+    <div class="boxwarp">
+      <table width="900" border="0" cellspacing="0" cellpadding="0" class="commontable">
+        <tbody>
+          <tr>
+            <td rowspan="2" class="tit"><label>客户信息</label></td>
+              <th>客户编号：</th>
+              <td>@customer.ClientCode </td>
+              <th>客户姓名：</th>
+              <td>@customer.ClientName</td>
+              <th>所属民族：</th>
+              <td>@customer.ClientNational</td>
+              <th>年龄：</th>
+              <td>@customer.ClientAge 岁</td>
+          </tr>
+            <tr>
+                <th>手机：</th>
+                <td>@customer.ClientTel1</td>
+                <th>详细地址：</th>
+                <td colspan="6"><span id="ClientCity">@customer.ClientAddress</span></td>
+            </tr>           
+        @* <tr> <td colspan="9"><div style=" height:8px;"></div></td> </tr>
+            <tr>
+                <td rowspan="2" class="tit"><label>育婴师信息</label><br /></td>
+                <th>预定时间：</th>
+                <td colspan="4" style=" font-weight:bold; color:red; font-size:14px;">(开始)@Html.DateTimeNullPalse(@order.OrderBegin).ToString("yyyy-MM-dd") - (结束)@Html.DateTimeNullPalse(@order.OrderEnd).ToString("yyyy-MM-dd")</td>
+                @*<th>确定月嫂：</th><td colspan="3">已确定育婴师： @yorderYuesao.PInfoName</td> </tr>*@
+         @*<tr>
+            <th>意向育婴师：</th>
+             <td colspan="8" class="yuesao_list">
+                 @foreach (var yuesao in yuesaoes)
+                 {
+                     <div class="list">
+                         <input type="hidden" name="YorderAlter" value="@yuesao.Id" />
+                         <span class="green">@yuesao.PInfoCode</span>
+                         <span>@yuesao.PInfoName</span>
+                         <span>@yuesao.PInfoAge 岁</span>
+                         <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★")</span>
+                         <span class="jineng" style="color:#fff;width:30px;">@yuesaoOrder.YorderPtype</span>
+                                    @if (yuesaoOrder.YorderPtype == "12时")
+                                    {<span class="jineng">@yuesao.PInfoPrice12</span> }
+                                    else
+                                    {<span>@yuesao.PInfoPrice</span> }  
+                         <a href="javascript:pregnanterinfo_view(@yuesao.Id);">查看</a>
+                     </div>
+                 }
+             </td> </tr>*@    
+          <tr> <td colspan="9"><div style=" height:8px;"></div></td> </tr>
+            <tr>
+            <td class="tit"><label>月子会所</label></td>
+            <th>详细要求：</th>
+            <td colspan="8">@order.OrderNote</td>
+          </tr>
+           <tr> <td colspan="9"><div style=" height:8px;"></div></td> </tr>
+         <tr>
+            <td rowspan="4" class="tit"><label>订单信息</label><br/></td>
+            <th>订单编号：</th>
+            <td>@order.OrderCode</td>
+              <th>预定时间：</th>
+              <th>开始时间：</th>
+            <td>@order.OrderBegin</td>
+              <th>结束时间：</th>
+            <td>@order.OrderEnd</td>
+            @*<th>预产期：</th>
+            <td style=" color:blue; font-size:14px;">@Html.DateTimeNullPalse(@yuesaoOrder.YorderChildbirth).ToString("yyyy-MM-dd")</td>
+            <th>胎数：</th>
+            <td colspan="3">@Html.OptionsPalse(yuesaoOrder.YorderCode, "1|一胎,2|二胎,3|三胎")</td>*@
+          </tr>
+            <tr>
+                @*<th>预产医院：</th>
+                <td>@yuesaoOrder.YorderHospital</td>
+                <th>详细地址：</th>
+                <td colspan="6">@yuesaoOrder.YorderHaddress</td>*@
+            </tr>
+         <tr>
+            <th>详细要求：</th>
+            <td colspan="8">@order.OrderNote</td>
+         </tr>         
+         <tr>
+            <th>下单相关：</th>
+            <td> @orderCreaterName (@Html.DateTimeNullPalse(order.OrderDate).ToString("yyyy-MM-dd"))</td>
+             <th>处理相关：</th>
+             <td  colspan="5">@orderWeihuName (@Html.DateTimeNullPalse(order.OrderProcesstime).ToString("yyyy-MM-dd"))</td>
+           </tr>
+          <tr> <td colspan="9"><div style=" height:8px;"></div></td> </tr>
+         <tr>
+            <td class="tit"><label>财务信息</label></td>
+            <th>总金额：</th>
+			 <td style="color:#0000CC;font-size:14px; font-weight:bold;">@order.OrderSumMoney 元</td>
+            <th>已付金额：</th>
+            <td style="color:green;font-size:14px; font-weight:bold;">@order.OrderPrepaid 元</td>
+            <th>未付款：</th>
+            <td colspan="3" style="color:red; font-size:14px;font-weight:bold;">@(order.OrderSumMoney-order.OrderPrepaid)元</td>
+          </tr>
+        </tbody>
+      </table>
+	 </div>
+    </body>
+    </html>

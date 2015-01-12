@@ -68,7 +68,7 @@ namespace Ed.Web.Areas.Tools.Controllers
             {
                 string _delfile = EdRequest.GetString("DelFilePath");
                 HttpPostedFileBase _upfile = Request.Files["Filedata"];
-                bool _iswater = false; //默认不打水印
+                bool _iswater = true; //默认不打水印
                 bool _isthumbnail = false; //默认不生成缩略图
 
                 if (EdRequest.GetQueryString("IsWater") == "1")
@@ -98,7 +98,7 @@ namespace Ed.Web.Areas.Tools.Controllers
                 string _upfilepath = EdRequest.GetQueryString("UpFilePath"); //取得上传的对象名称
                 string _delfile = EdRequest.GetString(_refilepath);
                 HttpPostedFileBase _upfile = Request.Files[_upfilepath];
-                bool _iswater = false; //默认不打水印
+                bool _iswater = true; //默认不打水印
                 bool _isthumbnail = false; //默认不生成缩略图
                 bool _isimage = false; //默认不限制图片上传
 
@@ -127,7 +127,7 @@ namespace Ed.Web.Areas.Tools.Controllers
             {
                 string _upfilepath = Request.QueryString["UpFilePath"]; //取得上传的对象名称
                 HttpPostedFileBase _upfile = Request.Files[_upfilepath];
-                bool _iswater = false; //默认不打水印
+                bool _iswater = true; //默认不打水印
                 bool _isthumbnail = false; //默认不生成缩略图
 
                 if (Request.QueryString["IsWater"] == "1")
@@ -151,7 +151,7 @@ namespace Ed.Web.Areas.Tools.Controllers
             {
                 string _upfilepath = Request.QueryString["UpFilePath"]; //取得上传的对象名称
                 HttpPostedFileBase _upfile = Request.Files[_upfilepath];
-                bool _iswater = false; //默认不打水印
+                bool _iswater = true; //默认不打水印
                 bool _isthumbnail = false; //默认不生成缩略图
 
                 if (Request.QueryString["IsWater"] == "1")
@@ -173,7 +173,7 @@ namespace Ed.Web.Areas.Tools.Controllers
             #region 编辑器上传处理===================================
             private string EditorFile()
             {
-                bool _iswater = false; //默认不打水印
+                bool _iswater = true; //默认不打水印
                 if (Request.QueryString["IsWater"] == "1")
                     _iswater = true;
                 HttpPostedFileBase imgFile = Request.Files["imgFile"];

@@ -23,12 +23,12 @@ namespace Ed.Web
         /// 依赖注入(PregnanterInfoApiController注入PregnanterInfoService) 2014-10-15 22:11:19 By 唐有炜
         /// </summary>
         private readonly IPregnanterInfoService PregnanterInfoService =
-            (IPregnanterInfoService) ContextRegistry.GetContext().GetObject("pregnanterInfoService");
+            (IPregnanterInfoService)ContextRegistry.GetContext().GetObject("pregnanterInfoService");
         private readonly IPregnanterMaintenanceService PregnanterMaintenanceService = (IPregnanterMaintenanceService)ContextRegistry.GetContext().GetObject("pregnanterMaintenanceService");
         private readonly IPregnanterServiceRecordService PregnanterServiceRecordService = (IPregnanterServiceRecordService)ContextRegistry.GetContext().GetObject("pregnanterServiceRecordService");
         private readonly ISysUserService SysUserService = (ISysUserService)ContextRegistry.GetContext().GetObject("sysUserService");
         private readonly ISysDepartmentService SysDepartmentService = (ISysDepartmentService)ContextRegistry.GetContext().GetObject("sysDepartmentService");
-	
+
         #endregion
 
         #region 逻辑实现 2014-10-15 22:11:19 By 唐有炜
@@ -101,9 +101,10 @@ namespace Ed.Web
             string sortField = sort.Split('[')[1].TrimEnd(']').ToLower();
             string sortType = request.Params.GetValues(sort).SingleOrDefault().ToLower();
             string searchPhrase = HttpUtility.UrlDecode(request.Params.Get("searchPhrase"));
+            
             //1 数值 2 搜索条件字符串
-            string searchType = request.Params.Get("searchType")??"1";
-
+            string searchType = request.Params.Get("searchType") ?? "1";
+            string PInfoFenlei = request.Params.Get("PInfoFenlei") ?? "0";
             //要查询的字段（控值所有）
             string selector = "";
 
@@ -118,30 +119,33 @@ namespace Ed.Web
                     "(PInfoCode.Contains(@0) OR PInfoName.Contains(@0) OR PInfoTel.Contains(@0) OR PInfoHobby.Contains(@0)) ";
 
                 int preStatus = -1; //1 正常 0 回收站
+                int preFenlei=0; //0 月嫂  1 育婴师 2月嫂和育婴师
                 if (null != request.Params.Get("PInfoState"))
                 {
-                    preStatus = int.Parse(request.Params.Get("PInfoState").ToString());
-                    }
+                     preStatus = int.Parse(request.Params.Get("PInfoState").ToString());
+                     preFenlei = 0;
+                }
                 //回收站订单
                 if (preStatus == 0 || preStatus == 2)
                 {
                     predicate += "AND PInfoState=@1 ";
+                   
                 }
-                    //全部订单
-                else if (preStatus == -1)
+                //全部订单
+                else if (preStatus == -1 && preFenlei ==0)
                 {
-                    predicate += "AND (PInfoState<>0 AND PInfoState<>2) ";
+                    predicate += "AND(PInfoState<>0 AND PInfoState<>2)";
+                    predicate += "AND(PInfoFenlei<>1)";
                 }
-                    //其他状态
-                else
+                //其他状态
+                else if (preStatus==1)
                 {
-                    predicate += "AND PInfoState=@1 AND (PInfoState<>0 AND PInfoState<>2)  ";
-                  
+                    predicate += "AND PInfoState=@1 AND (PInfoState<>0 AND PInfoState<>2)";                   
                 }
                 parms[0] = searchPhrase;
                 parms[1] = preStatus;
             }
-                //多条件搜索（订单搜索页面使用）
+            //多条件搜索（订单搜索页面使用）
             else
             {
                 var searchArr = Utils.StringToObjectArray(searchPhrase, '|');
@@ -159,16 +163,23 @@ namespace Ed.Web
                 predicate = String.Concat(new[] { "(", predicate, ")", " AND PInfoState=1 " });
                 LogHelper.Debug("添加订单第二部，搜索月嫂（排除回收站和已关闭）：" + predicate);
 
+                //只筛选月嫂
+                if (String.IsNullOrEmpty(predicate))
+                {
+                    predicate = "true";
+                }
+                predicate = String.Concat(new[] { "(", predicate, ")", " AND (PInfoFenlei=0 ||PInfoFenlei=2) " });
+                LogHelper.Debug("添加订单第二部，搜索月嫂（排除回收站和已关闭）：" + predicate);
+                
                 //控制判断
                 if (String.IsNullOrEmpty(predicate))
                 {
                     predicate = "true";
                 }
-
             }
 
             /***************************************************/
-            if (!String.IsNullOrEmpty(request.Params.Get("OrderStart"))&&!String.IsNullOrEmpty(request.Params.Get("OrderEnd")))
+            if (!String.IsNullOrEmpty(request.Params.Get("OrderStart")) && !String.IsNullOrEmpty(request.Params.Get("OrderEnd")))
             {
                 //时间特殊处理
                 DateTime orderStart = DateTime.Parse(request.Params.Get("OrderStart"));
@@ -180,17 +191,18 @@ namespace Ed.Web
                 if (objServiceRecordInfo != null)//有正在服务的月嫂，排除
                 {
                     //predicate = "false";
-                    foreach (var obj in objServiceRecordInfo) {
+                    foreach (var obj in objServiceRecordInfo)
+                    {
                         var code = int.Parse(obj.PInfoCode.ToString());//注意：这里必须强制类型转换
                         var begin = obj.PServiceBegin;
                         var end = obj.PServiceEnd;
 
                         var plist = parms.ToList();
-                        predicate = String.Concat(new []{predicate," AND Id <> @"+plist.Count});
+                        predicate = String.Concat(new[] { predicate, " AND Id <> @" + plist.Count });
                         plist.Add(code);
-                       parms= plist.ToArray();
+                        parms = plist.ToArray();
                     }
-                }   
+                }
             }
             /****************************************************/
 
@@ -208,7 +220,7 @@ namespace Ed.Web
             //空值处理
             if (null == pregnanterInfos)
             {
-                pregnanterInfos=new List<Dictionary<string, object>>();
+                pregnanterInfos = new List<Dictionary<string, object>>();
             }
 
 
@@ -249,7 +261,7 @@ namespace Ed.Web
 
 
 
-        #endregion 
+        #endregion
 
 
         #region 查看 2014-10-15 22:11:19 By 唐有炜
@@ -288,8 +300,8 @@ namespace Ed.Web
             var context = (HttpContextBase)Request.Properties["MS_HttpContext"]; //获取传统context
             HttpRequestBase request = context.Request; //定义传统request对象
             //月嫂编号
-             var userId = HttpContext.Current.Session[EdKeys.SESSION_USER_ID].ToString();
-            
+            var userId = HttpContext.Current.Session[EdKeys.SESSION_USER_ID].ToString();
+
             dynamic depObj = SysUserService.GetFields("NEW(DepId)", String.Concat(new[] { "Id=", userId })).FirstOrDefault();
             var depId = depObj.DepId.ToString();
 
@@ -301,6 +313,7 @@ namespace Ed.Web
             var maxId = PregnanterInfoService.GetMaxId();
 
             pregnanterInfo.PInfoCode = RandomHelper.GetYuesaoNumber(depCode, maxId);
+            pregnanterInfo.PInfoFenlei = 0;
 
             //生活照片
             string PInfoLifeimg = request.Params.Get("PInfoLifeimg") ?? "";
@@ -309,6 +322,7 @@ namespace Ed.Web
             PInfoLifeimg = Utils.UnionStringsBySplit(PInfoLifeimg, PInfoLifeimgRemark, ',');
             pregnanterInfo.PInfoLifeimg = PInfoLifeimg;
 
+            pregnanterInfo.PInfoFenlei = 0;
             //证件照片
             string PInfoCertimg = request.Params.Get("PInfoCertimg") ?? "";
             string PInfoCertimgRemark = request.Params.Get("PInfoCertimgRemark") ?? "";
@@ -323,21 +337,21 @@ namespace Ed.Web
 
             //创建时间
             pregnanterInfo.PInfoCreatedate = DateTime.Now;
-          
+
             //最后跟踪
             pregnanterInfo.PInfoLastdate = DateTime.Now;
 
             if (PregnanterInfoService.AddPregnanterInfo(pregnanterInfo))
             {
 
-                TPregnanterMaintenance pregnanterMaintenance =new TPregnanterMaintenance()
+                TPregnanterMaintenance pregnanterMaintenance = new TPregnanterMaintenance()
                 {
-                 PInfoCode = pregnanterInfo.Id,
-                 PMainType = 1,
-                 PMainContent = "添加了月嫂【"+pregnanterInfo.PInfoName+"】",
-                 PMainCreater =  (int)pregnanterInfo.PInfoCreateperson,
-                 PMainCreatTime =DateTime.Now
-                 
+                    PInfoCode = pregnanterInfo.Id,
+                    PMainType = 1,
+                    PMainContent = "添加了月嫂【" + pregnanterInfo.PInfoName + "】",
+                    PMainCreater = (int)pregnanterInfo.PInfoCreateperson,
+                    PMainCreatTime = DateTime.Now
+
                 };
                 try
                 {
@@ -372,19 +386,90 @@ namespace Ed.Web
         {
             ResponseMessage rmsg = new ResponseMessage();
 
-            var context = (HttpContextBase) Request.Properties["MS_HttpContext"]; //获取传统context
+            var context = (HttpContextBase)Request.Properties["MS_HttpContext"]; //获取传统context
             HttpRequestBase request = context.Request; //定义传统request对象
 
+            pregnanterInfo.PInfoFenlei = 0;
             //生活照片
-            string PInfoLifeimg = request.Params.Get("PInfoLifeimg")??"";
+            string PInfoLifeimg = request.Params.Get("PInfoLifeimg") ?? "";
             //0|/Upload/201410/18/201410180324093440.jpg|/Upload/201410/18/small_201410180324093440.jpg,0|/Upload/201410/18/201410180324094720.jpg|/Upload/201410/18/small_201410180324094720.jpg,0|/Upload/201410/18/201410180324096350.jpg|/Upload/201410/18/small_201410180324096350.jpg,0|/Upload/201410/18/201410180324098391.jpg|/Upload/201410/18/small_201410180324098391.jpg
-            string PInfoLifeimgRemark = request.Params.Get("PInfoLifeimgRemark")??"";
-           PInfoLifeimg = Utils.UnionStringsBySplit(PInfoLifeimg, PInfoLifeimgRemark, ',');
-           pregnanterInfo.PInfoLifeimg = PInfoLifeimg;
+            string PInfoLifeimgRemark = request.Params.Get("PInfoLifeimgRemark") ?? "";
+            PInfoLifeimg = Utils.UnionStringsBySplit(PInfoLifeimg, PInfoLifeimgRemark, ',');
+            pregnanterInfo.PInfoLifeimg = PInfoLifeimg;
 
             //证件照片
-            string PInfoCertimg = request.Params.Get("PInfoCertimg")??"";
-            string PInfoCertimgRemark = request.Params.Get("PInfoCertimgRemark")??"";
+            string PInfoCertimg = request.Params.Get("PInfoCertimg") ?? "";
+            string PInfoCertimgRemark = request.Params.Get("PInfoCertimgRemark") ?? "";
+            PInfoCertimg = Utils.UnionStringsBySplit(PInfoCertimg, PInfoCertimgRemark, ',');
+            pregnanterInfo.PInfoCertimg = PInfoCertimg;
+
+            //省市
+            string prov = request.Params.Get("YuesaoProv");
+            string city = request.Params.Get("YuesaoArea");
+            string region = request.Params.Get("YuesaoRegion");
+            pregnanterInfo.PInfoCity = String.Concat(new[] { prov, ",", city, ",", region });
+
+            //最后跟踪
+            pregnanterInfo.PInfoLastdate = DateTime.Now;
+
+            if (PregnanterInfoService.EditPregnanterInfo(pregnanterInfo))
+            {
+                TPregnanterMaintenance pregnanterMaintenance = new TPregnanterMaintenance()
+                {
+                    PInfoCode = pregnanterInfo.Id,
+                    PMainType = 1,
+                    PMainContent = "修改了月嫂【" + pregnanterInfo.PInfoName + "】",
+                    PMainCreater = (int)pregnanterInfo.PInfoCreateperson,
+                    PMainCreatTime = DateTime.Now
+
+                };
+                try
+                {
+                    PregnanterMaintenanceService.AddPregnanterMaintenance(pregnanterMaintenance);
+                    rmsg.Status = true;
+                }
+                catch (Exception)
+                {
+                    rmsg.Status = false;
+                }
+
+                rmsg.Status = true;
+                rmsg.Status = true;
+            }
+            else
+            {
+                rmsg.Status = false;
+            }
+
+
+            return rmsg;
+        }
+
+        // POST /api/PregnanterInfoApi/EditPregnanterInfo
+        /// <summary>
+        ///修改信息 2014-10-15 22:11:19 By 唐有炜
+        /// </summary>
+        /// <param name="pregnanterInfo">pregnanterInfo</param>
+        /// <returns>ResponseMessage</returns>
+        [HttpPost]
+        public ResponseMessage EditPregnanterInfos([FromBody] TPregnanterInfo pregnanterInfo)
+        {
+            ResponseMessage rmsg = new ResponseMessage();
+
+            var context = (HttpContextBase)Request.Properties["MS_HttpContext"]; //获取传统context
+            HttpRequestBase request = context.Request; //定义传统request对象
+
+            pregnanterInfo.PInfoFenlei =2;
+            //生活照片
+            string PInfoLifeimg = request.Params.Get("PInfoLifeimg") ?? "";
+            //0|/Upload/201410/18/201410180324093440.jpg|/Upload/201410/18/small_201410180324093440.jpg,0|/Upload/201410/18/201410180324094720.jpg|/Upload/201410/18/small_201410180324094720.jpg,0|/Upload/201410/18/201410180324096350.jpg|/Upload/201410/18/small_201410180324096350.jpg,0|/Upload/201410/18/201410180324098391.jpg|/Upload/201410/18/small_201410180324098391.jpg
+            string PInfoLifeimgRemark = request.Params.Get("PInfoLifeimgRemark") ?? "";
+            PInfoLifeimg = Utils.UnionStringsBySplit(PInfoLifeimg, PInfoLifeimgRemark, ',');
+            pregnanterInfo.PInfoLifeimg = PInfoLifeimg;
+
+            //证件照片
+            string PInfoCertimg = request.Params.Get("PInfoCertimg") ?? "";
+            string PInfoCertimgRemark = request.Params.Get("PInfoCertimgRemark") ?? "";
             PInfoCertimg = Utils.UnionStringsBySplit(PInfoCertimg, PInfoCertimgRemark, ',');
             pregnanterInfo.PInfoCertimg = PInfoCertimg;
 
@@ -470,7 +555,7 @@ namespace Ed.Web
         /// <param name="id">id</param>
         /// <returns>ResponseMessage</returns>
         [HttpGet]
-        public ResponseMessage UpdatePregnanterInfoStatus(string ids,int status)
+        public ResponseMessage UpdatePregnanterInfoStatus(string ids, int status)
         {
             ResponseMessage rmsg = new ResponseMessage();
 
@@ -527,7 +612,7 @@ namespace Ed.Web
         /// <param name="existReturn">存在时的返回结果（默认true）</param>
         /// <returns>验证状态</returns>
         [HttpGet]
-        public HttpResponseMessage Validate(string fields, string eqs, string values, string operations,bool existReturn=true)
+        public HttpResponseMessage Validate(string fields, string eqs, string values, string operations, bool existReturn = true)
         {
             //构造参数
             var Status = false;
@@ -535,7 +620,7 @@ namespace Ed.Web
             string predicate = Utils.BuildPredicate(fields, eqs, values, operations, out parms);
 
             //记录日志
-            LogHelper.Debug("验证存在predicate：存在（true），不存在（false）" + predicate+ "【参数】" + String.Concat(parms));
+            LogHelper.Debug("验证存在predicate：存在（true），不存在（false）" + predicate + "【参数】" + String.Concat(parms));
 
             //发送请求
             if (PregnanterInfoService.Validate(predicate, parms))
@@ -546,13 +631,11 @@ namespace Ed.Web
             {
                 Status = false;
             }
-
             //状态判断
             if (!existReturn)
             {
-                Status = !Status; 
+                Status = !Status;
             }
-
             //输出结果
             var rmsg = new HttpResponseMessage
             {

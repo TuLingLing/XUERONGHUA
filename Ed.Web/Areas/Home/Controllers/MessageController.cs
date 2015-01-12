@@ -20,6 +20,16 @@ namespace Ed.Web.Areas.Home.Controllers
         }
         #endregion
 
+        public ActionResult Yuangong()
+        {
+            Response.Redirect("Home/Main/Yuangong");
+            return View();
+        }
 
+        public ActionResult Yingshi()
+        {
+            Response.Redirect("Yingshi/Index/Index");
+            return View();
+        }  
     }
 }

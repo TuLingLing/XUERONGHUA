@@ -11,13 +11,10 @@
     string orderCreaterName = ViewBag.OrderCreaterName;
     //维护人
     string orderWeihuName = ViewBag.OrderWeihuName;
-
     //月嫂订单信息
     var yuesaoOrder = (TYuesaoOrder)ViewBag.yuesaoOrder;
-
    //确定月嫂
-    var yorderYuesao = (TPregnanterInfo)ViewBag.YorderYuesao;
-    
+    var yorderYuesao = (TPregnanterInfo)ViewBag.YorderYuesao;    
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -42,6 +39,7 @@
 .daizhixing{ border:3px solid green;color:green;}
 .zhixingzhong{border:3px solid blue;color:blue;}
 .weihuzhong{border:3px solid gray;color:gray;}
+.jineng{font-size: 12px;padding: 2px 3px;color: #FFFFFF;background-color: #328eb4;margin-right: 5px;}
 </style>
     <script type="text/javascript">
         //=============================================================
@@ -59,14 +57,12 @@
 		 function pregnanterinfo_view(id) {
                 var url = "/Yuesao/PregnanterInfo/View?id=" + id;
                 //console.log(id);
-                showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂", 720, 400);
-
-                //必须有这个，阻止刷新
-                return false;
+                showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂",810,500);
             }
+         
     </script>
     </head><body>
-    <div class="order_status daichuli">@Html.OptionsPalse(@order.OrderStatus, "1|待处理,2|待执行, 3|待评价,4|待维护,0|回收站")</div>
+    <div class="order_status daichuli">@Html.OptionsPalse(@order.OrderStatus, "1|待处理,2|待执行,3|待评价,4|待维护,0|回收站")</div>
 
     <div class="boxwarp">
       <table width="900" border="0" cellspacing="0" cellpadding="0" class="commontable">
@@ -74,7 +70,7 @@
           <tr>
             <td rowspan="2" class="tit"><label>客户信息</label></td>
               <th>客户编号：</th>
-              <td>@customer.ClientCode</td>
+              <td>@customer.ClientCode </td>
               <th>客户姓名：</th>
               <td>@customer.ClientName</td>
               <th>所属民族：</th>
@@ -106,9 +102,13 @@
                          <span class="green">@yuesao.PInfoCode</span>
                          <span>@yuesao.PInfoName</span>
                          <span>@yuesao.PInfoAge 岁</span>
-                         <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★")</span> <span>@yuesao.PInfoPrice</span>
+                         <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★")</span>
+                         <span class="jineng" style="color:#fff;width:30px;">@yuesaoOrder.YorderPtype</span>
+                                    @if (yuesaoOrder.YorderPtype == "12时")
+                                    {<span class="jineng">@yuesao.PInfoPrice12</span> }
+                                    else
+                                    {<span>@yuesao.PInfoPrice</span> }  
                          <a href="javascript:pregnanterinfo_view(@yuesao.Id);">查看</a>
-                        
                      </div>
                  }
              </td>

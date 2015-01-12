@@ -278,6 +278,7 @@ namespace Ed.Web
             string city = request.Params.Get("ClientArea");
             string region = request.Params.Get("ClientRegion");
             clientInfo.ClientCity = String.Concat(new[] {prov, ",", city, ",", region});
+            
 
             //默认正常 0 回收站
             clientInfo.ClientStatus = 1;
@@ -323,7 +324,8 @@ namespace Ed.Web
 
             var context = (HttpContextBase) Request.Properties["MS_HttpContext"]; //获取传统context
             HttpRequestBase request = context.Request; //定义传统request对象
-
+            string tel=request.Params.Get("ClientTel1");        
+        
 
             //省市
             string prov = request.Params.Get("ClientProv");
@@ -517,8 +519,10 @@ namespace Ed.Web
 
             //排除回收站
             predicate = String.Concat(new[] {"(",predicate,")"," AND ClientStatus<>0 "});
-
-            LogHelper.Debug("验证客户是否存在（排除回收站）："+predicate);
+            LogHelper.Debug("验证客户是否存在（排除回收站）：" + predicate);
+            ////排除当前登录人的手机号
+            //predicate = String.Concat(new[] { "(", predicate, ")", " AND ClientCode<>1 " });
+            //LogHelper.Debug("验证客户是否当前登录客户：" + predicate);
 
             if (ClientInfoService.Validate(predicate, parms))
             {

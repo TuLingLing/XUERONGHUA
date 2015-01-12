@@ -190,6 +190,14 @@ public  class PregnanterEvaluationApiController:ApiController
         public ResponseMessage AddPregnanterEvaluation([FromBody] TPregnanterEvaluation pregnanterEvaluation)
         {
             ResponseMessage rmsg = new ResponseMessage();
+            var context = (HttpContextBase)Request.Properties["MS_HttpContext"]; //获取传统context
+            HttpRequestBase request = context.Request; //定义传统request对象
+
+            string PEvaImg = request.Params.Get("PEvaImg") ?? "";
+            //0|/Upload/201410/18/201410180324093440.jpg|/Upload/201410/18/small_201410180324093440.jpg,0|/Upload/201410/18/201410180324094720.jpg|/Upload/201410/18/small_201410180324094720.jpg,0|/Upload/201410/18/201410180324096350.jpg|/Upload/201410/18/small_201410180324096350.jpg,0|/Upload/201410/18/201410180324098391.jpg|/Upload/201410/18/small_201410180324098391.jpg
+            string PEvaImgRemark = request.Params.Get("PEvaImgRemark") ?? "";
+            PEvaImg = Utils.UnionStringsBySplit(PEvaImg, PEvaImgRemark, ',');
+            pregnanterEvaluation.PEvaImg = PEvaImg;
             if (PregnanterEvaluationService.AddPregnanterEvaluation(pregnanterEvaluation))
             {
                 rmsg.Status = true;

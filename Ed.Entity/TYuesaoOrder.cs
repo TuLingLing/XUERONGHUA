@@ -39,9 +39,8 @@ namespace Ed.Entity
         public String YorderAlter { get; set; }
         [Column("yorder_yuesao")]
         public String YorderYuesao { get; set; }
-
-
-
+        [Column("yorder_ptype")]
+        public String YorderPtype { get; set; }
     }
 
 }

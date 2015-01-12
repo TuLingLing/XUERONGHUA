@@ -87,7 +87,7 @@ namespace Ed.Common
         /// <returns>System.Object[].</returns>
         public static object[] StringToObjectArray(string str, char split)
         {
-            var strs = new object[] {};
+            var strs = new object[] { };
             try
             {
                 strs = str.Split(split);
@@ -546,7 +546,7 @@ namespace Ed.Common
         public static string GetXmlMapPath(string xmlName)
         {
             string pathname = ConfigurationManager.AppSettings[xmlName].ToString();
-            string path=GetMapPath(pathname);
+            string path = GetMapPath(pathname);
             return path;
         }
 
@@ -571,7 +571,7 @@ namespace Ed.Common
             }
             else //非web程序
             {
-                  return "";
+                return "";
             }
         }
 
@@ -876,26 +876,68 @@ namespace Ed.Common
             for (int i = 0; i < arr1.Length; i++)
             {
                 var tempArr1 = arr1[i];
-                tempArr1 += "|" + arr2[i]+",";
+                tempArr1 += "|" + arr2[i] + ",";
                 result += tempArr1;
             }
             result = result.TrimEnd(',');
             return result;
         }
 
+        /// <summary>
+        /// 联合分隔符组成的字符串 14-10-18 By 唐有炜
+        /// </summary>
+        /// <param name="str1">a|b|,a2|b2,a3|b3</param>
+        /// <param name="str2">c,d,e</param>
+        /// <param name="split">,</param>
+        /// <returns>a|b|c,a2|b2|d,a3|b3|e</returns>
+        public static string UnionStringsBySplits(string str1, char split, string str2)
+        {
+            string result = "";
+            var arr1 = str1.Split(split);
+            var arr2 = str2.Split(split);
+            int zz = arr1.Length + arr2.Length;
+            //for (int i = 0; i <zz; i++)
+            //{
+            var tempArr1 = "";
+            for (int j = 0; j < arr1.Length; j++)
+            {
+                if (arr1.Length == 1)
+                {
+                    tempArr1 = arr1[j];
+                }
+                if (arr1.Length == 2)
+                {
+                    tempArr1 = arr1[j];
+                    tempArr1 += "," + arr1[++j];
+                }
+            }
+            if (arr1.Length == 3)
+            {
+                tempArr1 = arr1[0];
+                tempArr1 += "," + arr1[1];
+                tempArr1 += "," + arr1[2];
+            }
+
+            tempArr1 += "," + arr2[0] + ",";
+            result += tempArr1;
+
+            //}
+            result = result.TrimEnd(',');
+            return result;
+        }
         #endregion
 
         #region 构造动态LINQ查询条件 14-10-21 By 唐有炜
-   
-       /// <summary>
+
+        /// <summary>
         /// 构造动态LINQ查询条件 14-10-21 By 唐有炜
-       /// </summary>
+        /// </summary>
         /// <param name="fields">字段集合(id,name)</param>
         /// <param name="eqs">判断集合(=,>)</param>
         /// <param name="values">值集合(1,"aaa")【注意：数字型的字符串需要加_s】</param>
         /// <param name="operations">条件集合（or,and）</param>
         /// <returns>条件及参数集合</returns>
-       /// <returns></returns>
+        /// <returns></returns>
         public static string BuildPredicate(string fields, string eqs, string values, string operations, out  object[] parms)
         {
             var fieldArray = Utils.StringToObjectArray(fields, ',');
@@ -922,27 +964,30 @@ namespace Ed.Common
                 if (eq.ToUpper() == "LIKE")
                 {
 
-                    cond = String.Concat(new[] {field, ".Contains(", "@" + i, ") "});
+                    cond = String.Concat(new[] { field, ".Contains(", "@" + i, ") " });
                 }
                 else
                 {
                     //最后之前才加关系
-                    if (i < fieldArray.Length - 1) {
-                        cond = String.Concat(new[] { cond, " ", op, " " }); 
-                    }           
+                    if (i < fieldArray.Length - 1)
+                    {
+                        cond = String.Concat(new[] { cond, " ", op, " " });
+                    }
                 }
-                 //累加条件
+                //累加条件
                 if (!String.IsNullOrEmpty(value.ToString()))
                 {
                     sb.Append(cond);
                 }
 
                 //构造参数
-                if (!String.IsNullOrEmpty(value.ToString())) {
+                if (!String.IsNullOrEmpty(value.ToString()))
+                {
                     if (Utils.IsNumeric(value))
                     {
                         parms[i] = int.Parse(value.ToString());
                     }
+
                     else
                     {
                         //修复字符串Bug 141029 唐有炜
@@ -952,15 +997,17 @@ namespace Ed.Common
                         }
                         parms[i] = value;
                     }
-                }else{
-                    parms[i] =0;
                 }
-               
+                else
+                {
+                    parms[i] = 0;
+                }
+
             }
 
             predicate = sb.ToString();
             //修复末尾关系
-            if (predicate.Length>3&&(predicate.Substring(predicate.Length - 4, 3).ToUpper() == "AND"))
+            if (predicate.Length > 3 && (predicate.Substring(predicate.Length - 4, 3).ToUpper() == "AND"))
             {
                 var end1 = predicate.Substring(predicate.Length - 4, 3).ToUpper();
                 if (end1 == "AND")
@@ -972,22 +1019,22 @@ namespace Ed.Common
             if (predicate.Length > 2 && (predicate.Substring(predicate.Length - 3, 2).ToUpper() == "OR"))
             {
                 var end2 = predicate.Substring(predicate.Length - 3, 2).ToUpper();
-                if ( end2 == "OR")
+                if (end2 == "OR")
                 {
                     predicate += " true";
                 }
 
             }
-           
-           
-             return predicate;
+
+
+            return predicate;
         }
 
         #endregion
 
 
 
-     
+
 
 
     }

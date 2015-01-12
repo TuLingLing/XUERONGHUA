@@ -49,8 +49,6 @@
                 default:
                     break;
             }
-
-
         });
         //=====================================================================
     </script>
@@ -133,9 +131,9 @@
                 {
         <li><a href="javascript:show_order();"><img src="~/Themes/default/home/images/home_btn_05.png"><span>订单管理</span></a></li> 
                     }
-                @if (Html.LoadModulePowers(@Model, "Yuesao"))
+                @if (Html.LoadModulePowers(@Model, "Yuangong"))
                 {
-        <li><a href="javascript:show_yuesao();"><img src="~/Themes/default/home/images/home_btn_07.png"><span>月嫂管理</span></a></li> }
+        <li><a href="javascript:show_yuesao();"><img src="~/Themes/default/home/images/home_btn_07.png"><span>员工管理</span></a></li> }
                     @if (Html.LoadModulePowers(@Model, "Finance"))
                     {
         <li><a href="javascript:show_finance();"><img src="~/Themes/default/home/images/home_btn_09.png"><span>财务信息</span></a></li> 

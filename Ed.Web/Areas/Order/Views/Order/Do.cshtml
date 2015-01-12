@@ -1,6 +1,7 @@
 ﻿@using System.Web.Optimization
+@using Ed.Entity
 @model dynamic
-@{
+@{   
     Layout = null;
 }
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -25,8 +26,6 @@
             });
             //=====================================================================
         </script>
-
-
         <script type="text/javascript">
             //全局变量
             var order_grid;
@@ -38,12 +37,12 @@
             });
 
 
-            function InitOrderGrid() {
+            function InitOrderGrid() {              
                 order_grid = $("#order_grid_data").bootgrid({
                     ajax: true,
                     post: function () {
                         return {
-                            OrderStatus: 1
+                            OrderStatus: 1,                       
                         };
                     },
                     url: "/api/OrderApi/GetBootGridOrders",
@@ -66,8 +65,8 @@
                         infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
                     },
                     formatters: {
-					ClientId: function(colum, row) {
-                       return  row.ClientName+"<span style='color:green;font-weight:bold;margin-left:5px; font-size:13px;'>"+row.ClientTel1+"</span>";
+                        ClientId: function (colum, row) {
+                            return row.ClientName + "<span style='color:green;font-weight:bold;margin-left:5px; font-size:13px;'>" + row.ClientTel1 + "</span>";
                         },
                         OrderStatus: function (colum, row) {
                             switch (row.OrderStatus) {
@@ -90,12 +89,12 @@
                             switch (row.OrderStatus) {
                                 case 1:
                                     return "<span style=\"color:red\">(预定) </span>" + row.OrderBegin + "至" + row.OrderEnd;
-									case 2:
+                                case 2:
                                     return "<span style=\"color:red\">(预定) </span>" + row.OrderBegin + "至" + row.OrderEnd;
-									
+
                                 case 3:
                                     return "<span style=\"color:green\">(服务) </span>" + row.OrderBegin + "至" + row.OrderEnd;
-									case 4:
+                                case 4:
                                     return "<span style=\"color:red\">(服务) </span>" + row.OrderBegin + "至" + row.OrderEnd;
                                 default:
                                     return "";
@@ -109,10 +108,21 @@
                             return row.OrderWeihuName;
                         },
                         OrderType: function (column, row) {
-                            return GetOptionValue(row.OrderType, "1|月嫂服务,2|育婴师服务,3|催乳师服务");
+                            return GetOptionValue(row.OrderType, "1|月嫂服务,2|育婴师服务,3|会所服务,4|增值产品");
                         },
                         "commands": function (column, row) {
-                            return "<a href='javascript:order_do(\"" + row.OrderCode + "\")'  style=\"color:blue\">处理订单</a>";
+                            if (row.OrderType == 1) {
+                                return "<a href='javascript:order_do(\"" + row.OrderCode + "\")'  style=\"color:blue\">处理订单</a>";
+                            }
+                            if (row.OrderType == 2) {
+                                return "<a href='javascript:order_do1(\"" + row.OrderCode + "\")'  style=\"color:blue\">处理订单</a>";
+                            }
+                            if (row.OrderType == 3) {
+                                return "<a href='javascript:order_do2(\"" + row.OrderCode + "\")'  style=\"color:blue\">处理订单</a>";
+                            }
+                            if (row.OrderType == 4) {
+                                return "<a href='javascript:order_do2(\"" + row.OrderCode + "\")'  style=\"color:blue\">处理订单</a>";
+                            }
                         }
                     }
                 }).on("loaded.rs.jquery.bootgrid", function (e) {
@@ -127,7 +137,7 @@
 
 
 
-            //订单处理界面
+            //月嫂订单处理界面
             function order_do(order_code) {
                 showTopWindow("show_order_do", "/Order/YuesaoOrder/Edit?actionType=Do&order_code=" + order_code, null,900,450, function () {
 
@@ -179,15 +189,117 @@
 
                 //必须有这个，阻止刷新
                 return false;
-
-
-
-                
+           
                 },function(){});
             }
 
 
+            //育婴师订单处理界面
+            function order_do1(order_code) {
+                showTopWindow("show_order_do", "/Order/YingshiOrder/Edit?actionType=Do&order_code=" + order_code, null, 900, 450, function () {
 
+                    var yuesaoorder_form = $(top.window.frames["frm_show_order_do"].document).find("#step4_form");
+                    //console.log(yuesaoorder_form);
+                    var flag = top.window.document.getElementById("frm_show_order_do").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(yuesaoorder_form).serialize();
+                    //console.log(data);
+
+                    //alert(data);
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/YingshiOrderApi/EditYuesaoOrder?order_code=" + order_code,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            //显示加载中
+                            showTopDialog("show_loading", "<div class='dialog_loading'>月嫂订单确认中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_loading"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                show_do_order_success();
+                                order_grid.bootgrid("reload");
+                            } else {
+                                showMsg("系统异常，订单确认失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_loading"].close().remove();
+                            showMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                    //必须有这个，阻止刷新
+                    return false;
+                }, function () { });
+            }
+
+            //月子会所订单和增值产品处理界面
+            function order_do2(order_code) {
+                showTopWindow("show_order_do", "/Order/Corder/Edit?actionType=Do&order_code=" + order_code, null, 900, 450, function () {
+
+                    var yuesaoorder_form = $(top.window.frames["frm_show_order_do"].document).find("#step4_form");
+                    //console.log(yuesaoorder_form);
+                    var flag = top.window.document.getElementById("frm_show_order_do").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(yuesaoorder_form).serialize();
+                    //console.log(data);
+
+                    //alert(data);
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/CorderApi/EditHuisuoOrder?order_code=" + order_code,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            //显示加载中
+                            showTopDialog("show_loading", "<div class='dialog_loading'>订单确认中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_loading"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                show_do_order_success();
+                                order_grid.bootgrid("reload");
+                            } else {
+                                showMsg("系统异常，订单确认失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_loading"].close().remove();
+                            showMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                    //必须有这个，阻止刷新
+                    return false;
+                }, function () { });
+            }
+         
             //预定成功
             function show_do_order_success() {
                 top.dialog.list["show_order_do"].close().remove();
@@ -232,7 +344,7 @@
                     $.ajax({
                         type: "GET",
                         cache: false,
-                        url: "/api/OrderApi/UpdateOrderStatus?ids=" + ids + "&status=0",
+                        url: "/api/OrderApi/UpdateOrderStatusTrash?ids=" + ids + "&status=0",
                         //data: { ids: ids },
                         dataType: "json",
                         beforeSend: function () {

@@ -3,34 +3,29 @@
 @{
     Layout = null;
 }
-
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
+<head>
     <title>雪绒花_用户信息管理</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
-
     @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
     @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
-        <!--去除顶层加载中 14-10-17 By 唐有炜-->
-        <script type="text/javascript">
-            //=============================================================
-            //去除顶层加载中
-            $(document).ready(function () {
-                //去除加载中
-                if (undefined != top.dialog.list["show_loading"]) {
-                    top.dialog.list["show_loading"].close().remove();
-                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
-                }
-            });
-            //=====================================================================
-        </script>
-
-        
-        <script type="text/javascript">
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    <script type="text/javascript">
     //全局变量
     var sysuser_grid;
 
@@ -51,9 +46,10 @@
             keepSelection: true,
             rowCount: [10, 30, 50],
             templates: {
-                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return sysuser_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return sysuser_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button></div>" +
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\"return sysuser_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button></div>" +
                     "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
                     "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                //                    <button class=\"btn btn-default tip\" title=\"批量删除\" onclick=\"return sysuser_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>批量删除</button>
             },
             labels: {
                 all: "all", //checkbox全选的值
@@ -67,7 +63,7 @@
                 "UserLname": function (column, row) { return row.UserLname; },
                 "DepId": function (column, row) { return row.DepName; },
                 "RoleId": function (column, row) { return row.RoleName; },
-                "UserEnable": function(column, row) {
+                "UserEnable": function (column, row) {
                     if (row.UserEnable == 1) {
                         return "启用";
                     } else {
@@ -75,8 +71,8 @@
                     }
                 },
                 "commands": function (column, row) {
-                    return "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return sysuser_edit(" + row.Id + ");\" title=\"修改【自定义】\"><span class=\"glyphicon glyphicon-pencil\"></span></button>" +
-                        "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return sysuser_delete(" + row.Id + ");\" title=\"删除【自定义】\"><span class=\"glyphicon glyphicon-remove\"></span></button>";
+                    return "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return sysuser_edit(" + row.Id + ");\" title=\"修改【自定义】\"><span class=\"glyphicon glyphicon-pencil\"></span></button>";
+                    //                        "<button type=\"button\"  class=\"btn btn-link btn-sm btn-cmd tip\" onclick=\"return sysuser_delete(" + row.Id + ");\" title=\"删除【自定义】\"><span class=\"glyphicon glyphicon-remove\"></span></button>";
                 }
             }
         }).on("loaded.rs.jquery.bootgrid", function (e) {
@@ -189,17 +185,67 @@
         return false;
     }
 
+    function sysuser_Lizhi(id) {
+        var url = "/Settings/SysUser/Lizhi?actionType=Edit&id=" + id;
+        //console.log(id);
+        showTopWindow("sysuser_show_edit", url, null,400, 100, function () {
+            var sysuser_form = $(top.window.frames["frm_sysuser_show_edit"].document).find("#sysuser_form");
+            //console.log(sysuser_form);
+            var flag = top.window.document.getElementById("frm_sysuser_show_edit").contentWindow.form_valid();
+            if (!flag) {
+                return false;
+            }
+            var data = $(sysuser_form).serialize();
+            //console.log((data));
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/SysUserApi/EditSysUser",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                    //d.close().remove();
+                },
+                success: function (result) {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        sysuser_grid.bootgrid("reload");
+                        //console.log(grid);
+
+                        showMsg("修改成功！", "Success");
+                    } else {
+                        showMsg("系统异常，修改失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_edit_loding"].close().remove();
+                    showMsg("网络连接错误！", "Error");
+                }
+            });
+
+
+        });
+
+        //必须有这个，阻止刷新
+        return false;
+    }
     function sysuser_multi_delete() {
         var ids = get_selected_ids("sysuser_grid_data");
         //console.log(ids);
         if (ids == "") {
-            showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
+            showTopMsg("请选择你要删除的用户，删除后尽量！", "错误提示", "Error");
             return false;
         }
         //return false;
         sysuser_delete(ids);
     }
-
     function sysuser_delete(ids) {
         showTopDialog("sysuser_show_delete", "<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
             $.ajax({
@@ -235,30 +281,50 @@
         //必须有这个，阻止刷新
         return false;
     }
-        </script>
-
- </head>
-    <body>
-
-<div>
-    <table id="sysuser_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
-        <thead>
-            <tr>
-                <th data-column-id="UserRegDate" data-header-align="center" data-formatter="UserLname" data-order="desc">用户名</th>
-		  <th data-column-id="UserTname" data-header-align="center"  data-formatter="UserTname" data-order="desc">真实姓名</th>
-		  <th data-column-id="UserPhone" data-header-align="center"  data-formatter="UserPhone" data-order="desc">手机</th>
-		  <th data-column-id="UserQq" data-header-align="center"  data-formatter="UserQq" data-order="desc">QQ</th>
-		  <th data-column-id="DepId" data-header-align="center"  data-formatter="DepId" data-order="desc">所属部门</th>
-		  <th data-column-id="RoleId" data-header-align="center"  data-formatter="RoleId" data-order="desc">所属角色</th>
-		  <th data-column-id="UserEnable" data-header-align="center"  data-formatter="UserEnable" data-order="desc">是否启用</th>
-		  <th data-column-id="UserRegDate" data-header-align="center"  data-formatter="UserRegDate" data-order="desc">添加日期</th>
-		  <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>
-		    </tr>
-        </thead>
-    </table>
-</div>
-
+    </script>
+</head>
+<body>
+    <div>
+        <table id="sysuser_grid_data" class="table table-condensed table-hover table-striped table-bordered"
+            data-selection="true" data-multi-select="true">
+            <thead>
+                <tr>
+                    <th data-column-id="UserRegDate" data-header-align="center" data-formatter="UserLname"
+                        data-order="desc">
+                        用户名
+                    </th>
+                    <th data-column-id="UserTname" data-header-align="center" data-formatter="UserTname"
+                        data-order="desc">
+                        真实姓名
+                    </th>
+                    <th data-column-id="UserPhone" data-header-align="center" data-formatter="UserPhone"
+                        data-order="desc">
+                        手机
+                    </th>
+                    <th data-column-id="UserQq" data-header-align="center" data-formatter="UserQq" data-order="desc">
+                        QQ
+                    </th>
+                    <th data-column-id="DepId" data-header-align="center" data-formatter="DepId" data-order="desc">
+                        所属部门
+                    </th>
+                    <th data-column-id="RoleId" data-header-align="center" data-formatter="RoleId" data-order="desc">
+                        所属角色
+                    </th>
+                    <th data-column-id="UserEnable" data-header-align="center" data-formatter="UserEnable"
+                        data-order="desc">
+                        是否启用
+                    </th>
+                    <th data-column-id="UserRegDate" data-header-align="center" data-formatter="UserRegDate"
+                        data-order="desc">
+                        添加日期
+                    </th>
+                    <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands"
+                        data-sortable="false">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </body>
 </html>
-
-

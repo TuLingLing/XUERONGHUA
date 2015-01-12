@@ -21,7 +21,7 @@ namespace Ed.Common
                 return;
             byte[] _ImageBytes = File.ReadAllBytes(Utils.GetMapPath(imgPath));
             Image img = Image.FromStream(new System.IO.MemoryStream(_ImageBytes));
-            filename = Utils.GetMapPath(filename);
+            filename = Utils.GetMapPath(filename);           
 
             if (watermarkFilename.StartsWith("/") == false)
                 watermarkFilename = "/" + watermarkFilename;
@@ -49,7 +49,7 @@ namespace Ed.Common
 
             float transparency = 0.5F;
             if (watermarkTransparency >= 1 && watermarkTransparency <= 10)
-                transparency = (watermarkTransparency / 10.0F);
+                transparency = (watermarkTransparency / 1.0F);
 
 
             float[][] colorMatrixElements = {
@@ -66,7 +66,6 @@ namespace Ed.Common
 
             int xpos = 0;
             int ypos = 0;
-
             switch (watermarkStatus)
             {
                 case 1:
@@ -158,8 +157,8 @@ namespace Ed.Common
             SizeF crSize;
             crSize = g.MeasureString(watermarkText, drawFont);
 
-            float xpos = 0;
-            float ypos = 0;
+            float xpos =0;
+            float ypos =0;
 
             switch (watermarkStatus)
             {

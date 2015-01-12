@@ -16,105 +16,98 @@ using Ed.DBContext;
 using Ed.Entity;
 using System.Linq.Dynamic;
 
-namespace  Ed.Dao.Impl
+namespace Ed.Dao.Impl
 {
 
     /// <summary>
     /// 自动生成的实现ITSysUserDao接口的Dao类。 2014-10-20 04:45:28 By 唐有炜
     /// </summary>
- public class TSysUserDaoImpl:ITSysUserDao
+    public class TSysUserDaoImpl : ITSysUserDao
     {
 
-	  #region 读操作
+        #region 读操作
 
 
-	   /// <summary>
+        /// <summary>
         /// 获取数据总数
         /// </summary>
         /// <returns>返回所有数据总数</returns>
-        public int GetCount() 
+        public int GetCount()
         {
-          using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-             var models= db.TSysUsers;
-			 var sqlText = models.GetProperty("SqlText");
-             LogHelper.Debug(sqlText.ToString());
-			 return models.Count();
+                var models = db.TSysUsers;
+                var sqlText = models.GetProperty("SqlText");
+                LogHelper.Debug(sqlText.ToString());
+                return models.Count();
             }
         }
 
-		
-             /// <summary>
+
+        /// <summary>
         /// 获取数据总数
         /// </summary>
         /// <param name="predicate">Lamda表达式</param>
         /// <returns>返回所有数据总数</returns>
-       public int GetCount(Expression<Func<TSysUser, bool>> predicate)
+        public int GetCount(Expression<Func<TSysUser, bool>> predicate)
         {
-             using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-             var models= db.TSysUsers.Where<TSysUser>(predicate);
-			 var sqlText = models.GetProperty("SqlText");
-             LogHelper.Debug(sqlText.ToString());
-			 return models.Count();
+                var models = db.TSysUsers.Where<TSysUser>(predicate);
+                var sqlText = models.GetProperty("SqlText");
+                LogHelper.Debug(sqlText.ToString());
+                return models.Count();
             }
         }
-
-
-
-
-	    /// <summary>
+        /// <summary>
         /// 获取所有的数据
-	    /// </summary>
-	    /// <returns>返回所有数据列表</returns>
-        public List<TSysUser> GetList() 
+        /// </summary>
+        /// <returns>返回所有数据列表</returns>
+        public List<TSysUser> GetList()
         {
-          using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-             var models= db.TSysUsers;
-			  var sqlText = models.GetProperty("SqlText");
-             LogHelper.Debug(sqlText.ToString());
-			 return models.ToList();
+                var models = db.TSysUsers;
+                var sqlText = models.GetProperty("SqlText");
+                LogHelper.Debug(sqlText.ToString());
+                return models.ToList();
             }
         }
-
-		
         /// <summary>
         /// 获取所有的数据
         /// </summary>
         /// <param name="predicate">Lamda表达式</param>
         /// <returns>返回所有数据列表</returns>
-       public List<TSysUser> GetList(Expression<Func<TSysUser, bool>> predicate)
+        public List<TSysUser> GetList(Expression<Func<TSysUser, bool>> predicate)
         {
-             using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-             var models= db.TSysUsers.Where<TSysUser>(predicate);
-			   var sqlText = models.GetProperty("SqlText");
-             LogHelper.Debug(sqlText.ToString());
-			 return models.ToList();
+                var models = db.TSysUsers.Where<TSysUser>(predicate);
+                var sqlText = models.GetProperty("SqlText");
+                LogHelper.Debug(sqlText.ToString());
+                return models.ToList();
             }
         }
 
-		/// <summary>
+        /// <summary>
         /// 获取指定的单个实体
         /// 如果不存在则返回null
         /// 如果存在多个则抛异常
         /// </summary>
         /// <param name="predicate">Lamda表达式</param>
         /// <returns>Entity</returns>
-        public TSysUser GetEntity(Expression<Func<TSysUser, bool>> predicate) 
+        public TSysUser GetEntity(Expression<Func<TSysUser, bool>> predicate)
         {
-            using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-                var model =db.TSysUsers.Where<TSysUser>(predicate);
-			    var sqlText = model.GetProperty("SqlText");
+                var model = db.TSysUsers.Where<TSysUser>(predicate);
+                var sqlText = model.GetProperty("SqlText");
                 LogHelper.Debug(sqlText.ToString());
                 return model.SingleOrDefault();
-		    }
+            }
         }
 
-		
-		/// <summary>
+        /// <summary>
         /// 返回单个实体（带扩展字段）
         /// </summary>
         /// <param name="selector">要查询的字段</param>
@@ -126,23 +119,23 @@ namespace  Ed.Dao.Impl
         public Dictionary<string, object> GetEntityWithExp(string selector, string expFields, string expSelector,
             string predicate,
             params object[] values)
-			{
-		    using (EdDBContext db=new EdDBContext())
+        {
+            using (EdDBContext db = new EdDBContext())
             {
-                IQueryable<object> model=null;
+                IQueryable<object> model = null;
                 if (!String.IsNullOrEmpty(selector))
                 {
                     model =
-                        ((IQueryable<object>) db.TSysUsers.Where(predicate, values).Select(selector, values));
+                        ((IQueryable<object>)db.TSysUsers.Where(predicate, values).Select(selector, values));
                 }
                 else
                 {
                     model = ((IQueryable<object>)db.TSysUsers.Where(predicate, values));
                 }
-              
+
                 object temp = model.FirstOrDefault();
                 var sqlText = model.GetProperty("SqlText");
-                 LogHelper.Debug("ELINQ Paging:<br/>" + sqlText.ToString());
+                LogHelper.Debug("ELINQ Paging:<br/>" + sqlText.ToString());
 
                 Dictionary<string, object> result = new Dictionary<string, object>();
                 PropertyInfo[] propertyInfos = temp.GetType().GetProperties();
@@ -153,7 +146,7 @@ namespace  Ed.Dao.Impl
                     if (name == expFields)
                     {
                         IDictionary<string, JToken> cusFields =
-                            (JObject) JsonConvert.DeserializeObject(value.ToString());
+                            (JObject)JsonConvert.DeserializeObject(value.ToString());
                         //循环添加新字段
                         foreach (var field in cusFields)
                         {
@@ -178,9 +171,8 @@ namespace  Ed.Dao.Impl
 
                 return result;
             }
-			
-			}
 
+        }
 
         /// <summary>
         /// 根据条件查询某些字段(LINQ 动态查询)
@@ -198,37 +190,35 @@ namespace  Ed.Dao.Impl
                 return (IQueryable<object>)model;
             }
         }
-
-
-		   /// <summary>
+        /// <summary>
         /// 是否存在该记录
         /// </summary>
         /// <returns></returns>
-       public   bool ExistsEntity(Expression<Func<TSysUser , bool>> predicate)
-	   {
-            using (EdDBContext db=new EdDBContext())
+        public bool ExistsEntity(Expression<Func<TSysUser, bool>> predicate)
+        {
+            using (EdDBContext db = new EdDBContext())
             {
-               bool status= db.TSysUsers.Any(predicate);
-               return status;
+                bool status = db.TSysUsers.Any(predicate);
+                return status;
             }
         }
 
-       /// <summary>
-       /// 是否存在该记录
-       /// </summary>
-       /// <returns></returns>
-       public bool ExistsEntity(string predicate, params object[] values)
-       {
-           using (EdDBContext db = new EdDBContext())
-           {
-               bool status = db.TSysUsers.Where(predicate,values).Any();
-               return status;
-           }
-       }
-		
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        /// <returns></returns>
+        public bool ExistsEntity(string predicate, params object[] values)
+        {
+            using (EdDBContext db = new EdDBContext())
+            {
+                bool status = db.TSysUsers.Where(predicate, values).Any();
+                return status;
+            }
+        }
 
-		
-	   //查询分页
+
+
+        //查询分页
         public IPagination<TSysUser> GetListByPage(int pageIndex, int pageSize, out int rowCount,
             IDictionary<string, Ed.Entity.EdEnums.OrderEmum> orders,
             Expression<Func<TSysUser, bool>> predicate)
@@ -237,7 +227,7 @@ namespace  Ed.Dao.Impl
             {
                 var roles = db.TSysUsers.Where(predicate);
                 rowCount = roles.Count();
-                var prevCount = (pageIndex - 1)*pageSize;
+                var prevCount = (pageIndex - 1) * pageSize;
                 var models = roles
                     .Skip(prevCount)
                     .Take(pageSize);
@@ -252,7 +242,7 @@ namespace  Ed.Dao.Impl
         }
 
 
-		 //查询分页(LINQ动态)
+        //查询分页(LINQ动态)
         public IPagination<TSysUser> GetListByPage(int pageIndex, int pageSize, out int rowCount,
             IDictionary<string, Ed.Entity.EdEnums.OrderEmum> orders,
             string predicate)
@@ -261,7 +251,7 @@ namespace  Ed.Dao.Impl
             {
                 var roles = db.TSysUsers.Where(predicate);
                 rowCount = roles.Count();
-                var prevCount = (pageIndex - 1)*pageSize;
+                var prevCount = (pageIndex - 1) * pageSize;
                 var models = roles
                     .Skip(prevCount)
                     .Take(pageSize);
@@ -278,7 +268,7 @@ namespace  Ed.Dao.Impl
 
 
 
-		  /// <summary>
+        /// <summary>
         /// 查询分页（可以自定义添加属性，不包括扩展字段） 2014-10-15 14:58:50 By 唐有炜
         /// </summary>
         /// <param name="pageIndex">页码</param>
@@ -289,11 +279,11 @@ namespace  Ed.Dao.Impl
         /// <param name="recordCount">记录结果数</param>
         /// <param name="values">参数</param>
         /// <returns>查询分页（不包括扩展字段）</returns>
-   public     List<Dictionary<string, object>> GetListByPage(int pageIndex, int pageSize, string selector,string predicate, string ordering,
-            out int recordCount, params object[] values)
-			{
-			
-		  using (EdDBContext db=new EdDBContext())
+        public List<Dictionary<string, object>> GetListByPage(int pageIndex, int pageSize, string selector, string predicate, string ordering,
+                 out int recordCount, params object[] values)
+        {
+
+            using (EdDBContext db = new EdDBContext())
             {
                 //获取查询结果
                 //加上扩展字段值
@@ -302,7 +292,7 @@ namespace  Ed.Dao.Impl
                 IQueryable<object> models = null;
                 if (!String.IsNullOrEmpty(selector))
                 {
-                    models = (IQueryable<object>) (temps
+                    models = (IQueryable<object>)(temps
                         .Where(predicate, values)
                         .Select(selector, values)
                         .OrderBy(ordering));
@@ -313,17 +303,17 @@ namespace  Ed.Dao.Impl
                         .Where(predicate, values)
                         .OrderBy(ordering));
                 }
-               
+
 
                 var sqlText = models.GetProperty("SqlText");
                 LogHelper.Debug("ELINQ Dynamic Paging:<br/>" + sqlText.ToString());
 
-				//计算总数
-				recordCount = models.Count();
+                //计算总数
+                recordCount = models.Count();
 
                 //转换为分页
-				var prevCount = (pageIndex - 1)*pageSize;
-				models=models.Skip(prevCount).Take(pageSize);
+                var prevCount = (pageIndex - 1) * pageSize;
+                models = models.Skip(prevCount).Take(pageSize);
                 var pages = models.ToPagination(pageIndex, pageSize, recordCount);
 
                 //组装输出
@@ -368,21 +358,21 @@ namespace  Ed.Dao.Impl
                                 result.Add(name, value);
                                 continue;
                         }
-                  
+
                     }
                     results.Add(result);
                 }
 
                 return results;
             }
-			
-			}
+
+        }
 
 
 
 
 
-	    /// <summary>
+        /// <summary>
         /// 查询分页（包括扩展字段） 2014-08-29 14:58:50 By 唐有炜
         /// </summary>
         /// <param name="pageIndex">页码</param>
@@ -395,24 +385,24 @@ namespace  Ed.Dao.Impl
         /// <param name="recordCount">记录结果数</param>
         /// <param name="values">参数</param>
         /// <returns>查询分页（包括扩展字段）</returns>
-   public     List<Dictionary<string, object>> GetListWithExpByPage(int pageIndex, int pageSize, string selector,
-            string expFields, string expSelector,
-            string predicate, string ordering,
-            out int recordCount, params object[] values)
-			{
-			
-		  using (EdDBContext db=new EdDBContext())
+        public List<Dictionary<string, object>> GetListWithExpByPage(int pageIndex, int pageSize, string selector,
+                 string expFields, string expSelector,
+                 string predicate, string ordering,
+                 out int recordCount, params object[] values)
+        {
+
+            using (EdDBContext db = new EdDBContext())
             {
                 //获取查询结果
                 //加上扩展字段值
                 var temps = db.TSysUsers;
                 recordCount = temps.Count();
-                var prevCount = (pageIndex - 1)*pageSize;
+                var prevCount = (pageIndex - 1) * pageSize;
 
                 IQueryable<object> models = null;
                 if (!String.IsNullOrEmpty(selector))
                 {
-                    models = (IQueryable<object>) (temps
+                    models = (IQueryable<object>)(temps
                         .Skip(prevCount)
                         .Take(pageSize)
                         .Where(predicate, values)
@@ -427,7 +417,7 @@ namespace  Ed.Dao.Impl
                         .Where(predicate, values)
                         .OrderBy(ordering));
                 }
-               
+
 
                 var sqlText = models.GetProperty("SqlText");
                 LogHelper.Debug("ELINQ Dynamic Paging:<br/>" + sqlText.ToString());
@@ -448,7 +438,7 @@ namespace  Ed.Dao.Impl
                         if (name == expFields)
                         {
                             IDictionary<string, JToken> cusFields =
-                                (JObject) JsonConvert.DeserializeObject(value.ToString());
+                                (JObject)JsonConvert.DeserializeObject(value.ToString());
                             //循环添加新字段
                             foreach (var field in cusFields)
                             {
@@ -476,15 +466,15 @@ namespace  Ed.Dao.Impl
 
                 return results;
             }
-			
-			}
+
+        }
 
 
 
 
-	  //以下是原生Sql方法==============================================================
-	  //===========================================================================
-	   /// <summary>
+        //以下是原生Sql方法==============================================================
+        //===========================================================================
+        /// <summary>
         /// 用SQL语句查询
         /// </summary>
         /// <param name="sql">sql语句</param>
@@ -492,26 +482,26 @@ namespace  Ed.Dao.Impl
         /// <returns>集合</returns>
         public DataTable GetListBySql(string sql, dynamic namedParameters)
         {
-          using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-               return db.DbHelper.ExecuteDataTable(sql,namedParameters).ToList<TSysUser>();
+                return db.DbHelper.ExecuteDataTable(sql, namedParameters).ToList<TSysUser>();
             }
-          
+
         }
-  #endregion
+        #endregion
 
 
-   #region 写操作
-		  /// <summary>
+        #region 写操作
+        /// <summary>
         /// 添加实体
         /// </summary>
         /// <param name="entity">实体对象</param>
         public bool InsertEntity(TSysUser entity)
         {
-            using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-              int rows=  db.TSysUsers.Insert(entity);
-				 if (rows > 0)
+                int rows = db.TSysUsers.Insert(entity);
+                if (rows > 0)
                 {
                     return true;
                 }
@@ -521,17 +511,17 @@ namespace  Ed.Dao.Impl
                 }
             }
         }
-       /// <summary>
+        /// <summary>
         /// 删除实体
         /// </summary>
-         /// <param name="predicate">Lamda表达式</param>
-        public bool DeleteEntity(Expression<Func<TSysUser , bool>> predicate) 
+        /// <param name="predicate">Lamda表达式</param>
+        public bool DeleteEntity(Expression<Func<TSysUser, bool>> predicate)
         {
-            using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-                TSysUser  entity = db.TSysUsers.Where(predicate).First();
-                int rows=db.TSysUsers.Delete(entity);
-				 if (rows > 0)
+                TSysUser entity = db.TSysUsers.Where(predicate).First();
+                int rows = db.TSysUsers.Delete(entity);
+                if (rows > 0)
                 {
                     return true;
                 }
@@ -541,17 +531,17 @@ namespace  Ed.Dao.Impl
                 }
             }
         }
-		
-		
+
+
         /// <summary>
         /// 批量删除（实体集合）
         /// </summary>
         /// <param name="predicate">动态LINQ</param>
         public bool DeletesEntity(List<string> predicates)
         {
-            using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-             
+
                 if (db.Connection.State != ConnectionState.Open)
                 {
                     db.Connection.Open();
@@ -559,19 +549,19 @@ namespace  Ed.Dao.Impl
                 var tran = db.Connection.BeginTransaction();
                 try
                 {
-				     foreach (var predicate in predicates)
-                     {
+                    foreach (var predicate in predicates)
+                    {
                         var item = db.TSysUsers.Where(predicate).FirstOrDefault();
                         if (null != item)
-                         {
+                        {
                             db.TSysUsers.Delete(item);
-                         }
+                        }
                     }
                     tran.Commit();
                     LogHelper.Debug("批量删除成功！");
                     return true;
                 }
-              catch (Exception ex)
+                catch (Exception ex)
                 {
                     tran.Rollback();
                     LogHelper.Error("批量删除异常：", ex);
@@ -590,16 +580,16 @@ namespace  Ed.Dao.Impl
 
 
 
-         /// <summary>
+        /// <summary>
         /// 修改实体
         /// </summary>
         /// <param name="entity">实体对象</param>
         public bool UpdateEntity(TSysUser entity)
         {
-            using (EdDBContext db=new EdDBContext())
+            using (EdDBContext db = new EdDBContext())
             {
-               int rows= db.TSysUsers.Update(entity);
-			   if (rows > 0)
+                int rows = db.TSysUsers.Update(entity);
+                if (rows > 0)
                 {
                     return true;
                 }
@@ -611,7 +601,7 @@ namespace  Ed.Dao.Impl
         }
 
 
-     
+
 
         /// <summary>
         /// 使用LINQ批量更改TSysUser状态 2014-09-05 14:58:50 By 唐有炜
@@ -619,12 +609,12 @@ namespace  Ed.Dao.Impl
         /// <param name="fields">要更新的字段（支持批量更新）</param>
         /// <param name="predicate">条件</param>
         /// <returns></returns>
-       public bool UpdateEntityStatus(Dictionary<string, object> fields,
-            string predicate, params  object[] values)
-			{
-			
+        public bool UpdateEntityStatus(Dictionary<string, object> fields,
+             string predicate, params  object[] values)
+        {
 
-		 using (EdDBContext db=new EdDBContext())
+
+            using (EdDBContext db = new EdDBContext())
             {
                 if (db.Connection.State != ConnectionState.Open)
                 {
@@ -635,7 +625,7 @@ namespace  Ed.Dao.Impl
                 {
                     foreach (var field in fields)
                     {
-                     var entity = db.TSysUsers.Where(predicate,values).FirstOrDefault();
+                        var entity = db.TSysUsers.Where(predicate, values).FirstOrDefault();
                         var propertyInfos = entity.GetType().GetProperties();
                         foreach (var p in propertyInfos)
                         {
@@ -673,40 +663,40 @@ namespace  Ed.Dao.Impl
 
 
 
-			}
-
-
-    
+        }
 
 
 
 
 
-		
-		/// <summary>
-	     /// 执行Sql
-	     /// </summary>
-	     /// <param name="sql">Sql语句</param>
-	     /// <param name="namedParameters">查询字符串</param>
-	     /// <returns></returns>
-		public bool ExecuteSql(string sql, dynamic namedParameters = null)
-		{
-	         using (EdDBContext db = new EdDBContext())
-	         {
-	             var rows = db.DbHelper.ExecuteNonQuery(sql, namedParameters);
-	             if (rows > 0)
-	             {
-	                 return true;
-	             }
-	             else
-	             {
-	                 return false;
-	             }
-	         }
-		}
-
-		  #endregion
 
 
-	   }
-	   }
+
+
+        /// <summary>
+        /// 执行Sql
+        /// </summary>
+        /// <param name="sql">Sql语句</param>
+        /// <param name="namedParameters">查询字符串</param>
+        /// <returns></returns>
+        public bool ExecuteSql(string sql, dynamic namedParameters = null)
+        {
+            using (EdDBContext db = new EdDBContext())
+            {
+                var rows = db.DbHelper.ExecuteNonQuery(sql, namedParameters);
+                if (rows > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        #endregion
+
+
+    }
+}

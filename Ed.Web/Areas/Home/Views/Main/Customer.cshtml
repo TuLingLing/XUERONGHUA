@@ -1,8 +1,6 @@
 ﻿@using Ed.Entity
 @using Ed.Web.Helpers
 @model  List<Dictionary<string, object>> 
-
-
 @{
     Layout = null; 
 }
@@ -82,14 +80,62 @@
                 n = $(this).index();
                 $(".sidebar li img").eq(n).animate({ width: "50px", paddingTop: "10px" }, 0);
             });
-        });      
+        });
+
+
+//        function show_add() {
+//            showTopWindow("show_add_client", "/Customer/ClientInfo/Add?actionType=Add", null, 800, 380, function () {
+//                var client_form = $(top.window.frames["frm_show_add_client"].document).find("#clientinfo_form");
+//                var flag = top.document.getElementById("frm_show_add_client").contentWindow.form_valid();
+//                if (!flag) {
+//                    return false;
+//                }
+//                //var data = $(client_form).serializeObject();
+//                var data = $(client_form).serialize();
+//                //console.log(data);
+//                //return;
+//                $.ajax({
+//                    type: "POST",
+//                    cache: false,
+//                    url: "/api/ClientInfoApi/AddClientInfo/",
+//                    data: data,
+//                    dataType: "json",
+//                    beforeSend: function () {
+//                        //showMsg("添加中，请稍后...");
+//                    },
+//                    complete: function () {
+//                        //d.close().remove();
+//                    },
+//                    success: function (result) {
+//                        //toLowerCase报错
+//                        //var status = result.Status.toLowerCase();
+//                        var status = result.Status;
+//                        if (status == true || status == "true" || status == "True") {
+//                            //关闭当前
+//                            top.dialog.list["show_add_client"].close().remove();
+//                            //打开列表
+//                            show_business();
+
+//                        } else {
+//                            showMsg("系统异常，客户添加失败！", "Error");
+//                        }
+//                    },
+//                    error: function () {
+//                        showMsg("网络连接错误!", "错误提示", "Error");
+//                    }
+//                });
+//                //必须有这个，阻止刷新
+//                return false;
+//            });
+//        }
         function show_add() {
-            showTopWindow("show_add_client", "/Customer/ClientInfo/Edit?actionType=Add", null, 800, 380, function () {
+            showTopWindow("show_add_client", "/Customer/ClientInfo/Edit?actionType=Add", null, 800,380, function () {
                 var client_form = $(top.window.frames["frm_show_add_client"].document).find("#clientinfo_form");
                 var flag = top.document.getElementById("frm_show_add_client").contentWindow.form_valid();
                 if (!flag) {
                     return false;
                 }
+                var number1 = top.window.frames["frm_show_add_client"].document.getElementById("ClientTel1").value;
                 //var data = $(client_form).serializeObject();
                 var data = $(client_form).serialize();
                 //console.log(data);
@@ -114,10 +160,8 @@
                             //关闭当前
                             top.dialog.list["show_add_client"].close().remove();
                             //打开列表
-                            show_list(function () {
-                                showTopMsg("客户添加成功！", "温馨提示", "Success");
-                            });
-
+                            show_business();
+                            showTopMsg("客户添加成功！", "温馨提示", "Success");
                         } else {
                             showMsg("系统异常，客户添加失败！", "Error");
                         }
@@ -134,7 +178,7 @@
             showTopContentWindow("show_list", "/Customer/ClientInfo/List", "全部客户信息管理", 1000, 500);
         }
         function show_business() {
-            showTopContentWindow("show_list", "/Customer/ClientInfo/Business", '@Html.Raw("【" + @Session[EdKeys.SESSION_USER_NAME] + "】" + "的业务客户")', 1000, 500);
+            showTopContentWindow("show_list", "/Customer/ClientInfo/Business", '@Html.Raw("【" + @Session[EdKeys.SESSION_USER_NAME] + "】" + "的业务客户")', 1250, 500);
         }
         function show_maintenance() {
             showTopContentWindow("show_list", "/Customer/ClientInfo/Maintenance", '@Html.Raw("【" + @Session[EdKeys.SESSION_USER_NAME] + "】" + "维护客户")', 1000, 500);
@@ -196,9 +240,9 @@
                 {
         <li><a href="/Home/Main/Order/"><img src="~/Themes/default/home/images/home_btn_05.png"><span>订单管理</span></a></li> 
                     }
-                @if (Html.LoadModulePowers(@Model, "Yuesao"))
+                @if (Html.LoadModulePowers(@Model, "Yuangong"))
                 {
-        <li><a href="/Home/Main/Yuesao/"><img src="~/Themes/default/home/images/home_btn_07.png"><span>月嫂管理</span></a></li> 
+        <li><a href="/Home/Main/Yuangong/"><img src="~/Themes/default/home/images/home_btn_07.png"><span>员工管理</span></a></li> 
                     }
                     @if (Html.LoadModulePowers(@Model, "Finance"))
                     {

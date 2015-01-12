@@ -1,4 +1,5 @@
 ﻿@using System.Web.Optimization
+@using Ed.Common
 @using Ed.Entity
 @using Ed.Web.Helpers
 @model Ed.Entity.TPregnanterEvaluation
@@ -7,27 +8,60 @@
     //月嫂id
     var pid = (int)ViewBag.Pid;
     //创建人Id,UserLname,UserTname
-    var yuesaoCreaterId = (int)ViewBag.SysUser.Id;
-    var yuesaoCreaterName = (string)ViewBag.SysUser.UserTname; 
+    var yuesaoCreaterId = 0;
+    var yuesaoCreaterName = "";
+    if (ViewBag.SysUser != null)
+    {
+        yuesaoCreaterId = (int)ViewBag.SysUser.Id;
+        yuesaoCreaterName = (string)ViewBag.SysUser.UserTname;
+    }
+    var life_pics = (object[])Utils.StringToObjectArray(Model.PEvaImg, ',');
 }
-
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
      <title>雪绒花_月嫂信息评价记录</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
- 
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte="conte" nt="IE=Edge" />
     @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
     @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
-    
     <!--表单异步提交,用于单文件上传-->
     <script src="/Themes/default/lib/jquery.form/jquery.form.js"></script>
+    <!--文件上传js-->
+    <script type='text/javascript' src="/Themes/default/lib/swfupload/swfupload.js"></script>
+    <script type='text/javascript' src="/Themes/default/lib/swfupload/swfupload.queue.js"></script>
+    <script src="/Themes/default/lib/swfupload/swfupload.handlers.js" type="text/javascript"></script>
+    <!--上传样式-->
+    <style type="text/css">
+        .shenghuo .upload-btn
+        {
+            background: url(/Themes/default/base/images/btn_upload3.png);
+            width: 217px;
+            height: 40px;
+        }
+    </style>
+    <!--初始化-->
+    <script type="text/javascript">
+        $(function () {
+            //初始化上传控件
+            $("#PEvaImg").InitSWFUpload({ btntext: "批量上传", btnwidth: 217, single: false, water: true, thumbnail: true, filesize: "2048", sendurl: "/Tools/UploadApi/", flashurl: "/Themes/default/lib/swfupload/swfupload.swf", filetypes: "*.jpg;*.jpge;*.png;*.gif;" });
+        });
+        //头像上传及裁切
+        function do_photo_capture(obj) {
+            showTopWindow("photo_show_add", "/Tools/CaptureUpload/", "图片上传", 700, 450, function () {
+                //var time = new Date().getTime();
+                var topWinObj = top.window.document.getElementById("frm_photo_show_add").contentWindow;
+                var status = topWinObj.get_status();
+                var imageurl = topWinObj.get_url();
+                if (status == "true") {
+                    $(obj).prev().attr("src", imageurl);
+                    $(obj).next().val(imageurl);
+                }
 
-
-
+            });
+            return false;
+        }
+    </script>
     <script type="text/javascript">
         //=============================================================
         //去除顶层加载中
@@ -40,8 +74,6 @@
         });
         //=====================================================================
     </script>
-
-
     <!--my97DatePicker-->
     <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
     <!--省市数据-->
@@ -53,8 +85,6 @@
         $(function () {
             validate_form();
         });
-
-
             //表单验证
         function validate_form() {
             //表单验证
@@ -86,14 +116,6 @@
             });
         }
 
-
-
-
-
-
-
-
-
                 //表单验证方法，供父窗口调用
         function form_valid() {
             if ($("#pregnanterevaluation_form").valid()) {
@@ -105,9 +127,6 @@
         }
 
     </script>
-
-
-
 
 </head>
 <body>
@@ -153,10 +172,40 @@
                         <td >
                             @Html.TextAreaFor(model => model.PEvaContent, new { @class = "form-control required", @style = "width:200px; height:145px;", @placeholder = "评价内容不能为空" })
                         </td>
-                        <th>评价图片：</th>
+                         <th>
+                            评价图片：
+                        </th>
                         <td>
+                            <div class="upload-box shenghuo" id="PEvaImg">
+                                <span class="upload-progress"></span>
+                            </div>
+                            <div class="photo-list">
+                                <ul>
+                                    @foreach (var life_pic in life_pics)
+                                    {
+                                        for(int i = 0; i <= 6; i++)
+                                        {
+                                            try
+                                            {
+                                                var life_infos = life_pic.ToString().Split('|');
+                                                var big = life_infos[1];
+                                                var small = life_infos[2];
+                                                var des = life_infos[3] ?? "暂无描述...";
+                                                var pics = "0|" + big + "|" + small;
+                                            <li> <input type="hidden" name="PEvaImg" value="@pics" /> <input type="hidden" name="PEvaImgRemark"
+                                            value="remark" /> <div class="img-box"> <img src="@small" bigsrc="@big" /> <span
+                                            class="remark"><i>@des</i></span> </div> <a href="javascript:;" onclick=" setRemark(this,
+                                        'PEvaImg'); ">描述</a> <a href="javascript:;" onclick=" delImg(this); ">删除</a> </li>
+                                            }
+                                            catch
+                                            {
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </div>
                         
-                            <!--单文件上传开始-->
+                           @* <!--单文件上传开始-->
                             <div style="width:150px; height:130px; overflow:hidden;">
                             <img id="p_eva_imgpre" src='@Html.LoadDefaultPic(Model.PEvaImg, "/Themes/default/home/images/nophoto.gif")' title="" alt="" width="auto" height="130px;" />
                             </div>
@@ -167,7 +216,7 @@
                                 </a>
 
                             </div>
-                            <!--单文件上传结束-->
+                            <!--单文件上传结束-->*@
                         </td>
                     </tr>
                 

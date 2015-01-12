@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bak", "bak", "{9DD73E20-CBA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{382294D6-1E07-4210-B75B-E091954EA04A}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\SoftSetup\SqlServer\SQLServer2005_BC.msi = ..\..\..\SoftSetup\SqlServer\SQLServer2005_BC.msi
+		..\..\SoftSetup\SqlServer\SQLServer2005_BC.msi = ..\..\SoftSetup\SqlServer\SQLServer2005_BC.msi
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ed.Entity", "Ed.Entity\Ed.Entity.csproj", "{C49340B7-730E-4FB7-A236-CE209EB3BAFF}"

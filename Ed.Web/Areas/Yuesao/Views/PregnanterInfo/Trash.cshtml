@@ -4,7 +4,6 @@
     Layout = null;
 }
 
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -46,7 +45,7 @@
                     ajax: true,
                     post: function () {
                         return {
-                            PInfoState:0
+                            PInfoState: 0
                         };
                     },
                     url: "/api/PregnanterInfoApi/GetBootGridPregnanterInfos",
@@ -56,9 +55,10 @@
                     keepSelection: true,
                     rowCount: [10, 30, 50],
                     templates: {
-                        header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"还原月嫂\" onclick=\"return pregnanterinfo_add(); \"><span class=\"glyphicon glyphicon-check\"></span>还原月嫂</button><button class=\"btn btn-default tip\" title=\"彻底删除\" onclick=\"return pregnanterinfo_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>彻底删除</button></div>" +
+                        header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"还原月嫂\" onclick=\"return pregnanterinfo_add(); \"><span class=\"glyphicon glyphicon-check\"></span>还原月嫂</button></div>" +
                             "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
                             "<p class=\"{{css.actions}}\"></p></div></div></div>"
+                        //                            <button class=\"btn btn-default tip\" title=\"彻底删除\" onclick=\"return pregnanterinfo_multi_delete(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>彻底删除</button>
                     },
                     labels: {
                         all: "all", //checkbox全选的值
@@ -88,7 +88,7 @@
                             return row.PInfoAge + "岁";
                         },
                         PInfoType: function (column, row) {
-                            return GetOptionValue(row.PInfoType, "0|普通月嫂,1|员工制月嫂,2|其他类型");
+                            return GetOptionValue(row.PInfoType, "0|普通,1|员工制,2|其他类型");
                         },
 
                         PInfoLevel: function (clumn, row) {
@@ -112,6 +112,17 @@
                                     break;
                             }
                         },
+                        PInfoFenlei: function (column, row) {
+                            switch (row.PInfoFenlei) {
+                                case 0:
+                                    return "月嫂";
+                                case 1:
+                                    return "育婴师";
+                                case 2:
+                                    return "双向";
+                                    break;
+                            }
+                        },
                         PInfoCode: function (column, row) {
                             var now = '@DateTime.Now.ToString("MM-dd")';
                             //console.log(row.ClientBirthday.substring(5) + " " + now);
@@ -122,16 +133,21 @@
                             }
                         },
                         PInfoName: function (column, row) {
-                            return "<a href='javascript:pregnanterinfo_view(" + row.Id + ")' style='color:gray;'><span class='glyphicon glyphicon-user'>			                            </span>" + row.PInfoName + "</a>";
+                            return "<a href='javascript:pregnanterinfo_view(" + row.Id + ")' style='color:gray;'><span class='glyphicon glyphicon-user'> </span>" + row.PInfoName + "</a>";
                         },
                         PInfoLastdate: function (column, row) {
                             var now = '@DateTime.Now.ToString("yyyy-MM-dd")';
                             var d = DateDiff(row.PInfoLastdate, now);
                             return "<b style='color:red;font-size:14px;'>" + d + "</b>" + "天";
                         },
-                        "commands": function (column, row) {
+                        "commands": function (column, row) {                           
+                            if (row.PInfoFenlei == 0 || row.PInfoFenlei == 2) {
+                                return "<a href='javascript:pregnanterinfo_view(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>预览</a> <a href='javascript:pregnanterinfo_edit(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>还原</a>";
+                            }
+                            else {
+                                return "<a href='javascript:pregnanterinfo_view(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>预览</a> <a href='javascript:pregnanterinfo_edit1(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>还原</a>";
+                            }
 
-                            return "<a href='javascript:pregnanterinfo_view(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>预览</a>";
                         }
                     }
                 }).on("loaded.rs.jquery.bootgrid", function (e) {
@@ -188,10 +204,10 @@
                             showMsg("网络连接错误！", "Error");
                         }
                     });
-
+                    //必须有这个，阻止刷新
+                    return false;
                 });
-                //必须有这个，阻止刷新
-                return false;
+                
             }
 
             function pregnanterinfo_edit(id) {
@@ -219,7 +235,7 @@
                         data: data,
                         dataType: "json",
                         beforeSend: function () {
-                            showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
+                            showTopDialog("show_edit_loding", "<div class='dialog_loading'>还原中，请稍后...</div>", "温馨提示", 400, 95);
                         },
                         complete: function () {
                             //d.close().remove();
@@ -231,12 +247,69 @@
                             var status = result.Status;
                             if (status == true || status == "true" || status == "True") {
                                 //刷新数据
+                                top.dialog.list["pregnanterinfo_show_edit"].close().remove();
                                 pregnanterinfo_grid.bootgrid("reload");
                                 //console.log(grid);
 
-                                showMsg("月嫂修改成功！", "Success");
+                                showMsg("月嫂还原成功！", "Success");
                             } else {
-                                showMsg("系统异常，月嫂修改失败！", "Error");
+                                showMsg("系统异常，月嫂还原失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            showMsg("网络连接错误！", "Error");
+                        }
+                    });
+                    //必须有这个，阻止刷新
+                    return false;
+                });
+            }
+
+            function pregnanterinfo_edit1(id) {
+                var url = "/Yingshi/YPregnanterInfo/Edit?actionType=Edit&id=" + id;
+                //console.log(id);
+                showTopWindow("pregnanterinfo_show_edit", url, null, 800, 420, function () {
+                    var pregnanterinfo_form1 = $(top.window.frames["frm_pregnanterinfo_show_edit"].document).find("#pregnanterinfo_form1");
+                    var pregnanterinfo_form2 = $(top.window.frames["frm_pregnanterinfo_show_edit"].document).find("#pregnanterinfo_form2");
+                    var pregnanterinfo_form3 = $(top.window.frames["frm_pregnanterinfo_show_edit"].document).find("#pregnanterinfo_form3");
+                    //console.log(pregnanterinfo_form1);
+                    var flag = top.window.document.getElementById("frm_pregnanterinfo_show_edit").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(pregnanterinfo_form1).serialize();
+                    var data2 = $(pregnanterinfo_form2).serialize();
+                    var data3 = $(pregnanterinfo_form3).serialize();
+                    data += "&" + data2 + "&" + data3;
+                    //console.log((data));
+                    //return;
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/YPregnanterInfoApi/EditPregnanterInfo",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_edit_loding", "<div class='dialog_loading'>还原中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_edit_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                top.dialog.list["pregnanterinfo_show_edit"].close().remove();
+                                pregnanterinfo_grid.bootgrid("reload");
+                                //console.log(grid);
+
+                                showMsg("育婴师还原成功！", "Success");
+                            } else {
+                                showMsg("系统异常，育婴师还原失败！", "Error");
                             }
                         },
                         error: function () {
@@ -245,20 +318,15 @@
                         }
                     });
 
-
+                    //必须有这个，阻止刷新
+                    return false;
                 });
-
-                //必须有这个，阻止刷新
-                return false;
             }
 
             function pregnanterinfo_view(id) {
                 var url = "/Yuesao/PregnanterInfo/View?id=" + id;
                 //console.log(id);
                 showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂", 720, 400);
-
-                //必须有这个，阻止刷新
-                return false;
             }
 
             function pregnanterinfo_multi_delete() {
@@ -267,7 +335,7 @@
                 if (ids == "") {
                     showTopMsg("请选择你要删除的记录，删除后不可恢复！", "错误提示", "Error");
                     return false;
-                }
+                }              
                 //return false;
                 pregnanterinfo_delete(ids);
 
@@ -276,7 +344,7 @@
             }
 
             function pregnanterinfo_delete(ids) {
-                showTopDialog("pregnanterinfo_show_delete", "<div class='dialog_confirm'>确认删除选中记录吗？删除后不可恢复！</div>", "温馨提示", 400, 75, function () {
+                showTopDialog("pregnanterinfo_show_delete", "<div class='dialog_confirm'>请查看是否存在与该员工有关联的订单信息！如果存在，请删除；不存在，则请按确定删除该员工！</div>", "温馨提示", 400, 75, function () {
                     $.ajax({
                         type: "GET",
                         cache: false,
@@ -306,9 +374,10 @@
                             showMsg("网络连接错误！", "Error");
                         }
                     });
+                    //必须有这个，阻止刷新
+                    return false;
                 });
-                //必须有这个，阻止刷新
-                return false;
+                
             }
         </script>
 
@@ -325,6 +394,7 @@
                 <th data-column-id="PInfoTel" data-header-align="center" data-formatter="PInfoTel" data-order="desc">手机</th>
                 <th data-column-id="PInfoType" data-header-align="center" data-formatter="PInfoType" data-order="desc">类型</th>
                 <th data-column-id="PInfoLevel" data-header-align="center" data-formatter="PInfoLevel" data-order="desc">等级</th>
+                <th data-column-id="PInfoFenlei" data-header-align="center" data-formatter="PInfoFenlei" data-order="desc">类别</th>
                 <th data-column-id="CurrentStatus" data-header-align="center" data-formatter="CurrentStatus" data-sortable="false">当前状态</th>
                 <th data-column-id="PInfoLastdate" data-header-align="center" data-align="center" data-formatter="PInfoLastdate" data-order="desc">未跟踪</th>
                 <th data-column-id="Id" data-header-align="center" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>

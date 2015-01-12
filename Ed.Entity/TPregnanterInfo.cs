@@ -35,9 +35,19 @@ namespace Ed.Entity
 		public Int32? PInfoType { get;set; }
 		[Column("p_info_level")]
 		public Int32? PInfoLevel { get;set; }
+        [Column("p_info_price_type")]
+        public String PInfoPriceType { get; set; }
 		[Column("p_info_price")]
 		public Double? PInfoPrice { get;set; }
-		[Column("p_info_state")]
+        [Column("p_info_price_12")]
+		public Double? PInfoPrice12 { get;set; }
+        [Column("p_info_Yprice")]
+        public Double? PInfoYPrice { get; set; }
+        [Column("p_info_Yprice_12")]
+        public Double? PInfoYPrice12 { get; set; }
+        [Column("p_info_fenlei")]
+        public Int32? PInfoFenlei { get; set; }
+        [Column("p_info_state")]
 		public Int32? PInfoState { get;set; }
 		[Column("p_info_education")]
 		public Int32? PInfoEducation { get;set; }
@@ -45,9 +55,9 @@ namespace Ed.Entity
 		public Int32? PInfoMarriage { get;set; }
 		[Column("p_info_hobby")]
 		public String PInfoHobby { get;set; }
-		[Column("p_info_class")]
-		public String PInfoClass { get;set; }
-		[Column("p_info_city")]
+        [Column("p_info_class")]
+        public String PInfoClass { get; set; }
+        [Column("p_info_city")]
 		public String PInfoCity { get;set; }
 		[Column("p_info_address")]
 		public String PInfoAddress { get;set; }
@@ -102,7 +112,11 @@ namespace Ed.Entity
         [Column("P_info_scomment")]
         public Int32? PInfoScomment { get; set; }
         [Column("p_info_stotal")]
-        public Int32? PInfoStotal { get; set; }   
+        public Int32? PInfoStotal { get; set; }
+        [Column("P_info_start")]
+        public DateTime? PInfoStart { get; set; }
+        [Column("P_info_end")]
+        public DateTime? PInfoEnd { get; set; }
 	}
   
 }

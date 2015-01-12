@@ -110,12 +110,12 @@ namespace Ed.Web
             //搜索
             //string predicate = "true";
             string predicate = "PServiceNote.Contains(@0)";
-           
+
             int yuesaoId = 0;
             if (!String.IsNullOrEmpty(request.QueryString["yuesaoId"]))
             {
                 yuesaoId = int.Parse(request.QueryString["yuesaoId"].ToString());
-                predicate = String.Concat(new[] { predicate, " AND PInfoCode=@1"});
+                predicate = String.Concat(new[] { predicate, " AND PInfoCode=@1" });
             }
 
             //排序
@@ -189,7 +189,7 @@ namespace Ed.Web
             //var timeConverter =new IsoDateTimeConverter();
             //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式     
             //timeConverter.DateTimeFormat = "yyyy-MM-dd";
-            //return JsonConvert.SerializeObject(model, timeConverter); 
+            //return JsonConvert.SerializeObject(model, timeConverter);               
             return model;
         }
 
@@ -207,17 +207,18 @@ namespace Ed.Web
         public ResponseMessage AddPregnanterServiceRecord([FromBody] TPregnanterServiceRecord pregnanterServiceRecord)
         {
             ResponseMessage rmsg = new ResponseMessage();
-
+           
             if (PregnanterServiceRecordService.AddPregnanterServiceRecord(pregnanterServiceRecord))
-            {
+            {             
                 rmsg.Status = true;
             }
             else
             {
                 rmsg.Status = false;
-            }
-
-
+            }          
+           
+            
+          
             return rmsg;
         }
 

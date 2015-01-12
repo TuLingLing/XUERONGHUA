@@ -9,7 +9,7 @@
     //开始结束时间在隐藏域
     var orderStart = ViewBag.OrderStart;
     var orderEnd = ViewBag.OrderEnd;
-    
+    var pricetype = ViewBag.PriceType;
     //订单编号（自动生成）
     var orderCode = RandomHelper.GetOrderNumber();
 }
@@ -22,6 +22,9 @@
     <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
     @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
     @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+    <style type="text/css">
+.jineng{font-size: 12px;padding: 2px 3px;color: #FFFFFF;background-color: #328eb4;margin-right: 5px;}
+</style>
         <script src="~/Themes/default/base/js/city.js"></script>
     <!--my97DatePicker-->
     <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
@@ -121,15 +124,9 @@
                         showMsg("网络连接错误!", "错误提示", "Error");
                     }
                 });
-
-
                 //必须有这个，阻止刷新
-                return false;
-               
+                return false;              
             }
-
-
-
             //预定成功
             function show_order_success() {
                 var d = top.dialog({
@@ -141,16 +138,16 @@
                     okValue: '进入客户管理',
                     ok: function () {
                         //关闭添加框
-                        dialog.list["show_add"].close().remove();
+                        top.dialog.list["show_add_yuesao"].close().remove();
                         //关闭提示框
                         top.dialog.list["show_order_success"].close().remove();
                         //跳转到客户管理
-                        //showTopContentWindow("show_order_success", "/Customer/ClientInfo/List", "客户信息管理", 1000, 500);
+                        showTopContentWindow("show_order_success", "/Customer/ClientInfo/List", "客户信息管理", 1000, 500);
                     },
                     cancelValue: '继续添加订单',
                     cancel: function () {
                         //关闭添加框
-                        top.dialog.list["show_add"].close().remove();
+                        top.dialog.list["show_add_yuesao"].close().remove();
                         //关闭提示框
                         top.dialog.list["show_order_success"].close().remove();
                         //跳转到订单添加
@@ -159,30 +156,19 @@
                 });
                 d.showModal();
             }
-        </script>
-        
+        </script>      
         <script type="text/javascript">
     $(function () {
         var city = get_city_names("@customer.ClientCity");
         var addr = city + " " + $("#ClientCity").html();
         $("#ClientCity").html(addr);
                 });
-
-
-
-
             function pregnanterinfo_view(id) {
                 var url = "/Yuesao/PregnanterInfo/View?id=" + id;
                 //console.log(id);
-                showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂", 720, 400);
-
-                //必须有这个，阻止刷新
-                return false;
+                showTopContentWindow("pregnanterinfo_show_view", url, "查看月嫂",810,500);
             }
         </script>
-
-
-
     </head><body>
     <div class="boxwarp">
         <form id="step4_form">
@@ -228,15 +214,20 @@
                                     <input type="hidden"  name="YorderAlter" value="@yuesao.Id" />
                                     
                                     
-                                    <span class="green">@yuesao.PInfoCode</span>
+                         <span class="green">@yuesao.PInfoCode</span>
                          <span>@yuesao.PInfoName</span>
                          <span>@yuesao.PInfoAge 岁</span>
-                         <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★")</span> <span>@yuesao.PInfoPrice</span>
+                         <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★")</span><span class="jineng" style="color:#fff;">@pricetype</span>
+                         @if (pricetype == "12时")
+                         { <span>@yuesao.PInfoPrice12</span>}
+                         else
+                         { <span>@yuesao.PInfoPrice</span>}
                            <a href="javascript:pregnanterinfo_view(@yuesao.Id);">查看</a>          
                                     
                                 </div>
                             }
                         </td>
+                        <input type="hidden" id="YorderPtype" name="YorderPtype" value="@pricetype" />
                     </tr>
                     <tr> <td colspan="9"><div style=" height:3px;"></div></td> </tr>
                     <tr>
@@ -263,7 +254,7 @@
                     
                         <th>预产医院：</th>
                         <td colspan="8">
-                            <select value="1" class="form-control required valid success wid220" id="HospitalSelect" name="HospitalSelect" placeholder="" onChange="hospitalselect()">
+                            <select value="1" class="form-control valid success wid220" id="HospitalSelect" name="HospitalSelect" placeholder="" onChange="hospitalselect()">
                                 <option value="">请选择</option>
                                 <option value="河南省郑州市二七区康复前街7号" alt="">郑州大学三附院产科</option>
                                 <option value="郑州市金水路41号">郑州市妇幼保健院</option>
@@ -299,9 +290,9 @@
                     <tr> <td colspan="9"><div style=" height:3px;"></div></td> </tr>
                     <tr>
                         <td class="tit"><label>财务信息</label></td>
-                        <!--<th>总金额：</th>
+                       <th>总金额：</th>
                         <td>
-      <input class="form-control" id="OrderSumMoney" name="OrderSumMoney" placeholder="订单总金额" style="width:100px;" type="text" value="0.00" /></td>-->
+      <input class="form-control" id="OrderSumMoney" name="OrderSumMoney" placeholder="订单总金额" style="width:100px;" type="text" value="0.00" /></td>
                         <th>已付金额：</th>
                         <td><input class="form-control" id="OrderPrepaid" name="OrderPrepaid" placeholder="预付金额" style="width:100px;" type="text" value="0.00" /></td>
                         <th>备注：</th>

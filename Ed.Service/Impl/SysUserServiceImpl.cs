@@ -169,7 +169,6 @@ public  class SysUserServiceImpl: ISysUserService
 	   }
 	   #endregion 
 
-
 	   #region 查看
 	   	  /// <summary>
         /// 获取一条信息  2014-10-15 22:18:45 By 唐有炜
@@ -209,10 +208,6 @@ public  class SysUserServiceImpl: ISysUserService
                 return null;
             }
 	}
-
-
-	 
-
 
         /// <summary>
         /// 获取一条信息(带扩展字段)   2014-10-15 22:18:45 By 唐有炜

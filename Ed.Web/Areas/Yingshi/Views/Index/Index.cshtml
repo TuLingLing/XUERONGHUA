@@ -1,0 +1,134 @@
+﻿@using Ed.Web.Helpers
+@model List<Dictionary<string,object>>
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>雪绒花_育婴师管理首页</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="/Themes/default/lib/bootstrap/css/bootstrap-3.2.0.css" rel="stylesheet" />
+        <link href="/Themes/default/lib/bootstrap/assets/css/docs.css" rel="stylesheet" />
+        <link href="/Themes/default/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+        <script src="/Themes/default/lib/jquery/jquery-1.11.1.js"></script>
+        <script src="/Themes/default/lib/cookie/jquery.cookie.js"></script>
+        <script src="/Themes/default/lib/artDialog/dist/dialog-plus-min.js"></script>
+        <script src="/Themes/default/lib/function.js"></script>
+    </head>
+
+  <!--去除顶层加载中 14-10-17 By 唐有炜-->
+<script type="text/javascript">
+    //=============================================================
+    //去除顶层加载中
+    $(document).ready(function () {
+        //去除加载中
+        if (undefined != top.dialog.list["show_loading"]) {
+            top.dialog.list["show_loading"].close().remove();
+            //showTopMsg("页面加载成功！", "温馨提示", "Success");
+        }
+    });
+    //=====================================================================
+</script>
+
+    <script type="text/javascript">
+        function show_add() {
+                showTopWindow("pregnanterinfo_show_add", "/Yingshi/YPregnanterInfo/Edit?actionType=Add", null, 800, 420, function () {
+                    var pregnanterinfo_form1 = $(top.window.frames["frm_pregnanterinfo_show_add"].document).find("#pregnanterinfo_form1");
+                    var pregnanterinfo_form2 = $(top.window.frames["frm_pregnanterinfo_show_add"].document).find("#pregnanterinfo_form2");
+                    var pregnanterinfo_form3 = $(top.window.frames["frm_pregnanterinfo_show_add"].document).find("#pregnanterinfo_form3");
+                    //console.log(pregnanterinfo_form1);
+                    var flag = top.window.document.getElementById("frm_pregnanterinfo_show_add").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    var data = $(pregnanterinfo_form1).serialize();
+                    var data2 = $(pregnanterinfo_form2).serialize();
+                    var data3 = $(pregnanterinfo_form3).serialize();
+                    data += "&" + data2 + "&" + data3;
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/YPregnanterInfoApi/AddPregnanterInfo",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            showTopDialog("show_add_loding", "<div class='dialog_loading'>添加中，请稍后...</div>", "温馨提示", 400, 95);
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            top.dialog.list["show_add_loding"].close().remove();
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                show_list();
+                                showTopMsg("育婴师添加成功！", "温馨提示","Success");
+                            } else {
+                                showTopMsg("系统异常，育婴师添加失败！", "错误提示", "Error");
+                            }
+                        },
+                        error: function () {
+                            top.dialog.list["show_add_loding"].close().remove();
+                            showTopMsg("网络连接错误！", "错误提示", "Error");
+                        }
+                    });
+
+                },function(){});
+                //必须有这个，阻止刷新
+                return false;
+
+        }
+        function show_list() {
+            showTopContentWindow("show_list", "/Yingshi/YPregnanterInfo/List", "预定育婴师信息管理",1000,500);
+        }
+        function show_list_closed() {
+            showTopContentWindow("show_list_closed", "/Yingshi/YPregnanterInfo/Closed", "已关闭育婴师信息管理", 1000, 500);
+        }
+        function show_list_trash() {
+            showTopContentWindow("show_list_trash", "/Yingshi/YPregnanterInfo/Trash", "回收站育婴师信息管理", 1000, 500);
+        }
+    </script>
+    <body>
+        <div class="" style="width:231px;overflow: hidden; border-top: 1px solid #EFEFEF; border-left: 1px solid #EFEFEF;">
+            <div class="bs-glyphicons">
+                <ul class="bs-glyphicons-list">
+                      @if (Html.LoadModulePowers(@Model, "Yingshi_add"))
+                      {
+                          <li onclick=" show_add() ">
+                              <span class="glyphicon glyphicon-plus"></span>
+                              <span class="glyphicon-class">新增育婴师</span>
+                          </li>
+                      }
+                       @if (Html.LoadModulePowers(@Model, "Yingshi_list"))
+                       {
+                           <li onclick=" show_list(); ">
+                               <span class="glyphicon glyphicon-heart"></span>
+                               <span class="glyphicon-class">维护育婴师</span>
+                           </li>
+                       }
+                        @if (Html.LoadModulePowers(@Model, "Yingshi_closed"))
+                        {
+                            <li onclick=" show_list_closed(); ">
+                                <span class="glyphicon glyphicon-off"></span>
+                                <span class="glyphicon-class">已关闭育婴师</span>
+                            </li>
+                        }
+                        @if (Html.LoadModulePowers(@Model, "Yingshi_trash"))
+                        {
+                            <li onclick=" show_list_trash(); ">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                <span class="glyphicon-class">回收站育婴师</span>
+                            </li>
+                        }
+                    <div style="clear: both"></div>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

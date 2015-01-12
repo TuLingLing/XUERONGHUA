@@ -4,7 +4,6 @@
     Layout = null;
 }
 
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -25,10 +24,8 @@
                     //showTopMsg("页面加载成功！", "温馨提示", "Success");
                 }
             });
-            //=====================================================================
+            //=============================================================
         </script>
-
-
         <script type="text/javascript">
             //全局变量
             var order_grid;
@@ -38,8 +35,6 @@
                 //初始化表格
                 InitOrderGrid();
             });
-
-
             function InitOrderGrid() {
                 order_grid = $("#order_grid_data").bootgrid({
                     ajax: true,
@@ -103,10 +98,21 @@
                             return row.OrderWeihuName;
                         },
                         OrderType: function (column, row) {
-                            return GetOptionValue(row.OrderType, "1|月嫂服务,2|育婴师服务,3|催乳师服务");
+                            return GetOptionValue(row.OrderType, "1|月嫂服务,2|育婴师服务,3|会所服务,4|增值产品");
                         },
                         "commands": function (column, row) {
-                            return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
+                            if (row.OrderType == 1) {
+                                return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
+                            }
+                            if (row.OrderType == 2) {
+                                return "<a href='javascript:order_show1(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
+                            }
+                            if (row.OrderType == 3) {
+                                return "<a href='javascript:order_show2(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
+                            }
+                            if (row.OrderType == 4) {
+                                return "<a href='javascript:order_show3(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
+                            }
                         }
                     }
                 }).on("loaded.rs.jquery.bootgrid", function (e) {
@@ -159,67 +165,24 @@
                             showMsg("网络连接错误！", "Error");
                         }
                     });
-
+                    //必须有这个，阻止刷新
+                    return false;
                 });
-                //必须有这个，阻止刷新
-                return false;
-            }
-
-            function order_edit(id) {
-                var url = "/Settings/Order/Edit?actionType=Edit&id=" + id;
-                //console.log(id);
-                showTopWindow("order_show_edit", url, null, 800, 400, function () {
-                    var order_form = $(top.window.frames["frm_order_show_edit"].document).find("#order_form");
-                    //console.log(order_form);
-                    var flag = top.window.document.getElementById("frm_order_show_edit").contentWindow.form_valid();
-                    if (!flag) {
-                        return false;
-                    }
-                    var data = $(order_form).serialize();
-                    //console.log((data));
-                    $.ajax({
-                        type: "POST",
-                        cache: false,
-                        url: "/api/OrderApi/EditOrder",
-                        data: data,
-                        dataType: "json",
-                        beforeSend: function () {
-                            showTopDialog("show_edit_loding", "<div class='dialog_loading'>修改中，请稍后...</div>", "温馨提示", 400, 95);
-                        },
-                        complete: function () {
-                            //d.close().remove();
-                        },
-                        success: function (result) {
-                            top.dialog.list["show_edit_loding"].close().remove();
-                            //toLowerCase报错
-                            //var status = result.Status.toLowerCase();
-                            var status = result.Status;
-                            if (status == true || status == "true" || status == "True") {
-                                //刷新数据
-                                order_grid.bootgrid("reload");
-                                //console.log(grid);
-
-                                showMsg("修改成功！", "Success");
-                            } else {
-                                showMsg("系统异常，修改失败！", "Error");
-                            }
-                        },
-                        error: function () {
-                            top.dialog.list["show_edit_loding"].close().remove();
-                            showMsg("网络连接错误！", "Error");
-                        }
-                    });
-
-
-                });
-
-                //必须有这个，阻止刷新
-                return false;
+              
             }
             //订单预览界面
             function order_show(order_code) {
-                showTopWindow("show_view", "/Order/YuesaoOrder/ViewYuesao?order_code=" + order_code, "查看订单", 900, 450, function () { }, function () { });
+                showTopWindow("show_view", "/Order/YuesaoOrder/ViewYuesao?order_code=" + order_code, "查看月嫂订单", 900, 450, function () { }, function () { });
             }
+            function order_show1(order_code) {
+                showTopWindow("show_view", "/Order/YingshiOrder/ViewYingshi?order_code=" + order_code, "查看育婴师订单", 900, 450, function () { }, function () { });
+            }
+            function order_show2(order_code) {
+                showTopWindow("show_view", "/Order/Corder/ViewHuisuo?order_code=" + order_code, "查看月子会所订单", 900, 450, function () { }, function () { });
+            }
+            function order_show3(order_code) {
+                showTopWindow("show_view", "/Order/Corder/ViewZengzhi?order_code=" + order_code, "查看增值产品订单", 900, 450, function () { }, function () { });
+            }         
             function order_multi_delete() {
                 var ids = get_selected_ids("order_grid_data");
                 //console.log(ids);

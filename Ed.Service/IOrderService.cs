@@ -126,7 +126,13 @@ public  interface IOrderService
         /// </summary>
         /// <param name="TOrder">TOrder</param>
         /// <returns>添加状态</returns>
-        bool AddOrder(TOrder Order);
+        bool AddOrder(TOrder Order );
+
+        /// <summary>
+        /// 添加实体(事务控制先添加订单表,最后添加财务表) 14-10-19 By 唐友伟
+        /// </summary>
+        /// <param name="entity">实体对象</param>
+        bool AddOrderTran(TOrder order,TOrderFinance orderFinance);
 
         /// <summary>
         /// 修改信息 2014-08-30 14:58:50 By 唐有炜

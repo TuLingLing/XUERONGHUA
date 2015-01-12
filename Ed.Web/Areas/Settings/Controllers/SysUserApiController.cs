@@ -269,8 +269,27 @@ public  class SysUserApiController:ApiController
         /// <returns>ResponseMessage.</returns>
         [HttpGet]
         public ResponseMessage DeleteSysUser(string ids)
-        {
+        {                      
             ResponseMessage rmsg = new ResponseMessage();
+            //List<Field> fields = new List<Field>();
+
+            //var idArr = Utils.StringToObjectArray(ids, ',');
+            //object[] parms = new object[idArr.Length];
+            //for (int i = 0; i < idArr.Length; i++)
+            //{
+            //    //字段及条件
+            //    Field field = new Field()
+            //    {
+            //        Id = RandomHelper.GetGuidNumber(),
+            //        Key = "OrderWeihu",
+            //        Value =ids,
+            //        Predicate = "Id=@" + i
+            //    };
+            //    fields.Add(field);
+            //    //参数
+            //    var id = int.Parse(idArr[i].ToString());
+            //    parms[i] = id;
+            //}          
             if (SysUserService.DeleteSysUser(ids))
             {
                 rmsg.Status = true;

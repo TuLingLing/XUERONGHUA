@@ -61,9 +61,6 @@ namespace Ed.Dao.Impl
             }
         }
 
-
-
-
         /// <summary>
         /// 获取所有的数据
         /// </summary>
@@ -613,7 +610,46 @@ namespace Ed.Dao.Impl
         }
 
 
+        #region 手写的操作
+        /// <summary>
+        /// 添加实体(事务控制先添加订单表，在添加月嫂订单表)
+        /// </summary>
+        /// <param name="entity">实体对象</param>
+        public bool InsertEntityTran(TOrder order, TOrderFinance orderFinance)
+        {
+            using (EdDBContext db = new EdDBContext())
+            {
 
+                if (db.Connection.State != ConnectionState.Open)
+                {
+                    db.Connection.Open();
+                }
+                var tran = db.Connection.BeginTransaction();
+                try
+                {
+
+
+                    db.TOrders.Insert(order);
+                    db.TOrderFinances.Insert(orderFinance);                  
+                    tran.Commit();
+                    LogHelper.Debug("月子会所订单添加成功！");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    LogHelper.Error("月子会所订单添加异常：", ex);
+                    return false;
+                }
+                finally
+                {
+                    if (db.Connection.State != ConnectionState.Closed)
+                    {
+                        db.Connection.Close();
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 修改实体
@@ -787,3 +823,4 @@ namespace Ed.Dao.Impl
 
     }
 }
+        #endregion

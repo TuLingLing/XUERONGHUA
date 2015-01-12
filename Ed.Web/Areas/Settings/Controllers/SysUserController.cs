@@ -71,6 +71,44 @@ public  class SysUserController: Controller
 
         #endregion
 
+
+        #region 添加、修改页面
+
+        ////GET: URL
+        ////actionType (Add,Edit)
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult Lizhi(string actionType, int? id)
+        {
+            //页面类型
+            ViewBag.ActionType = actionType;
+
+            //修改
+            if (actionType == EdEnums.ActionEnum.Edit.ToString())
+            {
+                if (null == id)
+                {
+                    ViewData["Msg"] = "参数非法（id不能为空）";
+                    return View("_Error");
+                }
+                var model = SysUserService.GetSysUser(temp => temp.Id == id);
+                return View("Lizhi", model);
+            }
+            //添加
+            else if (actionType == EdEnums.ActionEnum.Add.ToString())
+            {
+                var sysuser = new TSysUser();
+                sysuser.UserEnable = 1;
+                return View("Lizhi", sysuser);
+            }
+            else
+            {
+                ViewData["Msg"] = "参数非法（actipnType不能为空）";
+                return View("_Error");
+            }
+        }
+
+        #endregion
         //#region   查看页面  
         ////GET: URL
         ////[UserAuthorize]

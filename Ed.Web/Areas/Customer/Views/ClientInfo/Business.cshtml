@@ -6,273 +6,526 @@
 }
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>雪绒花_客户管理_业务客户列表</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="keywords" content="" />
-        <meta name="description" content="" />
-        @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
-        @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
-        <!--去除顶层加载中 14-10-17 By 唐有炜-->
-        <script type="text/javascript">
-            //=============================================================
-            //去除顶层加载中
-            $(document).ready(function () {
-                //去除加载中
-                if (undefined != top.dialog.list["show_loading"]) {
-                    top.dialog.list["show_loading"].close().remove();
-                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
-                }
-            });
-            //=====================================================================
-        </script>
-        <script type="text/javascript">
-            //全局变量
-            var clientinfo_grid;
-
-            $(function () {
-
-                //初始化表格
-                InitGrid();
-            });
-
-            function InitGrid() {
-                clientinfo_grid = $("#clientinfo_grid_data").bootgrid({
-                    ajax: true,
-                    post: function () {
-                        return {
-                            ClientCreater: "@Session[EdKeys.SESSION_USER_ID]"
-                        };
-                    },
-                    url: "/api/ClientInfoApi/GetBootGridClientInfos/",
-                    selection: true,
-                    multiSelect: true,
-                    rowSelect: false,
-                    keepSelection: true,
-                    rowCount: [10, 30, 50],
-                    templates: {
-                        header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\" clientinfo_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"放入回收站\" onclick=\"return clientinfo_trash(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>放入回收站</button></div>" +
+<head>
+    <title>雪绒花_客户管理_业务客户列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min6.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min6.js")
+    <!--去除顶层加载中 14-10-17 By 唐有炜-->
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    <script type="text/javascript">
+        //全局变量
+        var clientinfo_grid;
+        $(function () {
+            //初始化表格
+            InitGrid();
+        });
+        function InitGrid() {
+            clientinfo_grid = $("#clientinfo_grid_data").bootgrid({
+                ajax: true,
+                post: function () {
+                    return {
+                        ClientCreater: "@Session[EdKeys.SESSION_USER_ID]"
+                    };
+                },
+                url: "/api/ClientInfoApi/GetBootGridClientInfos/",
+                selection: true,
+                multiSelect: true,
+                rowSelect: false,
+                keepSelection: true,
+                rowCount: [10, 30, 50],
+                templates: {
+                    header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\"><div class=\"btn-group\" style=\"float:left;\"><button class=\"btn btn-default tip\" title=\"添加\" onclick=\" clientinfo_add(); \"><span class=\"glyphicon glyphicon-plus\"></span>添加</button><button class=\"btn btn-default tip\" title=\"放入回收站\" onclick=\"return clientinfo_trash(); \"><span class=\"glyphicon glyphicon glyphicon glyphicon-trash\"></span>放入回收站</button></div>" +
                             "<div class=\"search form-group\"><div class=\"input-group\"><span class=\"icon glyphicon input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"search-field form-control\" placeholder=\"输入关键字\"></div></div>" +
                             "<p class=\"{{css.actions}}\"></p></div></div></div>"
-                    },
-                    labels: {
-                        all: "all", //checkbox全选的值
-                        search: "编号/姓名/手机",
-                        loading: "加载中...",
-                        noResults: "对不起，暂无符合条件的记录！",
-                        refresh: "刷新",
-                        infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
-                    },
-                    formatters: {
-                        ClientCode: function (column, row) {
-                            var now = '@DateTime.Now.ToString("dd")';
-                            var nowMon = '@DateTime.Now.ToString("MM-dd")';
-                            var nowFull = '@DateTime.Now.ToString("yyyy-MM-dd")';
-                            var tips = "";
-                            if (row.ClientBirthday.substring(5) == nowMon) {
-                                tips+= "<span style='color: white;background:#FF5400;padding: 2px 5px;margin-right: 3px;'>客户生日</span>";
-                            }
-                            if (row.ClientChildbirth.substring(5) == nowMon) {
-                                tips += "<span style='color: white;background:#FF5400;padding: 2px 5px;margin-right: 3px;'>宝宝生日</span>";
-                            }
-                             var mnum = MonthDiff(row.ClientChildbirth, nowFull);//相差的月份
-                            //alert(mnum);
-                            //alert(row.ClientChildbirth.substring(8) + " " + now);
-                             if (row.ClientChildbirth.substring(8) == now && ((mnum < 0 && mnum >= -8) || (mnum >0 && mnum <= 12) || mnum == 15 || mnum == 18 || mnum == 21 || mnum == 24 || mnum == 30 || mnum == 36 || mnum == 48 || mnum == 60)) {
-                                 tips += "<span style='color: white;background:#FF5400;padding: 2px 5px;margin-right: 3px;'>宝宝"+mnum+"个月生日</span>";
-                             }
+                },
+                labels: {
+                    all: "all", //checkbox全选的值
+                    search: "编号/姓名/手机",
+                    loading: "加载中...",
+                    noResults: "对不起，暂无符合条件的记录！",
+                    refresh: "刷新",
+                    infos: "从{{ctx.start}} 到 {{ctx.end}}，共{{ctx.total}} 条记录"
+                },
+                formatters: {
+                    ClientCode: function (column, row) {
+                        var now = '@DateTime.Now.ToString("dd")';
+                        var nowMon = '@DateTime.Now.ToString("MM-dd")';
+                        var nowFull = '@DateTime.Now.ToString("yyyy-MM-dd")';
+                        var tips = "";
+                        if (row.ClientBirthday.substring(5) == nowMon) {
+                            tips += "<span style='color: white;background:#FF5400;padding: 2px 5px;margin-right: 3px;'>客户生日</span>";
+                        }
+                        if (row.ClientChildbirth.substring(5) == nowMon) {
+                            tips += "<span style='color: white;background:#FF5400;padding: 2px 5px;margin-right: 3px;'>宝宝生日</span>";
+                        }
+                        var mnum = MonthDiff(row.ClientChildbirth, nowFull); //相差的月份
+                        //alert(mnum);
+                        //alert(row.ClientChildbirth.substring(8) + " " + now);
+                        if (row.ClientChildbirth.substring(8) == now && ((mnum < 0 && mnum >= -8) || (mnum > 0 && mnum <= 12) || mnum == 15 || mnum == 18 || mnum == 21 || mnum == 24 || mnum == 30 || mnum == 36 || mnum == 48 || mnum == 60)) {
+                            tips += "<span style='color: white;background:#FF5400;padding: 2px 5px;margin-right: 3px;'>宝宝" + mnum + "个月生日</span>";
+                        }
 
-                             if (tips != "") {
-                                 return tips;
-                             } else {
-                                 return row.ClientCode;
-                             }
-                              
-                         
-                        },
-                        ClientName: function (column, row) {
-                            return "<a href='javascript:clientinfo_edit(" + row.Id + ")' style='color:gray;'><span class='glyphicon glyphicon-user'></span>" + row.ClientName +
+                        if (tips != "") {
+                            return tips;
+                        } else {
+                            return row.ClientCode;
+                        }
+
+
+                    },
+                    ClientName: function (column, row) {
+                        return "<a href='javascript:clientinfo_edit(" + row.Id + ")' style='color:gray;'><span class='glyphicon glyphicon-user'></span>" + row.ClientName +
                                 "</a>";
-                        },
-                        ClientTel1: function (column, row) {
-                            return "<span style='color:#666565;'><span class='glyphicon glyphicon-phone-alt'></span>" + row.ClientTel1 + "</span>";
-                        },
-                        ClientCreater: function (column, row) {
-                            return row.ClientCreaterName;
-                        },
-                        ClientWeihu: function (column, row) {
-                            return row.ClientWeihuName;
-                        },
-                        "commands": function (column, row) {
-                            return "<a href='javascript:clientinfo_edit(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>查看</a>";
-                        }
+                    },
+                    ClientTel1: function (column, row) {
+                        return "<span style='color:#666565;'><span class='glyphicon glyphicon-phone-alt'></span>" + row.ClientTel1 + "</span>";
+                    },
+                    ClientCreater: function (column, row) {
+                        return row.ClientCreaterName;
+                    },
+                    ClientWeihu: function (column, row) {
+                        return row.ClientWeihuName;
+                    },
+                    "commands": function (column, row) {
+                        return "<a href='javascript:clientinfo_edit(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>查看</a>"
+                             + "<a href='javascript:clientinfo_yuesao(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'><span style='color: white;background:#500008;padding: 2px 2px;margin-right:1px;'>月</span></a>"
+                            + "<a href='javascript:clientinfo_yingshi(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'><span style='color: white;background:#698723;padding: 2px 2px;margin-right:1px;'>育</span></a>"
+                             + "<a href='javascript:clientinfo_huisuo(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'><span style='color: white;background:#FF5200;padding: 2px 2px;margin-right:1px;'>所</span></a>"
+                            + "<a href='javascript:clientinfo_zeng(" + row.Id + ")' style='margin-right:5px; color:#563d7c;'><span style='color: white;background:#964d7c;padding: 2px 2px;margin-right:1px;'>增</span></a>";
+
                     }
-                }).on("loaded.rs.jquery.bootgrid", function (e) {
-                    //按钮提示
-                    $('.tip').tooltip({ placement: "bottom" });
-                    //按钮气泡
-                    $('.pop').popover({ html: true, trigger: "hover" });
-                    //showMsg("数据加载完毕！", "Success");
-                });
-            }
+                }
+            }).on("loaded.rs.jquery.bootgrid", function (e) {
+                //按钮提示
+                $('.tip').tooltip({ placement: "bottom" });
+                //按钮气泡
+                $('.pop').popover({ html: true, trigger: "hover" });
+                //showMsg("数据加载完毕！", "Success");
+            });
+        }
 
-            function clientinfo_add() {
-                showTopWindow("show_add_client", "/Customer/ClientInfo/Edit?actionType=Add", null, 800, 400, function () {
-                    var client_form = $(top.window.frames["frm_show_add_client"].document).find("#clientinfo_form");
-                    var flag = top.document.getElementById("frm_show_add_client").contentWindow.form_valid();
-                    if (!flag) {
-                        return false;
-                    }
-                    //var data = $(client_form).serializeObject();
-                    var data = $(client_form).serialize();
-                    //console.log(data);
-                    //return;
-                    $.ajax({
-                        type: "POST",
-                        cache: false,
-                        url: "/api/ClientInfoApi/AddClientInfo/",
-                        data: data,
-                        dataType: "json",
-                        beforeSend: function () {
-                            //showMsg("添加中，请稍后...");
-                        },
-                        complete: function () {
-                            //d.close().remove();
-                        },
-                        success: function (result) {
-                            //toLowerCase报错
-                            //var status = result.Status.toLowerCase();
-                            var status = result.Status;
-                            if (status == true || status == "true" || status == "True") {
-                                //刷新数据
-                                clientinfo_grid.bootgrid("reload");
-                                showMsg("客户添加成功！", "Success");
-                            } else {
-                                showMsg("系统异常，客户添加失败！", "Error");
-                            }
-                        },
-                        error: function () {
-                            showMsg("网络连接错误!", "错误提示", "Error");
-                        }
-                    });
-
-                });
-                //必须有这个，阻止刷新
-                return false;
-            }
-
-            function clientinfo_edit(id) {
-                var url = "/Customer/ClientInfo/Edit?actionType=Edit&id=" + id;
-                //console.log(id);
-                showTopWindow("show_edit_client", url, "客户信息查看/修改", 800, 400, function () {
-                    var client_form = $(top.window.frames["frm_show_edit_client"].document).find("#clientinfo_form");
-                    //console.log(client_form);
-                    var flag = top.document.getElementById("frm_show_edit_client").contentWindow.form_valid();
-                    if (!flag) {
-                        return false;
-                    }
-                    //var data = $(client_form).serializeObject();
-                    var data = $(client_form).serialize();
-                    //console.log((data));
-                    $.ajax({
-                        type: "POST",
-                        cache: false,
-                        url: "/api/ClientInfoApi/EditClientInfo",
-                        data: data,
-                        dataType: "json",
-                        beforeSend: function () {
-                            //showMsg("修改中，请稍后...");
-                        },
-                        complete: function () {
-                            //d.close().remove();
-                        },
-                        success: function (result) {
-                            //toLowerCase报错
-                            //var status = result.Status.toLowerCase();
-                            var status = result.Status;
-                            if (status == true || status == "true" || status == "True") {
-                                //刷新数据
-                                clientinfo_grid.bootgrid("reload");
-
-                                showMsg("客户修改成功！", "Success");
-                            } else {
-                                showMsg("系统异常，客户修改失败！", "Error");
-                            }
-                        },
-                        error: function () {
-                            showMsg("网络连接错误!", "错误提示", "Error");
-                        }
-                    });
-
-
-                });
-
-                //必须有这个，阻止刷新
-                return false;
-            }
-
-
-            function clientinfo_trash() {
-                var ids = get_selected_ids("clientinfo_grid_data");
-                //console.log(ids);
-                if (ids == "") {
-                    showTopMsg("请选择你要放入回收站的记录！", "错误提示", "Error");
+        function clientinfo_add() {
+            showTopWindow("show_add_client", "/Customer/ClientInfo/Edit?actionType=Add", null, 800, 400, function () {
+                var client_form = $(top.window.frames["frm_show_add_client"].document).find("#clientinfo_form");
+                var flag = top.document.getElementById("frm_show_add_client").contentWindow.form_valid();
+                if (!flag) {
                     return false;
                 }
-                //console.log(ids);
-                //return false;
-                showTopDialog("show_clientinfo_trash", "<div class='dialog_confirm'>确认将选中记录放入回收站吗？</div>", "温馨提示", 400, 75, function () {
-                    $.ajax({
-                        type: "GET",
-                        cache: false,
-                        url: "/api/ClientInfoApi/UpdateClientInfoStatus?ids=" + ids+"&status=1",
-                        //data: { ids: ids },
-                        dataType: "json",
-                        beforeSend: function () {
-                            //showMsg("添加中，请稍后...");
-                        },
-                        complete: function () {
-                            //d.close().remove();
-                        },
-                        success: function (result) {
-                            //toLowerCase报错
-                            //var status = result.Status.toLowerCase();
-                            var status = result.Status;
-                            if (status == true || status == "true" || status == "True") {
-                                //刷新数据
-                                clientinfo_grid.bootgrid("reload");
-                                showMsg("客户放入回收站成功！", "Success");
-                            } else {
-                                showMsg("系统异常，客户放入回收站失败！", "Error");
-                            }
-                        },
-                        error: function () {
-                            showTopMsg("网络连接错误!", "错误提示", "Error");
+                //var data = $(client_form).serializeObject();
+                var data = $(client_form).serialize();
+                //console.log(data);
+                //return;
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/ClientInfoApi/AddClientInfo/",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //showMsg("添加中，请稍后...");
+                    },
+                    complete: function () {
+                        //d.close().remove();
+                    },
+                    success: function (result) {
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_add_client"].close().remove();
+                            clientinfo_grid.bootgrid("reload");
+                            showMsg("客户添加成功！", "Success");
+                        } else {
+                            showMsg("系统异常，客户添加失败！", "Error");
                         }
-                    });
+                    },
+                    error: function () {
+                        showMsg("网络连接错误!", "错误提示", "Error");
+                    }
                 });
                 //必须有这个，阻止刷新
                 return false;
+            });
+
+        }
+
+        function clientinfo_edit(id) {
+            var url = "/Customer/ClientInfo/Edit?actionType=Edit&id=" + id;
+            //console.log(id);
+            showTopWindow("show_edit_client", url, "客户信息查看/修改", 800, 400, function () {
+                var client_form = $(top.window.frames["frm_show_edit_client"].document).find("#clientinfo_form");
+                //console.log(client_form);
+                var flag = top.document.getElementById("frm_show_edit_client").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+                //var data = $(client_form).serializeObject();
+                var data = $(client_form).serialize();
+                //console.log((data));
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/ClientInfoApi/EditClientInfo",
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //showMsg("修改中，请稍后...");
+                    },
+                    complete: function () {
+                        //d.close().remove();
+                    },
+                    success: function (result) {
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_edit_client"].close().remove();
+                            clientinfo_grid.bootgrid("reload");
+
+                            showMsg("客户修改成功！", "Success");
+                        } else {
+                            showMsg("系统异常，客户修改失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        showMsg("网络连接错误!", "错误提示", "Error");
+                    }
+                });
+                //必须有这个，阻止刷新
+                return false;
+
+            });
+
+
+        }
+
+        //月子会所类型订单处理界面
+        function clientinfo_huisuo(id) {
+
+            showTopContentWindow("show_order_add", "/Order/Corder/AddHuisuoInfo?actionType=Add&id=" + id, "添加月子会所订单", 900, 450, function () {
+
+                var yuesaoorder_form = $(top.window.frames["frm_show_order_add"].document).find("#step4_form");
+                //console.log(yuesaoorder_form);
+                var flag = top.window.document.getElementById("frm_show_order_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+
+                if (!flag) {
+                    return false;
+                }
+                var data = $(yuesaoorder_form).serialize();
+                //console.log(data);
+
+                //alert(data);
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/CorderApi/AddHuisuoOrder?id=" + id,
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //显示加载中
+                        showTopDialog("show_loading", "<div class='dialog_loading'>月子会所订单确认中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function () {
+                    },
+                    success: function (result) {
+                        top.dialog.list["show_loading"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_order_add"].close().remove();
+                            show_do_order_success();
+                            order_grid.bootgrid("reload");
+                        } else {
+                            showMsg("系统异常，订单确认失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        top.dialog.list["show_loading"].close().remove();
+                        showMsg("网络连接错误!", "错误提示", "Error");
+                    }
+
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }, function () { });
+        }
+        //增值产品类型订单处理界面
+        function clientinfo_zeng(id) {
+            showTopContentWindow("show_order_add", "/Order/Corder/AddZengzhiInfo?actionType=Add&id=" + id, "添加增值产品订单", 900, 450, function () {
+
+                var yuesaoorder_form = $(top.window.frames["frm_show_order_add"].document).find("#step4_form");
+                //console.log(yuesaoorder_form);
+                var flag = top.window.document.getElementById("frm_show_order_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+
+                if (!flag) {
+                    return false;
+                }
+                var data = $(yuesaoorder_form).serialize();
+                //console.log(data);
+
+                //alert(data);
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/CorderApi/AddZengzhiOrder?id=" + id,
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //显示加载中
+                        showTopDialog("show_loading", "<div class='dialog_loading'>增值产品订单确认中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function () {
+                    },
+                    success: function (result) {
+                        top.dialog.list["show_loading"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_order_add"].close().remove();
+                            show_do_order_success();
+                            order_grid.bootgrid("reload");
+                        } else {
+                            showMsg("系统异常，订单确认失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        top.dialog.list["show_loading"].close().remove();
+                        showMsg("网络连接错误!", "错误提示", "Error");
+                    }
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }, function () { });
+        }
+        //月嫂订单处理界面
+        function clientinfo_yuesao(id) {
+            showTopContentWindow("show_add_yuesao", "/Order/YuesaoOrder/AddYuesao?actionType=Add&id=" + id, "添加月嫂订单", 1000, 500, function () {
+
+                var yuesaoorder_form = $(top.window.frames["frm_show_order_add"].document).find("#step4_form");
+                //console.log(yuesaoorder_form);
+                var flag = top.window.document.getElementById("frm_show_order_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+
+                if (!flag) {
+                    return false;
+                }
+                var data = $(yuesaoorder_form).serialize();
+                //console.log(data);
+
+                //alert(data);
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/YuesaoOrder/AddYuesao?id=" + id,
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //显示加载中
+                        showTopDialog("show_loading", "<div class='dialog_loading'>月嫂订单确认中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function () {
+                    },
+                    success: function (result) {
+                        top.dialog.list["show_loading"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_add_yuesao"].close().remove();
+                            show_do_order_success();
+                            order_grid.bootgrid("reload");
+                        } else {
+                            showMsg("系统异常，订单确认失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        top.dialog.list["show_loading"].close().remove();
+                        showMsg("网络连接错误!", "错误提示", "Error");
+                    }
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }, function () { });
+        }
+        //育婴师订单处理界面
+        function clientinfo_yingshi(id) {
+            showTopContentWindow("show_add_yingshi", "/Order/YingshiOrder/AddYingshi?actionType=Add&id=" + id, "添加育婴师订单", 900, 450, function () {
+
+                var yuesaoorder_form = $(top.window.frames["frm_show_order_add"].document).find("#step4_form");
+                //console.log(yuesaoorder_form);
+                var flag = top.window.document.getElementById("frm_show_order_add").contentWindow.form_valid();
+                if (!flag) {
+                    return false;
+                }
+
+                if (!flag) {
+                    return false;
+                }
+                var data = $(yuesaoorder_form).serialize();
+                //console.log(data);
+
+                //alert(data);
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/api/YingshiOrder/AddYingshi?id=" + id,
+                    data: data,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //显示加载中
+                        showTopDialog("show_loading", "<div class='dialog_loading'>育婴师订单确认中，请稍后...</div>", "温馨提示", 400, 95);
+                    },
+                    complete: function () {
+                    },
+                    success: function (result) {
+                        top.dialog.list["show_loading"].close().remove();
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_add_yingshi"].close().remove();
+                            show_do_order_success();
+                            order_grid.bootgrid("reload");
+                        } else {
+                            showMsg("系统异常，订单确认失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        top.dialog.list["show_loading"].close().remove();
+                        showMsg("网络连接错误!", "错误提示", "Error");
+                    }
+                });
+                //必须有这个，阻止刷新
+                return false;
+            }, function () { });
+        }
+
+        function pregnanterinfo_view(id) {
+            var url = "/Yuesao/PregnanterInfo/View?id=" + id;
+            //console.log(id);
+            showTopContentWindow("pregnanterinfo_show_view", url, "查看育婴师", 810, 500);
+
+            //必须有这个，阻止刷新
+            return false;
+        }
+        function clientinfo_trash() {
+            var ids = get_selected_ids("clientinfo_grid_data");
+            //console.log(ids);
+            if (ids == "") {
+                showTopMsg("请选择你要放入回收站的记录！", "错误提示", "Error");
+                return false;
             }
-        </script>
-    </head>
-    <body>
-        <div>
-            <table id="clientinfo_grid_data" class="table table-condensed table-hover table-striped table-bordered" data-selection="true" data-multi-select="true">
-                <thead>
-                    <tr>
-                        <th data-column-id="ClientLasttime" data-header-align="center" data-formatter="ClientCode" data-order="asc" data-header-css-class="wid140">客户编号</th>
-                        <th data-column-id="ClientName" data-header-align="left" data-formatter="ClientName" data-order="asc">姓名</th>
-                        <th data-column-id="ClientAge" data-header-align="left" data-formatter="ClientAge" data-order="desc">年龄</th>
-                        <th data-column-id="ClientChildbirth" data-header-align="center" data-formatter="ClientChildbirth" data-order="desc">预产期</th>
-                        <th data-column-id="ClientTel1" data-header-align="center" data-formatter="ClientTel1" data-order="desc" data-header-css-class="wid120">手机</th>
-                       <!-- <th data-column-id="ClientCreater" data-header-align="center" data-formatter="ClientCreater" data-order="asc">创建人</th>-->
-                        <th data-column-id="ClientWeihu" data-header-align="center" data-formatter="ClientWeihu" data-order="desc">维护人</th>
-                        <th data-column-id="ClientCreateTime" data-header-align="center" data-formatter="ClientCreateTime" data-order="desc">添加时间</th>
-                        <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands" data-sortable="false">操作</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </body>
+            //console.log(ids);
+            //return false;
+            showTopDialog("show_clientinfo_trash", "<div class='dialog_confirm'>确认将选中记录放入回收站吗？</div>", "温馨提示", 400, 75, function () {
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: "/api/ClientInfoApi/UpdateClientInfoStatus?ids=" + ids + "&status=1",
+                    //data: { ids: ids },
+                    dataType: "json",
+                    beforeSend: function () {
+                        //showMsg("添加中，请稍后...");
+                    },
+                    complete: function () {
+                        //d.close().remove();
+                    },
+                    success: function (result) {
+                        //toLowerCase报错
+                        //var status = result.Status.toLowerCase();
+                        var status = result.Status;
+                        if (status == true || status == "true" || status == "True") {
+                            //刷新数据
+                            top.dialog.list["show_clientinfo_trash"].close().remove();
+                            clientinfo_grid.bootgrid("reload");
+                            showMsg("客户放入回收站成功！", "Success");
+                        } else {
+                            showMsg("系统异常，客户放入回收站失败！", "Error");
+                        }
+                    },
+                    error: function () {
+                        showTopMsg("网络连接错误!", "错误提示", "Error");
+                    }
+                });
+                //必须有这个，阻止刷新
+                return false;
+            });
+
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <table id="clientinfo_grid_data" class="table table-condensed table-hover table-striped table-bordered"
+            data-selection="true" data-multi-select="true">
+            <thead>
+                <tr>
+                    <th data-column-id="ClientLasttime" data-header-align="center" data-formatter="ClientCode"
+                        data-order="asc" data-header-css-class="wid140">
+                        客户编号
+                    </th>
+                    <th data-column-id="ClientName" data-header-align="left" data-formatter="ClientName"
+                        data-order="asc">
+                        姓名
+                    </th>
+                    <th data-column-id="ClientAge" data-header-align="left" data-formatter="ClientAge"
+                        data-order="desc">
+                        年龄
+                    </th>
+                    <th data-column-id="ClientChildbirth" data-header-align="center" data-formatter="ClientChildbirth"
+                        data-order="desc">
+                        预产期
+                    </th>
+                    <th data-column-id="ClientTel1" data-header-align="center" data-formatter="ClientTel1"
+                        data-order="desc" data-header-css-class="wid120">
+                        手机
+                    </th>
+                    <!-- <th data-column-id="ClientCreater" data-header-align="center" data-formatter="ClientCreater" data-order="asc">创建人</th>-->
+                    <th data-column-id="ClientWeihu" data-header-align="center" data-formatter="ClientWeihu"
+                        data-order="desc">
+                        维护人
+                    </th>
+                    <th data-column-id="ClientCreateTime" data-header-align="center" data-formatter="ClientCreateTime"
+                        data-order="desc">
+                        添加时间
+                    </th>
+                    <th data-column-id="Id" data-type="numeric" data-identifier="true" data-formatter="commands"
+                        data-sortable="false">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
 </html>

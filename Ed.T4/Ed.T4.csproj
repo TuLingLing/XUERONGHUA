@@ -660,9 +660,7 @@
       <Name>Ed.Web</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Web\Views\SysModule\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Web\Configs\Daos.xml">
       <AutoGen>True</AutoGen>

@@ -109,7 +109,7 @@
                             return "<b style='color:red;font-size:14px;'>" + d + "</b>" + "天";
                         },
                         "commands": function(column, row) {
-                            return "<a href='javascript:clientinfo_edit(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>查看</a><a href='javascript:clientinfo_edit(" + row.Id + ")' style='color:green;'>维护</a>";
+                            return "<a href='javascript:clientinfo_edit(" + row.Id + ")' style='margin-right:10px; color:#563d7c;'>查看</a>"+"<a href='javascript:clientinfo_xedit(" + row.Id + ")' style='color:green;'>维护</a>";
                         }
                     }
                 }).on("loaded.rs.jquery.bootgrid", function(e) {
@@ -197,6 +197,7 @@
                             var status = result.Status;
                             if (status == true || status == "true" || status == "True") {
                                 //刷新数据
+                                top.dialog.list["show_edit_client"].close().remove();
                                 clientinfo_grid.bootgrid("reload");
 
                                 showMsg("客户修改成功！", "Success");
@@ -209,13 +210,60 @@
                         }
                     });
 
+                    //必须有这个，阻止刷新
+                    return false;
 
                 });
 
-                //必须有这个，阻止刷新
-                return false;
             }
+            function clientinfo_xedit(id) {
+                var url = "/Customer/ClientInfo/XEdit?actionType=Edit&id=" + id;
+                //console.log(id);
+                showTopWindow("show_edit_client", url, "客户信息查看/修改", 800, 400, function () {
+                    var client_form = $(top.window.frames["frm_show_edit_client"].document).find("#clientinfo_form");
+                    //console.log(client_form);
+                    var flag = top.document.getElementById("frm_show_edit_client").contentWindow.form_valid();
+                    if (!flag) {
+                        return false;
+                    }
+                    //var data = $(client_form).serializeObject();
+                    var data = $(client_form).serialize();
+                    //console.log((data));
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: "/api/ClientInfoApi/EditClientInfo",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            //showMsg("修改中，请稍后...");
+                        },
+                        complete: function () {
+                            //d.close().remove();
+                        },
+                        success: function (result) {
+                            //toLowerCase报错
+                            //var status = result.Status.toLowerCase();
+                            var status = result.Status;
+                            if (status == true || status == "true" || status == "True") {
+                                //刷新数据
+                                top.dialog.list["show_edit_client"].close().remove();
+                                clientinfo_grid.bootgrid("reload");
 
+                                showMsg("客户修改成功！", "Success");
+                            } else {
+                                showMsg("系统异常，客户修改失败！", "Error");
+                            }
+                        },
+                        error: function () {
+                            showMsg("网络连接错误!", "错误提示", "Error");
+                        }
+                    });
+                    //必须有这个，阻止刷新
+                    return false;
+                });
+               
+            }
             function clientinfo_trash() {
                 var ids = get_selected_ids("clientinfo_grid_data");
                 //console.log(ids);
@@ -272,11 +320,9 @@
                 showTopWindow("show_list_user", " /Customer/ClientInfo/ShowTransferUsers/", "选择要转移的客户",550,300, function () {
                     var userIds = top.window.document.getElementById("frm_show_list_user").contentWindow.get_selected_user_ids();
                     //必须选择一个用户
-                    if ("" == userIds) {
+                    if ("" == userIds){
                         return false;
                     }
-
-
                     var transfer_url = "/api/ClientInfoApi/UpdateClientInfoWeihu?ids=" + ids + "&userId=" + userIds;
                     //alert(transfer_url);
                     //return false;
@@ -310,21 +356,10 @@
                             }
                         });
                     });
-
-
-
                 }, function () { });
-
-
-
                 //必须有这个，阻止刷新
                 return false;
-            }
-
-
-
-        
-        
+            }          
          </script>
     </head>
     <body>

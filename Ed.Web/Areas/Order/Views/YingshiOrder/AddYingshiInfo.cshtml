@@ -1,0 +1,452 @@
+﻿@using Ed.Common
+@using Ed.Entity
+@using Ed.Web.Helpers
+@{
+    //客户信息
+    var customer = (TClientInfo)ViewBag.Customer;
+    //育婴师信息
+    var yuesaoes = (List<TPregnanterInfo>)ViewBag.Yuesao;
+    //开始结束时间在隐藏域
+    var orderStart = ViewBag.OrderStart;
+    var orderEnd = ViewBag.OrderEnd;
+    var pricetype = ViewBag.PriceType;
+    //订单编号（自动生成）
+    var orderCode = RandomHelper.GetOrderNumber();
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>雪绒花云服务_订单第三步输入客户信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" conte="conte" nt="IE=Edge" />
+    @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
+    @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
+    <style type="text/css">
+        .jineng
+        {
+            font-size: 12px;
+            padding: 2px 3px;
+            color: #FFFFFF;
+            background-color: #328eb4;
+            margin-right: 5px;
+        }
+    </style>
+    <script src="~/Themes/default/base/js/city.js"></script>
+    <!--my97DatePicker-->
+    <script src="/Themes/default/lib/my97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <style type="text/css">
+        .commontable
+        {
+            margin-top: 20px;
+        }
+        .commontable td
+        {
+            padding: 3px 5px;
+            text-align: left;
+            color: #726F6F;
+            line-height: 22px;
+        }
+        .commontable td.tit
+        {
+            background-color: #EBECEE;
+            text-align: center;
+            width: 110px;
+            color: #000;
+        }
+        .commontable th
+        {
+            width: 70px;
+            text-align: right;
+            font-weight: normal;
+        }
+        .commontable .yuesao_list .list
+        {
+            display: block;
+            line-height: 30px;
+            height: 30px;
+            width: 100%;
+            border: 1px solid #ccc;
+            margin-top: -1px;
+            overflow: hidden;
+        }
+        .commontable .yuesao_list .list span
+        {
+            display: block;
+            float: left;
+            width: 15%;
+            text-align: center;
+            color: green;
+        }
+        .commontable .yuesao_list .list a
+        {
+            margin-left: 20px;
+        }
+        .commontable .yuesao_list .list span.green
+        {
+            color: green;
+        }
+        .teshu
+        {
+            margin-top: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+            validate_form();
+
+
+            //选择医院时触发写入值
+            $("#HospitalSelect").change(function () {
+                var xx = $("#HospitalSelect option:selected").text();
+                var yy = $("#HospitalSelect option:selected").val();
+                $("#YorderHospital").val(xx);
+                $("#YorderHaddress").val(yy);
+            });
+        });
+        //表单验证
+        function validate_form() {
+            $("#step4_form").validate({
+                errorPlacement: function (error, element) {
+                    var errorMsg = error[0].innerHTML;
+                    var elementName = element[0].name;
+                    $("#" + elementName).formtip(errorMsg);
+                    //showMsg(errorMsg, "错误提示", "Error");
+                    $("#" + elementName).attr("placeholder", errorMsg);
+                },
+                success: function (element) {
+                    var elem = $(element)[0].htmlFor;
+                    $("#" + elem).poshytip('disable');
+                    $("#" + elem).poshytip('destroy');
+                    $("#" + elem).removeClass("error").addClass("success");
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+
+        function submit_order() {
+            if (!$("#step4_form").valid()) {
+                return false;
+            }
+            //var data = $(client_form).serializeObject();
+            var data = $("#step4_form").serialize();
+            console.log(data);
+            //return;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/api/YingshiOrderApi/AddYuesaoOrder",
+                data: data,
+                dataType: "json",
+                beforeSend: function () {
+                    //显示加载中
+                    showTopDialog("show_loading", "<div class='dialog_loading'>育婴师订单添加中，请稍后...</div>", "温馨提示", 400, 95);
+                },
+                complete: function () {
+                },
+                success: function (result) {
+                    top.dialog.list["show_loading"].close().remove();
+                    //toLowerCase报错
+                    //var status = result.Status.toLowerCase();
+                    var status = result.Status;
+                    if (status == true || status == "true" || status == "True") {
+                        //刷新数据
+                        show_order_success();
+                    } else {
+                        showMsg("系统异常，订单添加失败！", "Error");
+                    }
+                },
+                error: function () {
+                    top.dialog.list["show_loading"].close().remove();
+                    showMsg("网络连接错误!", "错误提示", "Error");
+                }
+               
+            });
+            
+        }
+
+        //预定成功
+        function show_order_success() {
+            var d = top.dialog({
+                id: "show_order_success",
+                title: "预定完成",
+                content: "<div class='dialog_ok'>恭喜你，成功添加育婴师订单，请及时保持与客户确认沟通！</div>   ",
+                width: 400,
+                height: 80,
+                okValue: '进入客户管理',
+            ok: function () {
+                        //关闭添加框
+                        top.dialog.list["show_add_yingshi"].close().remove();
+                        //关闭提示框
+                        top.dialog.list["show_order_success"].close().remove();
+                        //跳转到客户管理
+                        showTopContentWindow("show_list", "/Customer/ClientInfo/Business", '@Html.Raw("【" + @Session[EdKeys.SESSION_USER_NAME] + "】" + "的业务客户")', 1000, 500);
+                    },
+                    cancelValue: '继续添加订单',
+                    cancel: function () {
+                        //关闭添加框
+                        top.dialog.list["show_add_yingshi"].close().remove();
+                        //关闭提示框
+                        top.dialog.list["show_order_success"].close().remove();
+                        //跳转到订单添加
+                        showTopContentWindow("show_add_client", "/Order/YingshiOrder/AddClient/", "1. 确认客户信息", 500, 200);
+                }
+            });
+            d.showModal();
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var city = get_city_names("@customer.ClientCity");
+            var addr = city + " " + $("#ClientCity").html();
+            $("#ClientCity").html(addr);
+        });
+
+        function pregnanterinfo_view(id) {
+            var url = "/Yuesao/PregnanterInfo/View?id=" + id;
+            //console.log(id);
+            showTopContentWindow("pregnanterinfo_show_view", url, "查看育婴师", 810, 500);
+        }
+    </script>
+</head>
+<body>
+    <div class="boxwarp">
+        <form id="step4_form">
+        <table width="900" border="0" cellspacing="0" cellpadding="0" class="commontable">
+            <tbody>
+                <tr>
+                    <td rowspan="2" class="tit">
+                        <label>
+                            客户信息
+                        </label>
+                    </td>
+                    <!---隐藏值-->
+                    <input type="hidden" id="ClientId" name="ClientId" value="@customer.Id" />
+                    <th>
+                        客户编号：
+                    </th>
+                    <td>@customer.ClientCode
+                    </td>
+                    <th>
+                        客户姓名：
+                    </th>
+                    <td>@customer.ClientName
+                    </td>
+                    <th>
+                        所属民族：
+                    </th>
+                    <td>@customer.ClientNational
+                    </td>
+                    <th>
+                        年龄：
+                    </th>
+                    <td>@customer.ClientAge 岁
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        手机：
+                    </th>
+                    <td>@customer.ClientTel1
+                    </td>
+                    <th>
+                        详细地址：
+                    </th>
+                    <td colspan="6">
+                        <span id="ClientCity">@customer.ClientAddress</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <div style="height: 3px;">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="tit">
+                        <label>
+                            育婴师信息</label><br />
+                    </td>
+                    <th>
+                        预定时间：
+                    </th>
+                    <!---隐藏值-->
+                    <input type="hidden" id="OrderBegin" name="OrderBegin" value="@orderStart" />
+                    <input type="hidden" id="OrderEnd" name="OrderEnd" value="@orderEnd" />
+                    <td colspan="4" style="font-weight: bold; color: red; font-size: 14px;">
+                        (开始)@orderStart - (结束)@orderEnd
+                    </td>
+                    <th>
+                    </th>
+                    <td colspan="2">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        意向育婴师：
+                    </th>
+                    <td colspan="8" class="yuesao_list">
+                        @foreach (var yuesao in yuesaoes)
+                        {
+                            <div class="list">
+                                <input type="hidden"  name="YorderAlter" value="@yuesao.Id" />
+                                <span class="green">@yuesao.PInfoCode</span> <span>@yuesao.PInfoName</span> <span>@yuesao.PInfoAge
+                                    岁</span> <span>@Html.OptionsPalse(yuesao.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★")</span><span
+                                        class="jineng" style="color: #fff;">@pricetype</span>
+                                @if (pricetype == "12时")
+                                { <span>@yuesao.PInfoPrice12</span>}
+                                else
+                                { <span>@yuesao.PInfoPrice</span>}
+                                <a href="javascript:pregnanterinfo_view(@yuesao.Id);">查看</a>
+                            </div>
+                        }
+                    </td>
+                    <input type="hidden" id="YorderPtype" name="YorderPtype" value="@pricetype" />
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <div style="height: 3px;">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="6" class="tit">
+                        <label>
+                            订单信息</label><br />
+                    </td>
+                    <!---隐藏值-->
+                    <input type="hidden" id="OrderCode" name="OrderCode" value="@orderCode" />
+                    <th>
+                        订单编号：
+                    </th>
+                    <td>@orderCode
+                    </td>
+                    @* <th>
+                        预产期：
+                    </th>
+                    <td style="color: blue; font-size: 14px;">
+                        <input value="" class="form-control" data-val-date="填入正确格式" id="YorderChildbirth"
+                            name="YorderChildbirth" onclick="WdatePicker()" type="text">
+                    </td>*@ @* <th><span class="must">*</span>胎数：</th>
+                        <td colspan="3">
+                            <select value="1" class="form-control required valid success" id="YorderCode" name="YorderCode" placeholder="">
+                                <option value="">请选择</option>
+                                <option selected="selected" value="1">一胎</option>
+                                <option value="2">二胎</option>
+                                <option value="3">三胎</option>
+                            </select>
+                        </td>*@
+                </tr>
+                <tr>
+                    @*<th>
+                        预产医院：
+                    </th>
+                    <td colspan="8">
+                        <select value="1" class="form-control valid success wid220" id="HospitalSelect" name="HospitalSelect"
+                            placeholder="" onchange="hospitalselect()">
+                            <option value="">请选择</option>
+                            <option value="河南省郑州市二七区康复前街7号" alt="">郑州大学三附院产科</option>
+                            <option value="郑州市金水路41号">郑州市妇幼保健院</option>
+                            <option value="郑州市金水区黄河路33号">郑州人民医院</option>
+                            <option value="郑州市经八路2号">郑州大学第二附属医院三级甲等医院</option>
+                            <option value="河南省郑州市文化宫路65号">郑州市中医院三甲</option>
+                            <option value="河南省郑州市东大街56号">郑州第一人民医院产科</option>
+                            <option value="郑州市郑东新区农业东路3号(中州大道与农业路交汇往东)">郑州圣玛妇产医院</option>
+                            <option value="郑州市管城区南顺城街136号">郑州第三人民医院</option>
+                            <option value="郑州市金水区群办路13">郑州大桥医院</option>
+                            <option value="郑州市桐柏路中段195号">郑州市中心医院</option>
+                        </select>
+                    </td>*@
+                </tr>
+                <tr>
+                    <tr>
+                        @*<th>预产医院：</th><td><input class="form-control" id="YorderHospital" name="YorderHospital" placeholder="预产医院" style="width:220px;" type="text" value="" /></td>*@
+                        <th>
+                            服务地址：
+                        </th>
+                        <td colspan="6">
+                            <input class="form-control" id="YorderHaddress" name="YorderHaddress" placeholder="详细服务地址"
+                                style="width: 100%;" type="text" value="" />
+                        </td>
+                    </tr>
+                    <th>
+                        详细要求：
+                    </th>
+                    <td colspan="8">
+                        <textarea class="form-control" cols="4" id="YorderRequire" maxlength="200" minlength="1"
+                            name="YorderRequire" rows="2" style="width: 100%;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        下单日期：
+                    </th>
+                    <td>@DateTime.Now.ToString("yyyy-MM-dd")
+                    </td>
+                    <th>
+                        下单人：
+                    </th>
+                    <input type="hidden" id="OrderCreater" name="OrderCreater" value="@Session[EdKeys.SESSION_USER_ID]" />
+                    <td>@Session[EdKeys.SESSION_USER_NAME] @Session[EdKeys.SESSION_USER_ID]
+                    </td>
+                    <td colspan="5">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <div style="height: 3px;">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tit">
+                        <label>
+                            财务信息</label>
+                    </td>
+                    <th>
+                        总金额：
+                    </th>
+                    <td>
+                        <input class="form-control" id="OrderSumMoney" name="OrderSumMoney" placeholder="订单总金额"
+                            style="width: 100px;" type="text" value="0.00" />
+                    </td>
+                    <th>
+                        已付金额：
+                    </th>
+                    <td>
+                        <input class="form-control" id="OrderPrepaid" name="OrderPrepaid" placeholder="预付金额"
+                            style="width: 100px;" type="text" value="0.00" />
+                    </td>
+                    <th>
+                        备注：
+                    </th>
+                    <td colspan="6">
+                        <input class="form-control" id="FinNote" name="FinNote" placeholder="财务信息备注" style="width: 100%;"
+                            type="text" value="" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </form>
+        <div style="height: 10px;">
+        </div>
+        <button type="button" class="btn btn-primary btn-lg btn-block teshu" style="position: absolute;
+            bottom: 0px;" onclick="submit_order();">
+            确认无误，并生成订单信息
+        </button>
+    </div>
+</body>
+</html>

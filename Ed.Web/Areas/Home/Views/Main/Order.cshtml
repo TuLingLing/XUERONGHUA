@@ -55,11 +55,14 @@
         });
 
 
-        function show_add() {
-            showTopContentWindow("show_add", "/Order/YuesaoOrder/AddClient/", "1. 选择订单类型并确认客户信息", 500, 200);
+        function show_add_yuesao() {
+            showTopContentWindow("show_add_yuesao", "/Order/YuesaoOrder/AddClient/", "1.确认客户信息", 500, 200);
+        }
+        function show_add_yingshi() {
+            showTopContentWindow("show_add_yingshi", "/Order/YingshiOrder/AddClient/", "1.确认客户信息", 500, 200);
         }
         function show_my() {
-            showTopContentWindow("show_list_my", "/Order/Order/My", '@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1000, 500);
+            showTopContentWindow("show_list_my", "/Order/Order/My", '@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1100, 500);
         }
         function show_do() {
             showTopContentWindow("show_list", "/Order/Order/Do", "待处理订单信息管理", 1000, 500);
@@ -88,10 +91,14 @@
     <div class="main">
         <div class="main-container">
             <ul>
-                @if (Html.LoadModulePowers(@Model, "Order_add"))
+              @*  @if (Html.LoadModulePowers(@Model, "Order_add_yuesao"))
                 {
-                    <li onclick=" show_add(); "><img src="~/Themes/default/home/images/order_01.png"><span>新增订单</span></li>
+                    <li onclick=" show_add_yuesao(); "><img src="~/Themes/default/home/images/order_01.png"><span>新增月嫂订单</span></li>
                 }
+                   @if (Html.LoadModulePowers(@Model, "Order_add_yingshi"))
+                {
+                    <li onclick=" show_add_yingshi(); "><img src="~/Themes/default/home/images/order_01.png"><span>新增育婴师订单</span></li>
+                }*@
                 @if (Html.LoadModulePowers(@Model, "Order_my"))
                 {
                     <li onclick=" show_my(); "><img src="~/Themes/default/home/images/order_02.png"><span>我的订单</span></li>
@@ -126,9 +133,9 @@
                 {
         <li><a href="/Home/Main/Order/"><img src="~/Themes/default/home/images/home_btn_05.png"><span>订单管理</span></a></li> 
                     }
-                @if (Html.LoadModulePowers(@Model, "Yuesao"))
+                @if (Html.LoadModulePowers(@Model, "Yuangong"))
                 {
-        <li><a href="/Home/Main/Yuesao/"><img src="~/Themes/default/home/images/home_btn_07.png"><span>月嫂管理</span></a></li> }
+        <li><a href="/Home/Main/Yuangong/"><img src="~/Themes/default/home/images/home_btn_07.png"><span>员工管理</span></a></li> }
                     @if (Html.LoadModulePowers(@Model, "Finance"))
                     {
         <li><a href="/Home/Main/Finance/"><img src="~/Themes/default/home/images/home_btn_09.png"><span>财务信息</span></a></li> 

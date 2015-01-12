@@ -175,7 +175,7 @@
     }
 
     function do_order() {
-        showTopContentWindow("show_add", "/Order/YuesaoOrder/AddClient/", "1. 选择订单类型并确认客户信息", 500, 200);
+        showTopContentWindow("show_add", "/Order/YuesaoOrder/AddClient/", "1.确认客户信息", 500, 200);
     }
 </script>
     </head>
@@ -256,11 +256,12 @@
                         <li><span data-for="area4">评价记录</span></li>
                     </ul>
                     <div class="summary area1">
-                        <p style="float:right;">今天正在：<span style="font-weight:bold;color:#F00;">空闲中..</span>.</p>
+                     @*   <p style="float:right;">今天正在：<span style="font-weight:bold;color:#F00;">@Html.OptionsPalse(@Model.PInfoState, "1|上岗中…,2|上户中…,3|请假休息,4|其他安排,5|空闲中…")</span>.</p>*@
                         <p style="font-weight:bold">@Model.PInfoAge  @Model.PInfoNational  @Model.PInfoXingzuo   @Model.PInfoShuxiang   @Html.OptionsPalse(@Model.PInfoEducation, "1|本科及以上,2|大专,3|高中,4|初中及以下")</p>
                         <p>户口所在<span class="money">@Model.PInfoPermanent</span>，有<span class="money">@Html.OptionsPalse(@Model.PInfoEdage, "1|1年以下,2|1-3年,3|3-5年,4|5-7年,5|7-9年,6|9年以上")</span>家政服务行业工作经验。</p>
                         <p><strong>现居住地址：</strong>@Model.PInfoAddress</p>
-                        <p class="salary"><strong>参考工资：</strong><span class="money">@Model.PInfoPrice 元/月</span></p>
+                        <p class="salary"><strong>24小时参考工资：</strong><span class="money">@Model.PInfoPrice 元/月</span></p>
+                        <p class="salary"><strong>12小时参考工资：</strong><span class="money">@Model.PInfoPrice12 元/月</span></p>
                         <p><strong>综合评级：</strong><span style="color:red; font-size:16px;">@Html.OptionsPalse(@Model.PInfoLevel, "1|★,2|★★,3|★★★,4|★★★★,5|★★★★★,6|★★★★★★,7|★★★★★★★,8|★★★★★★★★")</span></p>
                         <p><strong>特长爱好：</strong>@Model.PInfoHobby</p>
                         <p><strong>特别技能：</strong>
@@ -314,7 +315,7 @@
                                         var big = life_infos[1];
                                         var small = life_infos[2];
                                         var des = life_infos[3] ?? "暂无描述...";
-                                        <li> <a class="pic" href="@big" title=""><img src="@small" alt="" width="auto" /></a> </li>
+                                        <li> <a class="pic" href="@big" title=""><img src="@small" alt="" width="auto" height="210" /></a> </li>
                                     }
                                     catch
                                     {
@@ -350,21 +351,43 @@
 
                     <div class="summary" style="display:none;">
                         <h4 class="base_tit">共有 @evals.Count 位为此月嫂进行评价</h4>
-                        <div class="comment_list">
-                            @foreach (var evaltion in evals)
-                            {
-                                var evaImg = @Html.GetValue(evaltion, "PEvaImg");
+                         <div class="comment_list" style=" background-color:rgb(253,248,226);">
+                        @foreach (var evaltion in evals)
+                        {
+                            var evaImg = @Html.GetValue(evaltion, "PEvaImg").ToString();
+                            var ping_pics = (object[])Utils.StringToObjectArray(evaImg, ',');  
+                            
+                            <div class="inner">
                                 <li>
-                                    <span style="cursor: pointer;float: right;height: 50px;" onClick="showTopDialog('prev_img', '<div style=\'text-align:center;\'><img style=\'height:390px;\' src =\'@evaImg\' /></div>','查看大图',650,400,null, null);">
-                                        <div style="width:100px; height:70px; overflow:hidden;"><img src='@evaImg' style="width:auto;height: 70px;margin-top:2px;" /></div>
-                                    </span>
-                                    <div class="inner">
-                                        <div>@Html.GetValue(evaltion, "PEvaContent")</div>
-                                        <div class="meta"> <span class="blue">评价人：@Html.GetValue(evaltion, "PEvaPerson")</span><span class="time">@DateTime.Parse(@Html.GetValue(evaltion, "PEvaTime").ToString()).ToString("yyyy-MM-dd")</span> 评价级别：<span class="xing">@Html.OptionsPalse(int.Parse(@Html.GetValue(evaltion, "PEvaLevel").ToString()), "1|★,2|★★,3|★★★")</span> </div>
+                                    <div style=" font-weight:bold; color:blue;">@Html.GetValue(evaltion, "PEvaContent")</div>
+                                    <div style="width: 450px; height: 70px; overflow: hidden;">
+                                        @foreach (var ping_pic in ping_pics)
+                                        {
+                                            try
+                                            {
+                                                var ping_infos = ping_pic.ToString().Split('|');
+                                                var big = ping_infos[1];
+                                                var small = ping_infos[2];
+                                                var des = ping_infos[3] ?? "暂无描述...";       
+                                            <span style="cursor: pointer; width:auto; height:70px;  padding:8px 0px; overflow:hidden;" onClick="showTopDialog('prev_img', '<div style=\'text-align:center;\'><img style=\'height:390px;\' src =\'@small\' /></div>','查看大图',650,400,null, null);">
+                                                <img src='@small' style="width:60px;height: 70px; float:left; margin-left:5px;  margin-top:2px;"/>
+                                            </span>     }
+                                            catch
+                                            {
+                                            }
+                                        }
                                     </div>
                                 </li>
-                            }
-                        </div>
+                            </div>
+                            <li>
+                                <div class="meta">
+                                    <span class="blue" style=" font-weight:bold; color:red;">评价人：@Html.GetValue(evaltion, "PEvaPerson")</span><span class="time">@DateTime.Parse(@Html.GetValue(evaltion, "PEvaTime").ToString()).ToString("yyyy-MM-dd")</span>
+                                    评价级别：<span class="xing">@Html.OptionsPalse(int.Parse(@Html.GetValue(evaltion, "PEvaLevel").ToString()), "1|★,2|★★,3|★★★")</span>
+                                </div>
+                            </li> 
+                            <div style=" height:10px; background-color:#fff;"></div>                        
+                        }
+                    </div>
                     </div>
 
                     <div class="clear"></div>

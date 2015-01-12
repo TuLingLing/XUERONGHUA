@@ -41,6 +41,15 @@ $(function () {
         return reg.test(value);
     }, "电话号码格式错误!");
 
+    //验证手机号码（包括170）
+    jQuery.validator.addMethod("mobile", function (value, element) {
+        if ($.trim(value) == "") {
+            return true;
+        }
+        var reg = /^1[3578]\d{9}$/;
+        return reg.test(value);
+    }, "电话号码格式错误!");
+
     //验证手机和电话号码
     jQuery.validator.addMethod("mobileTelephome", function (value, element) {
         if ($.trim(value) == "") {

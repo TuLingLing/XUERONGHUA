@@ -52,6 +52,22 @@ namespace Ed.Web.Areas.Home.Controllers
         }
         [UserAuthorize]
         [RolePowerAuthorize]
+        public ActionResult Yuangong()
+        {
+            var powers = (List<Dictionary<string, object>>)ViewBag.Powers;
+            return View(powers);
+
+        }
+        [UserAuthorize]
+        [RolePowerAuthorize]
+        public ActionResult Yingshi()
+        {
+            var powers = (List<Dictionary<string, object>>)ViewBag.Powers;
+            return View(powers);
+
+        }
+        [UserAuthorize]
+        [RolePowerAuthorize]
         public ActionResult Finance(int? id)
         {
             var finance = (List<Dictionary<string, object>>)ViewBag.Powers;

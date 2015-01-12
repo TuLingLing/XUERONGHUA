@@ -37,6 +37,8 @@ namespace Ed.Entity
 		public Int32? PInfoLevel { get;set; }
 		[Column("p_info_price")]
 		public Double? PInfoPrice { get;set; }
+        [Column("p_info_fenlei")]
+        public Int32? PInfoFenlei { get; set; }
 		[Column("p_info_state")]
 		public Int32? PInfoState { get;set; }
 		[Column("p_info_education")]

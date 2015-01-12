@@ -35,6 +35,8 @@ namespace Ed.Entity
 		public DateTime OrderDate { get;set; }
 		[Column("order_processtime")]
 		public DateTime? OrderProcesstime { get;set; }
+        [Column("order_note")]
+        public String OrderNote { get; set; }
  
  
  

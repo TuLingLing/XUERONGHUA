@@ -282,6 +282,29 @@ public  class OrderServiceImpl: IOrderService
            
 		
 		}
+        /// <summary>
+        /// 添加实体(事务控制先添加订单表，在添加财务表) 14-10-19 By 唐友伟
+        /// </summary>
+        /// <param name="entity">实体对象</param>
+        public bool AddOrderTran(TOrder order, TOrderFinance orderFinance)
+        {
+
+            var status = false;
+            try
+            {
+                status = OrderDao.InsertEntityTran(order, orderFinance);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("YuesaoOrder添加失败。", ex);
+                status = false;
+            }
+
+            return status;
+
+
+        }
+
 
         /// <summary>
         /// 修改信息  2014-10-15 22:18:45 By 唐有炜

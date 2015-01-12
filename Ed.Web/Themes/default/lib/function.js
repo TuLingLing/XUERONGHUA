@@ -315,7 +315,7 @@ function showTopContentWindow(id, url, title, w, h) {
         resize: true,
         drag: true,
         lock: true,
-        onshow: function() { showTopDialog("show_loading", "<div class='dialog_loading'>页面加载中，请稍后...</div>", "温馨提示", 400, 95); },
+        onshow: function() {  },
         oniframeload: function() {
             alert("ccc");
         }

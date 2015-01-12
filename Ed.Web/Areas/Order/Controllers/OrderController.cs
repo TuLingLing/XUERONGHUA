@@ -72,8 +72,37 @@ public  class OrderController: Controller
 
         #endregion
 
+        // GET: URL
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult Edit(string order_code)
+        {
 
+            if (null == order_code)
+            {
+                ViewData["Msg"] = "参数非法（id不能为空）";
+                return View("_Error");
+            }
+            else
+            {
+                TOrder order = OrderService.GetOrder(o => o.OrderCode == order_code);
+                ViewBag.Order = order;
+                return View("Edit");
+            }
 
+        }
+
+        #region   查看页面  141225 By 屠玲玲
+
+        //GET: URL   /Order/Order/ShowTransferUsers/
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult ShowTransferUsers()
+        {
+            return View("ShowTransferUsers");
+        }
+
+        #endregion
      #endregion
     }
 }

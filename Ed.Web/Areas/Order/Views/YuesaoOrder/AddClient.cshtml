@@ -1,171 +1,191 @@
 ﻿@{
     ViewBag.Title = "AddClient";
 }
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
     <title>雪绒花云服务_订单第一步输入客户信息</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" conte=conte nt="IE=Edge" />
+    <meta http-equiv="X-UA-Compatible" conte="conte" nt="IE=Edge" />
     @Styles.Render("~/Themes/default/css/cp.globle.min1.css")
     @Scripts.Render("~/Themes/default/js/cp.globle.min1.js")
-    <style type="text/css" >
-.boxwarp {
-	width:100%;
-}
-.boxwarp h4 {
-	font-weight:bold;
-}
-.order_type {
-	width:100%;
-	display: inline-block;
-	vertical-align: middle;
-	margin:10px 0px;
-}
-.order_type a {
-	display: inline-block;
-	margin-right: -1px;
-	float: left;
-	padding: 5px 15px;
-	width:25%;
-	text-decoration:none;
-	text-align:center;
-	line-height:40px;
-	border: 1px solid #D4D4D4;
-	vertical-align: middle;
-	color: #333;
-	font-size:20px;
-	cursor: pointer;
-}
-.order_type a.select, .order_type a:hover {
-	background: #16A0D3;
-	border-color: #1096C7;
-	color: white;
-}
-        .main_content { width: 80%; margin: 0px auto; margin-top:10px;}
-        .main .main_content input {
+    <style type="text/css">
+        .boxwarp
+        {
+            width: 100%;
+        }
+        .boxwarp h4
+        {
+            font-weight: bold;
+        }
+        .order_type
+        {
+            width: 100%;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 10px 0px;
+        }
+        .order_type a
+        {
+            display: inline-block;
+            margin-right: -1px;
+            float: left;
+            padding: 5px 15px;
+            width: 25%;
+            text-decoration: none;
+            text-align: center;
+            line-height: 40px;
+            border: 1px solid #D4D4D4;
+            vertical-align: middle;
+            color: #333;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .order_type a.select, .order_type a:hover
+        {
+            background: #16A0D3;
+            border-color: #1096C7;
+            color: white;
+        }
+        .main_content
+        {
+            width: 80%;
+            margin: 0px auto;
+            margin-top: 10px;
+        }
+        .main .main_content input
+        {
             width: 100%;
             height: 50px;
             margin: 20px auto;
             font-size: 18px;
             color: green;
             font-weight: 500;
+        }
+        .main .button
+        {
+            margin: 0px auto;
+            margin-top: 0px;
+            width: 80%;
+        }
+    </style>
+    <script type="text/javascript">
+        //=============================================================
+        //去除顶层加载中
+        $(document).ready(function () {
+            //去除加载中
+            if (undefined != top.dialog.list["show_loading"]) {
+                top.dialog.list["show_loading"].close().remove();
+                //showTopMsg("页面加载成功！", "温馨提示", "Success");
+            }
+        });
+        //=====================================================================
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            validate_form();
+        });
+        //表单验证
+        function validate_form() {
+            $("#step1_form").validate({
+                rules: {
+                    client_num: {
+                        remote: { type: "GET", url: '/api/ClientInfoApi/Validate?fields=ClientCode,ClientTel1,ClientIdcard&eqs==,=,=&operations=or,or,or', data: {
+                            values: function () { return $("#client_num").val() + ',' + $("#client_num").val() + ',' + $("#client_num").val(); }
+                        }
+                        }
+                    }
+                },
+                messages: {
+                    client_num: {
+                        remote: "对不起，该号码不存在或该客户已经被放入回收站（请核实客户编号/手机号/身份证）！"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    var errorMsg = error[0].innerHTML;
+                    var elementName = element[0].name;
+                    $("#" + elementName).formtip(errorMsg);
+                    //showMsg(errorMsg, "错误提示", "Error");
+                    $("#" + elementName).attr("placeholder", errorMsg);
+                },
+                success: function (element) {
+                    var elem = $(element)[0].htmlFor;
+                    $("#" + elem).poshytip('disable');
+                    $("#" + elem).poshytip('destroy');
+                    $("#" + elem).removeClass("error").addClass("success");
+                }
+            });
+        }
+        function step2() {
+            if (!$("#step1_form").valid()) {
+                return false;
+            }
+            top.dialog.list["show_add_yuesao"].height(500).width(900).title("2. 选择意向月嫂信息");
+            //显示加载中
+            showTopDialog("show_loading", "<div class='dialog_loading'>页面加载中，请稍后...</div>", "温馨提示", 400, 95);
+            var client_num = $.trim($("#client_num").val());
+            var num_type = get_num_type(client_num);
+            window.location.href = '/Order/YuesaoOrder/AddYuesao/?client_num=' + client_num + '&num_type=' + num_type;
+        }
+
+        //验证客户编号/手机号/身份证号
+        jQuery.validator.addMethod("khnum_phone_idcard", function (value, element) {
+            if ($.trim(value) == "") {
+                return true;
+            }
+            var reg = /^1[3|4|5|8|9]\d{9}$/;
+            if (!isKH(value) && !reg.test(value) && !isChinaIDCard(value)) {
+                return false;
+            } else {
+                return true;
+            }
+
+        }, "客户编号/手机号/身份证号格式错误!");
+        function isKH(kh_num) {
+            kh_num = $.trim(kh_num);
+            if (kh_num.length <= 2) {
+                return false;
+            }
+            else if (!(kh_num.indexOf('kh') >= 0 || kh_num.indexOf('KH') >= 0)) {
+                return false;
+            } else if (!isInteger(kh_num.substring(2, kh_num.length))) {
+                return false;
+            } else {
+                return true;
+            }
 
         }
-.main .button{margin:0px auto; margin-top: 0px; width: 80%;}
-</style>
-        <script type="text/javascript">
-            //=============================================================
-            //去除顶层加载中
-            $(document).ready(function () {
-                //去除加载中
-                if (undefined != top.dialog.list["show_loading"]) {
-                    top.dialog.list["show_loading"].close().remove();
-                    //showTopMsg("页面加载成功！", "温馨提示", "Success");
-                }
-            });
-            //=====================================================================
-        </script>
-        <script type="text/javascript">
-            $(function() {
-                validate_form();
-            });
-            //表单验证
-            function validate_form() {
-                $("#step1_form").validate({
-                    rules: {
-                        client_num: {
-                            remote: { type: "GET", url: '/api/ClientInfoApi/Validate?fields=ClientCode,ClientTel1,ClientIdcard&eqs==,=,=&operations=or,or,or', data: {
-                                values: function () { return $("#client_num").val() + ',' + $("#client_num").val() + ',' + $("#client_num").val(); }
-                            } }
-                        }
-                },
-                    messages: {
-                        client_num: {
-                            remote:"对不起，该号码不存在或该客户已经被放入回收站（请核实客户编号/手机号/身份证）！"
-                        }
-                    },
-                    errorPlacement: function (error, element) {
-                        var errorMsg = error[0].innerHTML;
-                        var elementName = element[0].name;
-                        $("#" + elementName).formtip(errorMsg);
-                        //showMsg(errorMsg, "错误提示", "Error");
-                        $("#" + elementName).attr("placeholder", errorMsg);
-                    },
-                    success: function (element) {
-                        var elem = $(element)[0].htmlFor;
-                        $("#" + elem).poshytip('disable');
-                        $("#" + elem).poshytip('destroy');
-                        $("#" + elem).removeClass("error").addClass("success");
-                    }
-                });
-            }
-            function step2() {
-                if (!$("#step1_form").valid()) {
-                    return false;
-                }
-                top.dialog.list["show_add"].height(500).width(900).title("2. 选择意向月嫂信息");
-                //显示加载中
-                showTopDialog("show_loading", "<div class='dialog_loading'>页面加载中，请稍后...</div>", "温馨提示", 400, 95);
-                var client_num = $.trim($("#client_num").val());
-                var num_type = get_num_type(client_num);
-                window.location.href = '/Order/YuesaoOrder/AddYuesao/?client_num=' +client_num+'&num_type='+num_type;
-            }
 
-            //验证客户编号/手机号/身份证号
-            jQuery.validator.addMethod("khnum_phone_idcard", function (value, element) {
-                if ($.trim(value) == "") {
-                    return true;
-                }
-                var reg = /^1[3|4|5|8|9]\d{9}$/;
-                if (!isKH(value) && !reg.test(value) && !isChinaIDCard(value)) {
-                    return false;
-                } else {
-                    return true;
-                }
-                
-            }, "客户编号/手机号/身份证号格式错误!");
-            function isKH(kh_num) {
-                kh_num = $.trim(kh_num);
-                if (kh_num.length<=2) {
-                    return false;
-                }
-               else if (!(kh_num.indexOf('kh') >= 0 || kh_num.indexOf('KH') >= 0) ){
-                    return false;
-                }else if (!isInteger(kh_num.substring(2,kh_num.length))) {
-                    return false;
-                } else {
-                    return true;
-                }
-                
+        //判断输入类型(kh,phone,idcard)
+        function get_num_type(value) {
+            var reg = /^1[3|4|5|8|9]\d{9}$/;
+            if (isKH(value)) {
+                return "kh";
+            } else if (reg.test(value)) {
+                return "phone";
+            } else if (isChinaIDCard(value)) {
+                return "idcard";
+            } else {
+                return "";
             }
-
-            //判断输入类型(kh,phone,idcard)
-            function get_num_type(value) {
-                var reg = /^1[3|4|5|8|9]\d{9}$/;
-                if (isKH(value)) {
-                    return "kh";
-                } else if (reg.test(value)) {
-                    return "phone";
-                } else if (isChinaIDCard(value)) {
-                    return "idcard";
-                }else {
-                    return "";
-                }
-            }
-        </script>
-    </head><body>
+        }
+    </script>
+</head>
+<body>
     <div class="boxwarp">
-      <div class="main">
-          <div class="main_content">
-              <form id="step1_form">
-                  <input type="text" class="form-control required khnum_phone_idcard" id="client_num" name="client_num" maxlength="50" placeholder="请正确输入客户编号/手机号/身份证号" />
-              </form> 
-          </div>
-          <div class="button">
-           <button type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;" onclick=" step2();">下一步选择意向月嫂</button>
-          </div>
-      </div>
+        <div class="main">
+            <div class="main_content">
+                <form id="step1_form">
+                   <input type="text" class="form-control required khnum_phone_idcard" id="client_num"
+                    name="client_num" maxlength="50" placeholder="请正确输入客户编号/手机号/身份证号" />
+                </form>
+            </div>
+            <div class="button">
+                <button type="button" class="btn btn-primary btn-lg btn-block" style="width: 100%;"
+                    onclick="step2()">
+                    下一步选择意向月嫂</button>
+            </div>
+        </div>
     </div>
-    </body>
-    </html>
+</body>
+</html>

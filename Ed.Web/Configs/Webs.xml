@@ -24,10 +24,20 @@
   </object>
   <!--clientInfoController-->
   <object id="clientInfoController" type="Ed.Web.Areas.Customer.Controllers.ClientInfoController, Ed.Web" singleton="false">
-    <property name="SysUserService" ref="sysUserService" />
-    <property name="ClientInfoService" ref="clientInfoService" />
+    <property name="SysUserService" ref="sysUserService"/>
+    <property name="ClientInfoService" ref="clientInfoService"/>
   </object>
 
+
+
+  <!--CorderController-->
+  <object id="CorderController" type="Ed.Web.Areas.Order.Controllers.CorderController, Ed.Web" singleton="false">
+    <property name="YuesaoOrderService" ref="yuesaoOrderService" />
+    <property name="ClientInfoService" ref="clientInfoService" />
+    <property name="OrderService" ref="orderService" />
+    <property name="PregnanterInfoService" ref="pregnanterInfoService" />
+    <property name="SysUserService" ref="sysUserService" />
+  </object>
 
   <!--orderIndexController-->
   <object id="orderIndexController" type="Ed.Web.Areas.Order.Controllers.IndexController, Ed.Web" singleton="false">
@@ -50,6 +60,15 @@
     <property name="ClientInfoService" ref="clientInfoService" />
     <property name="OrderService" ref="orderService" />
       <property name="PregnanterInfoService" ref="pregnanterInfoService" />
+    <property name="SysUserService" ref="sysUserService" />
+  </object>
+  
+  <!--yingshiOrderController-->
+  <object id="yingshiOrderController" type="Ed.Web.Areas.Order.Controllers.YingshiOrderController, Ed.Web" singleton="false">
+    <property name="YuesaoOrderService" ref="yuesaoOrderService" />
+    <property name="ClientInfoService" ref="clientInfoService" />
+    <property name="OrderService" ref="orderService" />
+    <property name="PregnanterInfoService" ref="pregnanterInfoService" />
     <property name="SysUserService" ref="sysUserService" />
   </object>
 
@@ -86,6 +105,40 @@
     <property name="SysUserService" ref="sysUserService" />
     <property name="PregnanterServiceRecordService" ref="pregnanterServiceRecordService" />
   </object>
+
+  
+  
+  <!--ypregnanterInfoIndexController-->
+  <object id="ypregnanterInfoIndexController" type="Ed.Web.Areas.Yingshi.Controllers.YIndexController, Ed.Web" singleton="false">
+  </object>
+  <!--ypregnanterInfoController-->
+  <object id="ypregnanterInfoController" type=" Ed.Web.Areas.Yingshi.Controllers.YPregnanterInfoController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="SysDepartmentService" ref="sysDepartmentService" />
+    <property name="PregnanterInfoService" ref="pregnanterInfoService" />
+    <property name="PregnanterServiceRecordService" ref="pregnanterServiceRecordService" />
+    <property name="PregnanterEvaluationService" ref="pregnanterEvaluationService" />
+  </object>
+
+
+  <!--ypregnanterEvaluationController-->
+  <object id="ypregnanterEvaluationController" type="Ed.Web.Areas.Yingshi.Controllers.YPregnanterEvaluationController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="PregnanterEvaluationService" ref="pregnanterEvaluationService" />
+  </object>
+
+  <!--ypregnanterMaintenanceController-->
+  <object id="ypregnanterMaintenanceController" type="Ed.Web.Areas.Yingshi.Controllers.YPregnanterMaintenanceController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="PregnanterMaintenanceService" ref="pregnanterMaintenanceService" />
+  </object>
+
+  <!--ypregnanterServiceRecordController-->
+  <object id="ypregnanterServiceRecordController" type="Ed.Web.Areas.Yingshi.Controllers.YPregnanterServiceRecordController, Ed.Web" singleton="false">
+    <property name="SysUserService" ref="sysUserService" />
+    <property name="PregnanterServiceRecordService" ref="pregnanterServiceRecordService" />
+  </object>
+
 
 
   <!--financeIndexController-->

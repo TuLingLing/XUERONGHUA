@@ -4,147 +4,59 @@
         <name>Ed.Web</name>
     </assembly>
     <members>
-        <member name="T:Ed.Web.BundleConfig">
+        <member name="T:Ed.Web.WebApiConfig">
             <summary>
-            Class BundleConfig.
+            Class WebApiConfig.
+            2014-10-13 02:05:08 修改 By 唐有炜
             </summary>
         </member>
-        <member name="M:Ed.Web.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+        <member name="M:Ed.Web.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
             <summary>
-            Registers the bundles.
+            Registers the specified configuration.
             </summary>
-            <param name="bundles">The bundles.</param>
+            <param name="config">The configuration.</param>
         </member>
-        <member name="T:Ed.Web.Areas.Account.Controllers.LoginController">
+        <member name="M:Ed.Web.MvcApplication.Configure(System.Web.Http.HttpConfiguration)">
+             <summary>
+            配置全局设置
+             </summary>
+             <param name="config">config</param>
+        </member>
+        <member name="T:Ed.Web.Filters.AutoLoginAttribute">
+             <summary>
+            自动登录过滤器 2014-08-22 14:58:50 By 唐有炜
+             </summary>
+        </member>
+        <member name="T:Ed.Web.Areas.Yingshi.Controllers.YPregnanterInfoController">
             <summary>
-            Class LoginController.
-            2014-10-13 20:09:45 修改 By 唐有炜
+            Class  YPregnanterInfoController.
             </summary>
         </member>
-        <member name="M:Ed.Web.Areas.Account.Controllers.LoginController.Index">
+        <member name="M:Ed.Web.Areas.Yingshi.Controllers.YPregnanterInfoController.View(System.Nullable{System.Int32})">
             <summary>
-            Indexes this instance.
+            Views the specified identifier.
             </summary>
+            <param name="id">月嫂id</param>
             <returns>ActionResult.</returns>
         </member>
-        <member name="M:Ed.Web.Areas.Account.Controllers.LoginController.ForgetPassword">
+        <member name="F:Ed.Web.CorderApiController.YuesaoOrderService">
             <summary>
-            Forgets the password.
-            </summary>
-            <returns>ActionResult.</returns>
-        </member>
-        <member name="T:Ed.Web.ClientInfoApiController">
-            <summary>
-            Class ClientInfoApiController.
+            依赖注入(YuesaoOrderApiController注入YuesaoOrderService) 2014-10-16 23:38:14 By 唐有炜
             </summary>
         </member>
-        <member name="F:Ed.Web.ClientInfoApiController.ClientInfoService">
+        <member name="F:Ed.Web.CorderApiController.ClientInfoService">
             <summary>
             依赖注入(ClientInfoApiController注入ClientInfoService) 2014-10-15 14:36:33 By 唐有炜
             </summary>
         </member>
-        <member name="F:Ed.Web.ClientInfoApiController.SysUserService">
+        <member name="F:Ed.Web.CorderApiController.PregnanterServiceRecordService">
             <summary>
-            The system user service
+            依赖注入(YuesaoOrderApiController注入PregnanterInfoRecordService ) 2014-12-12 23:38:14 By 屠玲玲
             </summary>
         </member>
-        <member name="F:Ed.Web.ClientInfoApiController.ClientMaintenanceService">
-            <summary>
-            The client maintenance service
-            </summary>
-        </member>
-        <member name="F:Ed.Web.ClientInfoApiController.SysDepartmentService">
-            <summary>
-            The system department service
-            </summary>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.GetClientInfos(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-            <summary>
-            获取所有ClientInfo列表（默认前10条） 2014-10-15 14:36:335 By 唐有炜
-            </summary>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">页数.</param>
-            <param name="sortField">排序字段</param>
-            <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-            <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-            <returns>IEnumerable&lt;TClientInfo&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.GetBootGridClientInfos">
-            <summary>
-            获取Bootgrid ClientInfo列表 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.GetZTreeClientInfos(System.Int32)">
-            <summary>
-            获取ClientInfoZTree树形节点 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.GetClientInfo(System.Int32)">
-            <summary>
-            获取一条ClientInfo数据 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TClientInfo</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.AddClientInfo(Ed.Entity.TClientInfo)">
-            <summary>
-            添加信息 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="clientInfo">clientInfo</param>
-            <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.EditClientInfo(Ed.Entity.TClientInfo)">
-            <summary>
-            修改信息 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="clientInfo">clientInfo</param>
-            <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.DeleteClientInfo(System.String)">
-            <summary>
-            删除    2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="ids">要删除的ids集合</param>
-            <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.UpdateClientInfoStatus(System.String,System.Int32)">
-            <summary>
-            修改状态 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="ids">The ids.</param>
-            <param name="status">The status.</param>
-            <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.UpdateClientInfoWeihu(System.String,System.Int32)">
-            <summary>
-            修改状态 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-            <param name="ids">The ids.</param>
-            <param name="status">The status.</param>
-            <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.ClientInfoApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
-            <summary>
-            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
-            </summary>
-            <param name="fields">字段集合(id,name)</param>
-            <param name="eqs">The eqs.</param>
-            <param name="values">The values.</param>
-            <param name="operations">条件集合（or,and）</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="F:Ed.Web.ClientMaintenanceApiController.ClientMaintenanceService">
-            <summary>
-            依赖注入(ClientMaintenanceApiController注入ClientMaintenanceService) 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.GetClientMaintenances(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+        <member name="M:Ed.Web.CorderApiController.GetYuesaoOrders(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
              <summary>
-             获取所有ClientMaintenance列表（默认前10条） 2014-10-15 22:11:195 By 唐有炜
+             获取所有YuesaoOrder列表（默认前10条） 2014-10-16 23:38:145 By 唐有炜
              </summary>
              <param name="pageIndex">页码</param>
              <param name="pageSize">页数.</param>
@@ -152,11 +64,11 @@
              <param name="sortType">排序类型</param>
             <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
              <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TClientMaintenance&gt;.</returns>
+             <returns>IEnumerable&lt;TYuesaoOrder&gt;.</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.GetBootGridClientMaintenances">
+        <member name="M:Ed.Web.CorderApiController.GetBootGridYuesaoOrders">
             <summary>
-            获取Bootgrid ClientMaintenance列表 2014-10-15 22:11:19 By 唐有炜
+            获取Bootgrid YuesaoOrder列表 2014-10-16 23:38:14 By 唐有炜
             </summary>
             <param name="current">current</param>
             <param name="rowCount">rowCount</param>
@@ -164,46 +76,647 @@
             <param name="searchPhrase">searchPhrase(格式)</param>
             <returns>json</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.GetZTreeClientMaintenances(System.Int32)">
+        <member name="M:Ed.Web.CorderApiController.GetZTreeYuesaoOrders(System.Int32)">
             <summary>
-            获取ClientMaintenanceZTree树形节点 2014-10-15 22:11:19 By 唐有炜
+            获取YuesaoOrderZTree树形节点 2014-10-16 23:38:14 By 唐有炜
             </summary>
             <returns>json</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.GetClientMaintenance(System.Int32)">
+        <member name="M:Ed.Web.CorderApiController.GetYuesaoOrder(System.Int32)">
             <summary>
-            获取一条ClientMaintenance数据 2014-10-15 22:11:19 By 唐有炜
+            获取一条YuesaoOrder数据 2014-10-16 23:38:14 By 唐有炜
             </summary>
             <param name="id">id</param>
-            <returns>TClientMaintenance</returns>
+            <returns>TYuesaoOrder</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.AddClientMaintenance(Ed.Entity.TClientMaintenance)">
+        <member name="M:Ed.Web.CorderApiController.AddHuisuoOrder(Ed.Entity.TOrder)">
+             <summary>
+            添加月子会所订单信息 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.CorderApiController.AddZengzhiOrder(Ed.Entity.TOrder)">
+             <summary>
+            添加月子会所订单信息 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.CorderApiController.EditYuesaoOrder(Ed.Entity.TOrder)">
+             <summary>
+            修改月嫂订单(即处理订单) 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.CorderApiController.DeleteYuesaoOrder(System.String)">
+             <summary>
+            删除    2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.CorderApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.PregnanterEvaluationApiController.PregnanterEvaluationService">
+            <summary>
+            依赖注入(PregnanterEvaluationApiController注入PregnanterEvaluationService) 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetPregnanterEvaluations(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有PregnanterEvaluation列表（默认前10条） 2014-10-16 17:25:335 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TPregnanterEvaluation&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetBootGridPregnanterEvaluations">
+            <summary>
+            获取Bootgrid PregnanterEvaluation列表 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetZTreePregnanterEvaluations(System.Int32)">
+            <summary>
+            获取PregnanterEvaluationZTree树形节点 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetPregnanterEvaluation(System.Int32)">
+            <summary>
+            获取一条PregnanterEvaluation数据 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TPregnanterEvaluation</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.AddPregnanterEvaluation(Ed.Entity.TPregnanterEvaluation)">
+             <summary>
+            添加信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterEvaluation">pregnanterEvaluation</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.EditPregnanterEvaluation(Ed.Entity.TPregnanterEvaluation)">
+             <summary>
+            修改信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterEvaluation">pregnanterEvaluation</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.DeletePregnanterEvaluation(System.String)">
+             <summary>
+            删除    2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterEvaluationApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.Areas.Tools.Controllers.CaptureUploadApiController.siteConfig">
+            <summary>
+            站点配置信息
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Areas.Tools.Controllers.CaptureUploadApiController.GetUpLoadPath">
+            <summary>
+            返回上传目录相对路径
+            </summary>
+            <param name="fileName">上传文件名</param>
+        </member>
+        <member name="F:Ed.Web.SysDepartmentApiController.SysDepartmentService">
+            <summary>
+            依赖注入(SysDepartmentApiController注入SysDepartmentService) 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.GetSysDepartments(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有SysDepartment列表（默认前10条） 2014-10-16 23:17:315 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TSysDepartment&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.GetBootGridSysDepartments">
+            <summary>
+            获取Bootgrid SysDepartment列表 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.GetZTreeSysDepartments(System.Int32)">
+            <summary>
+            获取SysDepartmentZTree树形节点 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.GetSysDepartment(System.Int32)">
+            <summary>
+            获取一条SysDepartment数据 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TSysDepartment</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.AddSysDepartment(Ed.Entity.TSysDepartment)">
+             <summary>
+            添加信息 2014-10-16 23:17:31 By 唐有炜
+             </summary>
+             <param name="sysDepartment">sysDepartment</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.EditSysDepartment(Ed.Entity.TSysDepartment)">
+             <summary>
+            修改信息 2014-10-16 23:17:31 By 唐有炜
+             </summary>
+             <param name="sysDepartment">sysDepartment</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.DeleteSysDepartment(System.String)">
+             <summary>
+            删除    2014-10-16 23:17:31 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.SysDepartmentApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
+            </summary>
+            <param name="fields">字段集合(id,name)</param>
+            <param name="eqs">The eqs.</param>
+            <param name="values">The values.</param>
+            <param name="operations">条件集合（or,and）</param>
+            <param name="existReturn">存在时的返回结果（默认true）</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,Ed.Web.Api.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,Ed.Web.Api.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create one using <see cref="T:Ed.Web.Api.Areas.HelpPage.ObjectGenerator"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},Ed.Web.Api.Areas.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel">
+            <summary>
+            The model that represents an API displayed on the help page.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel"/> class.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription">
+            <summary>
+            Gets or sets the <see cref="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.SampleRequests">
+            <summary>
+            Gets the sample requests associated with the API.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.SampleResponses">
+            <summary>
+            Gets the sample responses associated with the API.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.ErrorMessages">
+            <summary>
+            Gets the error messages associated with this model.
+            </summary>
+        </member>
+        <member name="F:Ed.Web.PregnanterServiceRecordApiController.PregnanterServiceRecordService">
+            <summary>
+            依赖注入(PregnanterServiceRecordApiController注入PregnanterServiceRecordService) 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetPregnanterServiceRecords(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有PregnanterServiceRecord列表（默认前10条） 2014-10-16 17:25:335 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TPregnanterServiceRecord&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetBootGridPregnanterServiceRecords">
+            <summary>
+            获取Bootgrid PregnanterServiceRecord列表 2014-10-22 16:43:33 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetZTreePregnanterServiceRecords(System.Int32)">
+            <summary>
+            获取PregnanterServiceRecordZTree树形节点 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetPregnanterServiceRecord(System.Int32)">
+            <summary>
+            获取一条PregnanterServiceRecord数据 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TPregnanterServiceRecord</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.AddPregnanterServiceRecord(Ed.Entity.TPregnanterServiceRecord)">
+             <summary>
+            添加信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterServiceRecord">pregnanterServiceRecord</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.EditPregnanterServiceRecord(Ed.Entity.TPregnanterServiceRecord)">
+             <summary>
+            修改信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterServiceRecord">pregnanterServiceRecord</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.DeletePregnanterServiceRecord(System.String)">
+             <summary>
+            删除    2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterServiceRecordApiController.Validate(System.String,System.String,System.String,System.String)">
+            <summary>
+            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
+            </summary>
+            <param name="fields">字段集合(id,name)</param>
+            <param name="fields">判断集合(=,>)</param>
+            <param name="fields">值集合(1,"aaa")</param>
+            <param name="operations">条件集合（or,and）</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.PregnanterInfoApiController.PregnanterInfoService">
+            <summary>
+            依赖注入(PregnanterInfoApiController注入PregnanterInfoService) 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.GetPregnanterInfos(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有PregnanterInfo列表（默认前10条） 2014-10-17 14:25:145 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TPregnanterInfo&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.GetBootGridPregnanterInfos">
+            <summary>
+            获取Bootgrid PregnanterInfo列表 2014-10-17 14:25:14 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.GetZTreePregnanterInfos(System.Int32)">
+            <summary>
+            获取PregnanterInfoZTree树形节点 2014-10-17 14:25:14 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.GetPregnanterInfo(System.Int32)">
+            <summary>
+            获取一条PregnanterInfo数据 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TPregnanterInfo</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.AddPregnanterInfo(Ed.Entity.TPregnanterInfo)">
              <summary>
             添加信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
-             <param name="clientMaintenance">clientMaintenance</param>
+             <param name="pregnanterInfo">pregnanterInfo</param>
              <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.EditClientMaintenance(Ed.Entity.TClientMaintenance)">
+        <member name="M:Ed.Web.PregnanterInfoApiController.EditPregnanterInfo(Ed.Entity.TPregnanterInfo)">
              <summary>
             修改信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
-             <param name="clientMaintenance">clientMaintenance</param>
+             <param name="pregnanterInfo">pregnanterInfo</param>
              <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.DeleteClientMaintenance(System.String)">
+        <member name="M:Ed.Web.PregnanterInfoApiController.EditPregnanterInfos(Ed.Entity.TPregnanterInfo)">
+             <summary>
+            修改信息 2014-10-15 22:11:19 By 唐有炜
+             </summary>
+             <param name="pregnanterInfo">pregnanterInfo</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.DeletePregnanterInfo(System.String)">
              <summary>
             删除    2014-10-15 22:11:19 By 唐有炜
              </summary>
              <param name="ids">要删除的ids集合</param>
              <returns>ResponseMessage.</returns>
         </member>
-        <member name="M:Ed.Web.ClientMaintenanceApiController.Validate(System.String)">
+        <member name="M:Ed.Web.PregnanterInfoApiController.UpdatePregnanterInfoStatus(System.String,System.Int32)">
             <summary>
-            验证字段是否存在  2014-10-15 22:11:19 By 唐有炜
+            修改状态 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.PregnanterInfoApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
+            </summary>
+            <param name="fields">字段集合(id,name)</param>
+            <param name="eqs">The eqs.</param>
+            <param name="values">The values.</param>
+            <param name="operations">条件集合（or,and）</param>
+            <param name="existReturn">存在时的返回结果（默认true）</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.YPregnanterEvaluationApiController.PregnanterEvaluationService">
+            <summary>
+            依赖注入(PregnanterEvaluationApiController注入PregnanterEvaluationService) 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.GetPregnanterEvaluations(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有PregnanterEvaluation列表（默认前10条） 2014-10-16 17:25:335 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TPregnanterEvaluation&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.GetBootGridPregnanterEvaluations">
+            <summary>
+            获取Bootgrid PregnanterEvaluation列表 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.GetZTreePregnanterEvaluations(System.Int32)">
+            <summary>
+            获取PregnanterEvaluationZTree树形节点 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.GetPregnanterEvaluation(System.Int32)">
+            <summary>
+            获取一条PregnanterEvaluation数据 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TPregnanterEvaluation</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.AddPregnanterEvaluation(Ed.Entity.TPregnanterEvaluation)">
+             <summary>
+            添加信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterEvaluation">pregnanterEvaluation</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.EditPregnanterEvaluation(Ed.Entity.TPregnanterEvaluation)">
+             <summary>
+            修改信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterEvaluation">pregnanterEvaluation</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.DeletePregnanterEvaluation(System.String)">
+             <summary>
+            删除    2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterEvaluationApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 17:25:33 By 唐有炜
             </summary>
             <param name="fields">字段集合</param>
             <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.YingshiOrderApiController.YuesaoOrderService">
+            <summary>
+            依赖注入(YuesaoOrderApiController注入YuesaoOrderService) 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.YingshiOrderApiController.ClientInfoService">
+            <summary>
+            依赖注入(ClientInfoApiController注入ClientInfoService) 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.YingshiOrderApiController.PregnanterServiceRecordService">
+            <summary>
+            依赖注入(YuesaoOrderApiController注入PregnanterInfoRecordService ) 2014-12-12 23:38:14 By 屠玲玲
+            </summary>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.GetYuesaoOrders(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有YuesaoOrder列表（默认前10条） 2014-10-16 23:38:145 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TYuesaoOrder&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.GetBootGridYuesaoOrders">
+            <summary>
+            获取Bootgrid YuesaoOrder列表 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.GetZTreeYuesaoOrders(System.Int32)">
+            <summary>
+            获取YuesaoOrderZTree树形节点 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.GetYuesaoOrder(System.Int32)">
+            <summary>
+            获取一条YuesaoOrder数据 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TYuesaoOrder</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.AddYuesaoOrder(Ed.Entity.TOrder)">
+             <summary>
+            添加信息 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.EditYuesaoOrder(Ed.Entity.TOrder)">
+             <summary>
+            修改月嫂订单(即处理订单) 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.DeleteYuesaoOrder(System.String)">
+             <summary>
+            删除    2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.YingshiOrderApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.Controllers.HelpController">
+            <summary>
+            The controller that will handle requests for the help page.
+            </summary>
         </member>
         <member name="F:Ed.Web.OrderFinanceApiController.OrderFinanceService">
             <summary>
@@ -290,23 +803,187 @@
             <param name="operations">条件集合（or,and）</param>
             <returns>验证状态</returns>
         </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
+        <member name="M:Ed.Web.Helpers.MyControllerHelper.FilterModulePowers(System.Collections.Generic.IEnumerable{System.Collections.Generic.Dictionary{System.String,System.Object}},System.Int32)">
             <summary>
-            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
+            根据角色id筛选对应的模块权限数据
             </summary>
-            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
-            <returns>The ID as a string.</returns>
+            <param name="tempMoudlsPowers"></param>
+            <param name="roleId"></param>
+            <returns></returns>
         </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.HelpPageConfig">
+        <member name="F:Ed.Web.SysRoleApiController.SysRoleService">
             <summary>
-            Use this class to customize the Help Page.
-            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
-            or you can provide the samples for the requests/responses.
+            依赖注入(SysRoleApiController注入SysRoleService) 2014-10-16 23:17:31 By 唐有炜
             </summary>
         </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.Controllers.HelpController">
+        <member name="M:Ed.Web.SysRoleApiController.GetSysRoles(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有SysRole列表（默认前10条） 2014-10-16 23:17:315 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TSysRole&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.GetBootGridSysRoles">
             <summary>
-            The controller that will handle requests for the help page.
+            获取Bootgrid SysRole列表 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.GetZTreeSysRoles(System.Int32)">
+            <summary>
+            获取SysRoleZTree树形节点 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.GetSysRole(System.Int32)">
+            <summary>
+            获取一条SysRole数据 2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TSysRole</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.AddSysRole(Ed.Entity.TSysRole)">
+             <summary>
+            添加信息 2014-10-16 23:17:31 By 唐有炜
+             </summary>
+             <param name="sysRole">sysRole</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.EditSysRole(Ed.Entity.TSysRole)">
+             <summary>
+            修改信息 2014-10-16 23:17:31 By 唐有炜
+             </summary>
+             <param name="sysRole">sysRole</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.DeleteSysRole(System.String)">
+             <summary>
+            删除    2014-10-16 23:17:31 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.SysRoleApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 23:17:31 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.OrderApiController.OrderService">
+            <summary>
+            依赖注入(OrderApiController注入OrderService) 2014-10-20 21:14:18 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.OrderApiController.OrderFinanceService">
+            <summary>
+            依赖注入(OrderFinanceApiController注入OrderFinanceService) 2014-10-28 10:55:32 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.GetOrders(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有Order列表（默认前10条） 2014-10-20 21:14:185 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TOrder&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.GetBootGridOrders">
+            <summary>
+            获取Bootgrid Order列表 2014-10-20 21:14:18 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.GetZTreeOrders(System.Int32)">
+            <summary>
+            获取OrderZTree树形节点 2014-10-20 21:14:18 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.GetOrder(System.Int32)">
+            <summary>
+            获取一条Order数据 2014-10-20 21:14:18 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TOrder</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.AddOrder(Ed.Entity.TOrder)">
+             <summary>
+            添加信息 2014-10-20 21:14:18 By 唐有炜
+             </summary>
+             <param name="order">order</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.EditOrder(Ed.Entity.TOrder)">
+             <summary>
+            修改信息 2014-10-20 21:14:18 By 唐有炜
+             </summary>
+             <param name="order">order</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.DeleteOrder(System.String)">
+             <summary>
+            删除    2014-10-20 21:14:18 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.UpdateClientInfoWeihu(System.String,System.Int32)">
+            <summary>
+            修改状态 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="ids">The ids.</param>
+            <param name="status">The status.</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.UpdateOrderStatusTrash(System.String,System.Int32)">
+            <summary>
+            修改状态(回收站) 2014-10-20 21:14:18 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.UpdateOrderStatusUpdate(System.String,System.Int32)">
+            <summary>
+            修改状态(执行中) 2014-10-20 21:14:18 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.UpdateOrderStatusWan(System.String,System.Int32)">
+            <summary>
+            修改状态(回收站) 2014-10-20 21:14:18 By 唐有炜
+            </summary>注意
+            <param name="id">id</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.OrderApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-20 21:14:18 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
             </summary>
         </member>
         <member name="M:Ed.Web.Api.Areas.HelpPage.Controllers.RestApiTestController.Get">
@@ -340,6 +1017,203 @@
             删除  2014-10-13 19:51:21 By 唐有炜
             </summary>
             <param name="id">id</param>
+        </member>
+        <member name="T:Ed.Web.BundleConfig">
+            <summary>
+            Class BundleConfig.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+            <summary>
+            Registers the bundles.
+            </summary>
+            <param name="bundles">The bundles.</param>
+        </member>
+        <member name="T:Ed.Web.Helpers.MyHtmlHelper">
+            <summary>
+            Html格式化输出辅助类
+            2014-10-13 02:50:51 修改 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.IsNull(System.Web.Mvc.HtmlHelper,System.String,System.String)">
+            <summary>
+            自定义字符串长度 2014-05-25 By 唐有炜
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="value">The value.</param>
+            <param name="replaceValue">The replace value.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultPic(System.Web.Mvc.HtmlHelper,System.String,System.String)">
+            <summary>
+            加载默认图片 2014-05-25 By 唐有炜
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="src">The source.</param>
+            <param name="imgUrl">The img URL.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.String,System.String)">
+            <summary>
+            Loads the default value.
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="value">The value.</param>
+            <param name="replaceValue">The replace value.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.Nullable{System.Int32},System.String)">
+            <summary>
+            Loads the default value.
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="value">The value.</param>
+            <param name="replaceValue">The replace value.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.Nullable{System.Double},System.String)">
+            <summary>
+            Loads the default value.
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="value">The value.</param>
+            <param name="replaceValue">The replace value.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.Object,System.Object,System.String)">
+            <summary>
+            Loads the default value.
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="obj">The object.</param>
+            <param name="value">The value.</param>
+            <param name="replaceValue">The replace value.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.NullPalse(System.Web.Mvc.HtmlHelper,System.Object)">
+            <summary>
+            加载默认 2014-05-25 By 唐有炜
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="field">The field.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.DateTimeNullPalse(System.Web.Mvc.HtmlHelper,System.Nullable{System.DateTime})">
+            <summary>
+            加载默认时间 2014-05-25 By 唐有炜
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="dt">The dt.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.BuildSelectList(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Boolean)">
+            <summary>
+            Builds the select list. 14-10-14 By 唐有炜
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="lists">下拉框集合</param>
+            <param name="defaultValue">默认值</param>
+            <param name="showLabel">是否显示"请选择",默认显示</param>
+            <returns>IEnumerable&lt;SelectListItem&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.OptionsPalse(System.Web.Mvc.HtmlHelper,System.Nullable{System.Int32},System.String,System.String)">
+            <summary>
+            整型多选项输出 2014-07-29 By 唐有炜
+            </summary>
+            <param name="htmlHelper">The HTML helper.</param>
+            <param name="value">当前值</param>
+            <param name="options">选项1|a,2|b</param>
+            <param name="replaceValue">The replace value.</param>
+            <returns>MvcHtmlString.</returns>
+        </member>
+        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadModulePowers(System.Web.Mvc.HtmlHelper,System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.String,System.String)">
+            <summary>
+            根据模块别名判断是否有权限
+            </summary>
+            <param name="htmlHelper"></param>
+            <param name="models"></param>
+            <param name="mid">模块id</param>
+            <param name="paction">操作（默认查看）</param>
+            <returns></returns>
+        </member>
+        <member name="F:Ed.Web.YPregnanterMaintenanceApiController.PregnanterMaintenanceService">
+            <summary>
+            依赖注入(PregnanterMaintenanceApiController注入PregnanterMaintenanceService) 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.GetPregnanterMaintenances(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有PregnanterMaintenance列表（默认前10条） 2014-10-16 17:25:335 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TPregnanterMaintenance&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.GetBootGridPregnanterMaintenances">
+            <summary>
+            获取Bootgrid PregnanterMaintenance列表 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.GetZTreePregnanterMaintenances(System.Int32)">
+            <summary>
+            获取PregnanterMaintenanceZTree树形节点 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.GetPregnanterMaintenance(System.Int32)">
+            <summary>
+            获取一条PregnanterMaintenance数据 2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TPregnanterMaintenance</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.AddPregnanterMaintenance(Ed.Entity.TPregnanterMaintenance)">
+             <summary>
+            添加信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterMaintenance">pregnanterMaintenance</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.EditPregnanterMaintenance(Ed.Entity.TPregnanterMaintenance)">
+             <summary>
+            修改信息 2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="pregnanterMaintenance">pregnanterMaintenance</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.DeletePregnanterMaintenance(System.String)">
+             <summary>
+            删除    2014-10-16 17:25:33 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterMaintenanceApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 17:25:33 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.XmlDocumentationProvider"/> class.
+            </summary>
+            <param name="documentPath">The physical path to XML document.</param>
         </member>
         <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
             <summary>
@@ -472,724 +1346,17 @@
             An <see cref="T:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel"/>
             </returns>
         </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel">
+        <member name="T:Ed.Web.Filters.RolePowerAuthorize">
             <summary>
-            The model that represents an API displayed on the help page.
+            角色模块权限过滤器 14-10-24 by 唐有炜
             </summary>
         </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.#ctor">
+        <member name="M:Ed.Web.Api.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
             <summary>
-            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel"/> class.
+            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
             </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription">
-            <summary>
-            Gets or sets the <see cref="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
-            </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.SampleRequests">
-            <summary>
-            Gets the sample requests associated with the API.
-            </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.SampleResponses">
-            <summary>
-            Gets the sample responses associated with the API.
-            </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.Models.HelpPageApiModel.ErrorMessages">
-            <summary>
-            Gets the error messages associated with this model.
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator">
-            <summary>
-            This class will generate the samples for the help page.
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator"/> class.
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
-            <summary>
-            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
-            </summary>
-            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
-            <returns>The samples keyed by media type.</returns>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
-            <summary>
-            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
-            </summary>
-            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
-            <returns>The samples keyed by media type.</returns>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,Ed.Web.Api.Areas.HelpPage.SampleDirection)">
-            <summary>
-            Gets the request or response body samples.
-            </summary>
-            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
-            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
-            <returns>The samples keyed by media type.</returns>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,Ed.Web.Api.Areas.HelpPage.SampleDirection)">
-            <summary>
-            Search for samples that are provided directly through <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
-            </summary>
-            <param name="controllerName">Name of the controller.</param>
-            <param name="actionName">Name of the action.</param>
-            <param name="parameterNames">The parameter names.</param>
-            <param name="type">The CLR type.</param>
-            <param name="formatter">The formatter.</param>
-            <param name="mediaType">The media type.</param>
-            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
-            <returns>The sample that matches the parameters.</returns>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
-            <summary>
-            Gets the sample object that will be serialized by the formatters. 
-            First, it will look at the <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create one using <see cref="T:Ed.Web.Api.Areas.HelpPage.ObjectGenerator"/>.
-            </summary>
-            <param name="type">The type.</param>
-            <returns>The sample object.</returns>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},Ed.Web.Api.Areas.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
-            <summary>
-            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
-            </summary>
-            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
-            <param name="controllerName">Name of the controller.</param>
-            <param name="actionName">Name of the action.</param>
-            <param name="parameterNames">The parameter names.</param>
-            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
-            <param name="formatters">The formatters.</param>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
-            <summary>
-            Writes the sample object using formatter.
-            </summary>
-            <param name="formatter">The formatter.</param>
-            <param name="value">The value.</param>
-            <param name="type">The type.</param>
-            <param name="mediaType">Type of the media.</param>
-            <returns></returns>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
-            <summary>
-            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
-            </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples">
-            <summary>
-            Gets the objects that are used directly as samples for certain actions.
-            </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects">
-            <summary>
-            Gets the objects that are serialized as samples by the supported formatters.
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey">
-            <summary>
-            This is used to identify the place where the sample should be applied.
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
-            <summary>
-            Creates a new <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
-            </summary>
-            <param name="mediaType">The media type.</param>
-            <param name="type">The CLR type.</param>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(Ed.Web.Api.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Creates a new <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey"/> based on <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
-            </summary>
-            <param name="sampleDirection">The <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
-            <param name="controllerName">Name of the controller.</param>
-            <param name="actionName">Name of the action.</param>
-            <param name="parameterNames">The parameter names.</param>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,Ed.Web.Api.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Creates a new <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
-            </summary>
-            <param name="mediaType">The media type.</param>
-            <param name="sampleDirection">The <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
-            <param name="controllerName">Name of the controller.</param>
-            <param name="actionName">Name of the action.</param>
-            <param name="parameterNames">The parameter names.</param>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.ControllerName">
-            <summary>
-            Gets the name of the controller.
-            </summary>
-            <value>
-            The name of the controller.
-            </value>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.ActionName">
-            <summary>
-            Gets the name of the action.
-            </summary>
-            <value>
-            The name of the action.
-            </value>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.MediaType">
-            <summary>
-            Gets the media type.
-            </summary>
-            <value>
-            The media type.
-            </value>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.ParameterNames">
-            <summary>
-            Gets the parameter names.
-            </summary>
-        </member>
-        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection">
-            <summary>
-            Gets the <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.ImageSample">
-            <summary>
-            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.ImageSample.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.ImageSample"/> class.
-            </summary>
-            <param name="src">The URL of an image.</param>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.InvalidSample">
-            <summary>
-            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.ObjectGenerator">
-            <summary>
-            This class will create an object of a given type and populate it with sample data.
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
-            <summary>
-            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
-            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
-            Complex types: POCO types.
-            Nullables: <see cref="T:System.Nullable`1"/>.
-            Arrays: arrays of simple types or complex types.
-            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
-            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
-            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
-            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
-            </summary>
-            <param name="type">The type.</param>
-            <returns>An object of the given type.</returns>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.SampleDirection">
-            <summary>
-            Indicates whether the sample is used for request or response
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.TextSample">
-            <summary>
-            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Api.Areas.HelpPage.XmlDocumentationProvider">
-            <summary>
-            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Api.Areas.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Ed.Web.Api.Areas.HelpPage.XmlDocumentationProvider"/> class.
-            </summary>
-            <param name="documentPath">The physical path to XML document.</param>
-        </member>
-        <member name="F:Ed.Web.OrderApiController.OrderService">
-            <summary>
-            依赖注入(OrderApiController注入OrderService) 2014-10-20 21:14:18 By 唐有炜
-            </summary>
-        </member>
-        <member name="F:Ed.Web.OrderApiController.OrderFinanceService">
-            <summary>
-            依赖注入(OrderFinanceApiController注入OrderFinanceService) 2014-10-28 10:55:32 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.GetOrders(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有Order列表（默认前10条） 2014-10-20 21:14:185 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TOrder&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.GetBootGridOrders">
-            <summary>
-            获取Bootgrid Order列表 2014-10-20 21:14:18 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.GetZTreeOrders(System.Int32)">
-            <summary>
-            获取OrderZTree树形节点 2014-10-20 21:14:18 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.GetOrder(System.Int32)">
-            <summary>
-            获取一条Order数据 2014-10-20 21:14:18 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TOrder</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.AddOrder(Ed.Entity.TOrder)">
-             <summary>
-            添加信息 2014-10-20 21:14:18 By 唐有炜
-             </summary>
-             <param name="order">order</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.EditOrder(Ed.Entity.TOrder)">
-             <summary>
-            修改信息 2014-10-20 21:14:18 By 唐有炜
-             </summary>
-             <param name="order">order</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.DeleteOrder(System.String)">
-             <summary>
-            删除    2014-10-20 21:14:18 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.UpdateOrderStatus(System.String,System.Int32)">
-            <summary>
-            修改状态 2014-10-20 21:14:18 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.OrderApiController.Validate(System.String)">
-            <summary>
-            验证字段是否存在  2014-10-20 21:14:18 By 唐有炜
-            </summary>
-            <param name="fields">字段集合</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="F:Ed.Web.YuesaoOrderApiController.YuesaoOrderService">
-            <summary>
-            依赖注入(YuesaoOrderApiController注入YuesaoOrderService) 2014-10-16 23:38:14 By 唐有炜
-            </summary>
-        </member>
-        <member name="F:Ed.Web.YuesaoOrderApiController.ClientInfoService">
-            <summary>
-            依赖注入(ClientInfoApiController注入ClientInfoService) 2014-10-15 14:36:33 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.GetYuesaoOrders(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有YuesaoOrder列表（默认前10条） 2014-10-16 23:38:145 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TYuesaoOrder&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.GetBootGridYuesaoOrders">
-            <summary>
-            获取Bootgrid YuesaoOrder列表 2014-10-16 23:38:14 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.GetZTreeYuesaoOrders(System.Int32)">
-            <summary>
-            获取YuesaoOrderZTree树形节点 2014-10-16 23:38:14 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.GetYuesaoOrder(System.Int32)">
-            <summary>
-            获取一条YuesaoOrder数据 2014-10-16 23:38:14 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TYuesaoOrder</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.AddYuesaoOrder(Ed.Entity.TOrder)">
-             <summary>
-            添加信息 2014-10-16 23:38:14 By 唐有炜
-             </summary>
-             <param name="yuesaoOrder">yuesaoOrder</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.EditYuesaoOrder(Ed.Entity.TOrder)">
-             <summary>
-            修改月嫂订单(即处理订单) 2014-10-16 23:38:14 By 唐有炜
-             </summary>
-             <param name="yuesaoOrder">yuesaoOrder</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.DeleteYuesaoOrder(System.String)">
-             <summary>
-            删除    2014-10-16 23:38:14 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.YuesaoOrderApiController.Validate(System.String)">
-            <summary>
-            验证字段是否存在  2014-10-16 23:38:14 By 唐有炜
-            </summary>
-            <param name="fields">字段集合</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="T:Ed.Web.Areas.Settings.Controllers.DataBackupApiController">
-            <summary>
-            Class DataBackupApiController.
-            2014-10-16 02:23:17 修改 By 唐有炜
-            </summary>
-        </member>
-        <member name="F:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.conntionString">
-            <summary>
-            数据库连接字符串
-            </summary>
-        </member>
-        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.GetBootGridDatabackups">
-            <summary>
-            获取Bootgrid Databackup列表 2014-10-15 22:07:40 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.Get">
-            <summary>
-            获取数据库连接信息 2014-10-15 22:07:40 By 唐有炜
-            </summary>
-            <returns>IEnumerable&lt;System.String&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.Get(System.Int32)">
-            <summary>
-            数据库连接信息（长字符串） 2014-10-15 22:07:40 By 唐有炜
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns>System.String.</returns>
-        </member>
-        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.RestoreDB(System.String,System.String,System.String@)">
-            <summary>
-            恢复数据库，恢复前杀死所有与本数据库相关进程
-            </summary>
-            <param name="strDbName">数据库名</param>
-            <param name="strFileName">存放路径</param>
-            <returns></returns>
-        </member>
-        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.Delete(System.String)">
-            <summary>
-            Deletes the specified identifier.
-            </summary>
-            <param name="id">The identifier.</param>
-        </member>
-        <member name="F:Ed.Web.SysDepartmentApiController.SysDepartmentService">
-            <summary>
-            依赖注入(SysDepartmentApiController注入SysDepartmentService) 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.GetSysDepartments(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有SysDepartment列表（默认前10条） 2014-10-16 23:17:315 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TSysDepartment&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.GetBootGridSysDepartments">
-            <summary>
-            获取Bootgrid SysDepartment列表 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.GetZTreeSysDepartments(System.Int32)">
-            <summary>
-            获取SysDepartmentZTree树形节点 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.GetSysDepartment(System.Int32)">
-            <summary>
-            获取一条SysDepartment数据 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TSysDepartment</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.AddSysDepartment(Ed.Entity.TSysDepartment)">
-             <summary>
-            添加信息 2014-10-16 23:17:31 By 唐有炜
-             </summary>
-             <param name="sysDepartment">sysDepartment</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.EditSysDepartment(Ed.Entity.TSysDepartment)">
-             <summary>
-            修改信息 2014-10-16 23:17:31 By 唐有炜
-             </summary>
-             <param name="sysDepartment">sysDepartment</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.DeleteSysDepartment(System.String)">
-             <summary>
-            删除    2014-10-16 23:17:31 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.SysDepartmentApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
-            <summary>
-            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
-            </summary>
-            <param name="fields">字段集合(id,name)</param>
-            <param name="eqs">The eqs.</param>
-            <param name="values">The values.</param>
-            <param name="operations">条件集合（or,and）</param>
-            <param name="existReturn">存在时的返回结果（默认true）</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="F:Ed.Web.SysLogApiController.SysLogService">
-            <summary>
-            依赖注入(SysLogApiController注入SysLogService) 2014-10-20 16:07:14 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.GetSysLogs(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有SysLog列表（默认前10条） 2014-10-20 16:07:145 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TSysLog&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.GetBootGridSysLogs">
-            <summary>
-            获取Bootgrid SysLog列表 2014-10-20 16:07:14 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.GetZTreeSysLogs(System.Int32)">
-            <summary>
-            获取SysLogZTree树形节点 2014-10-20 16:07:14 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.GetSysLog(System.Int32)">
-            <summary>
-            获取一条SysLog数据 2014-10-20 16:07:14 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TSysLog</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.AddSysLog(Ed.Entity.TSysLog)">
-             <summary>
-            添加信息 2014-10-20 16:07:14 By 唐有炜
-             </summary>
-             <param name="sysLog">sysLog</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.EditSysLog(Ed.Entity.TSysLog)">
-             <summary>
-            修改信息 2014-10-20 16:07:14 By 唐有炜
-             </summary>
-             <param name="sysLog">sysLog</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.DeleteSysLog(System.String)">
-             <summary>
-            删除    2014-10-20 16:07:14 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.SysLogApiController.Validate(System.String)">
-            <summary>
-            验证字段是否存在  2014-10-20 16:07:14 By 唐有炜
-            </summary>
-            <param name="fields">字段集合</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="F:Ed.Web.SysPowerApiController.SysPowerService">
-            <summary>
-            依赖注入(SysPowerApiController注入SysPowerService) 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.GetSysPowers(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有SysPower列表（默认前10条） 2014-10-15 22:11:195 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TSysPower&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.GetBootGridSysPowers">
-            <summary>
-            获取Bootgrid SysPower列表 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.GetZTreeSysPowers(System.Int32)">
-            <summary>
-            获取SysPowerZTree树形节点 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.GetSysPower(System.Int32)">
-            <summary>
-            获取一条SysPower数据 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TSysPower</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.AddSysPower(Ed.Entity.TSysPower)">
-             <summary>
-            添加信息 2014-10-15 22:11:19 By 唐有炜
-             </summary>
-             <param name="sysPower">sysPower</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.EditSysPower(Ed.Entity.TSysPower)">
-             <summary>
-            修改信息 2014-10-15 22:11:19 By 唐有炜
-             </summary>
-             <param name="sysPower">sysPower</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.DeleteSysPower(System.String)">
-             <summary>
-            删除    2014-10-15 22:11:19 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.SysPowerApiController.Validate(System.String)">
-            <summary>
-            验证字段是否存在  2014-10-15 22:11:19 By 唐有炜
-            </summary>
-            <param name="fields">字段集合</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="F:Ed.Web.SysRoleApiController.SysRoleService">
-            <summary>
-            依赖注入(SysRoleApiController注入SysRoleService) 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.GetSysRoles(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有SysRole列表（默认前10条） 2014-10-16 23:17:315 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TSysRole&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.GetBootGridSysRoles">
-            <summary>
-            获取Bootgrid SysRole列表 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.GetZTreeSysRoles(System.Int32)">
-            <summary>
-            获取SysRoleZTree树形节点 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.GetSysRole(System.Int32)">
-            <summary>
-            获取一条SysRole数据 2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TSysRole</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.AddSysRole(Ed.Entity.TSysRole)">
-             <summary>
-            添加信息 2014-10-16 23:17:31 By 唐有炜
-             </summary>
-             <param name="sysRole">sysRole</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.EditSysRole(Ed.Entity.TSysRole)">
-             <summary>
-            修改信息 2014-10-16 23:17:31 By 唐有炜
-             </summary>
-             <param name="sysRole">sysRole</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.DeleteSysRole(System.String)">
-             <summary>
-            删除    2014-10-16 23:17:31 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.SysRoleApiController.Validate(System.String)">
-            <summary>
-            验证字段是否存在  2014-10-16 23:17:31 By 唐有炜
-            </summary>
-            <param name="fields">字段集合</param>
-            <returns>验证状态</returns>
+            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The ID as a string.</returns>
         </member>
         <member name="F:Ed.Web.SysUserApiController.SysUserService">
             <summary>
@@ -1263,25 +1430,14 @@
             <param name="existReturn">存在时的返回结果（默认true）</param>
             <returns>验证状态</returns>
         </member>
-        <member name="F:Ed.Web.Areas.Tools.Controllers.CaptureUploadApiController.siteConfig">
+        <member name="F:Ed.Web.SysPowerApiController.SysPowerService">
             <summary>
-            站点配置信息
+            依赖注入(SysPowerApiController注入SysPowerService) 2014-10-15 22:11:19 By 唐有炜
             </summary>
         </member>
-        <member name="M:Ed.Web.Areas.Tools.Controllers.CaptureUploadApiController.GetUpLoadPath">
-            <summary>
-            返回上传目录相对路径
-            </summary>
-            <param name="fileName">上传文件名</param>
-        </member>
-        <member name="F:Ed.Web.PregnanterEvaluationApiController.PregnanterEvaluationService">
-            <summary>
-            依赖注入(PregnanterEvaluationApiController注入PregnanterEvaluationService) 2014-10-16 17:25:33 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetPregnanterEvaluations(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+        <member name="M:Ed.Web.SysPowerApiController.GetSysPowers(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
              <summary>
-             获取所有PregnanterEvaluation列表（默认前10条） 2014-10-16 17:25:335 By 唐有炜
+             获取所有SysPower列表（默认前10条） 2014-10-15 22:11:195 By 唐有炜
              </summary>
              <param name="pageIndex">页码</param>
              <param name="pageSize">页数.</param>
@@ -1289,11 +1445,11 @@
              <param name="sortType">排序类型</param>
             <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
              <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TPregnanterEvaluation&gt;.</returns>
+             <returns>IEnumerable&lt;TSysPower&gt;.</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetBootGridPregnanterEvaluations">
+        <member name="M:Ed.Web.SysPowerApiController.GetBootGridSysPowers">
             <summary>
-            获取Bootgrid PregnanterEvaluation列表 2014-10-16 17:25:33 By 唐有炜
+            获取Bootgrid SysPower列表 2014-10-15 22:11:19 By 唐有炜
             </summary>
             <param name="current">current</param>
             <param name="rowCount">rowCount</param>
@@ -1301,137 +1457,63 @@
             <param name="searchPhrase">searchPhrase(格式)</param>
             <returns>json</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetZTreePregnanterEvaluations(System.Int32)">
+        <member name="M:Ed.Web.SysPowerApiController.GetZTreeSysPowers(System.Int32)">
             <summary>
-            获取PregnanterEvaluationZTree树形节点 2014-10-16 17:25:33 By 唐有炜
+            获取SysPowerZTree树形节点 2014-10-15 22:11:19 By 唐有炜
             </summary>
             <returns>json</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.GetPregnanterEvaluation(System.Int32)">
+        <member name="M:Ed.Web.SysPowerApiController.GetSysPower(System.Int32)">
             <summary>
-            获取一条PregnanterEvaluation数据 2014-10-16 17:25:33 By 唐有炜
+            获取一条SysPower数据 2014-10-15 22:11:19 By 唐有炜
             </summary>
             <param name="id">id</param>
-            <returns>TPregnanterEvaluation</returns>
+            <returns>TSysPower</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.AddPregnanterEvaluation(Ed.Entity.TPregnanterEvaluation)">
-             <summary>
-            添加信息 2014-10-16 17:25:33 By 唐有炜
-             </summary>
-             <param name="pregnanterEvaluation">pregnanterEvaluation</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.EditPregnanterEvaluation(Ed.Entity.TPregnanterEvaluation)">
-             <summary>
-            修改信息 2014-10-16 17:25:33 By 唐有炜
-             </summary>
-             <param name="pregnanterEvaluation">pregnanterEvaluation</param>
-             <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.DeletePregnanterEvaluation(System.String)">
-             <summary>
-            删除    2014-10-16 17:25:33 By 唐有炜
-             </summary>
-             <param name="ids">要删除的ids集合</param>
-             <returns>ResponseMessage.</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterEvaluationApiController.Validate(System.String)">
-            <summary>
-            验证字段是否存在  2014-10-16 17:25:33 By 唐有炜
-            </summary>
-            <param name="fields">字段集合</param>
-            <returns>验证状态</returns>
-        </member>
-        <member name="F:Ed.Web.PregnanterInfoApiController.PregnanterInfoService">
-            <summary>
-            依赖注入(PregnanterInfoApiController注入PregnanterInfoService) 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.GetPregnanterInfos(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
-             <summary>
-             获取所有PregnanterInfo列表（默认前10条） 2014-10-17 14:25:145 By 唐有炜
-             </summary>
-             <param name="pageIndex">页码</param>
-             <param name="pageSize">页数.</param>
-             <param name="sortField">排序字段</param>
-             <param name="sortType">排序类型</param>
-            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
-             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
-             <returns>IEnumerable&lt;TPregnanterInfo&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.GetBootGridPregnanterInfos">
-            <summary>
-            获取Bootgrid PregnanterInfo列表 2014-10-17 14:25:14 By 唐有炜
-            </summary>
-            <param name="current">current</param>
-            <param name="rowCount">rowCount</param>
-            <param name="sort[fieldName]">sort[fieldName]</param>
-            <param name="searchPhrase">searchPhrase(格式)</param>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.GetZTreePregnanterInfos(System.Int32)">
-            <summary>
-            获取PregnanterInfoZTree树形节点 2014-10-17 14:25:14 By 唐有炜
-            </summary>
-            <returns>json</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.GetPregnanterInfo(System.Int32)">
-            <summary>
-            获取一条PregnanterInfo数据 2014-10-15 22:11:19 By 唐有炜
-            </summary>
-            <param name="id">id</param>
-            <returns>TPregnanterInfo</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.AddPregnanterInfo(Ed.Entity.TPregnanterInfo)">
+        <member name="M:Ed.Web.SysPowerApiController.AddSysPower(Ed.Entity.TSysPower)">
              <summary>
             添加信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
-             <param name="pregnanterInfo">pregnanterInfo</param>
+             <param name="sysPower">sysPower</param>
              <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.EditPregnanterInfo(Ed.Entity.TPregnanterInfo)">
+        <member name="M:Ed.Web.SysPowerApiController.EditSysPower(Ed.Entity.TSysPower)">
              <summary>
             修改信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
-             <param name="pregnanterInfo">pregnanterInfo</param>
+             <param name="sysPower">sysPower</param>
              <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.DeletePregnanterInfo(System.String)">
+        <member name="M:Ed.Web.SysPowerApiController.DeleteSysPower(System.String)">
              <summary>
             删除    2014-10-15 22:11:19 By 唐有炜
              </summary>
              <param name="ids">要删除的ids集合</param>
              <returns>ResponseMessage.</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.UpdatePregnanterInfoStatus(System.String,System.Int32)">
+        <member name="M:Ed.Web.SysPowerApiController.Validate(System.String)">
             <summary>
-            修改状态 2014-10-15 22:11:19 By 唐有炜
+            验证字段是否存在  2014-10-15 22:11:19 By 唐有炜
             </summary>
-            <param name="id">id</param>
-            <returns>ResponseMessage</returns>
-        </member>
-        <member name="M:Ed.Web.PregnanterInfoApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
-            <summary>
-            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
-            </summary>
-            <param name="fields">字段集合(id,name)</param>
-            <param name="eqs">The eqs.</param>
-            <param name="values">The values.</param>
-            <param name="operations">条件集合（or,and）</param>
-            <param name="existReturn">存在时的返回结果（默认true）</param>
+            <param name="fields">字段集合</param>
             <returns>验证状态</returns>
         </member>
-        <member name="T:Ed.Web.Areas.Yuesao.Controllers.PregnanterInfoController">
+        <member name="T:Ed.Web.Api.Areas.HelpPage.HelpPageConfig">
             <summary>
-            Class PregnanterInfoController.
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
+            or you can provide the samples for the requests/responses.
             </summary>
         </member>
-        <member name="M:Ed.Web.Areas.Yuesao.Controllers.PregnanterInfoController.View(System.Nullable{System.Int32})">
-            <summary>
-            Views the specified identifier.
-            </summary>
-            <param name="id">月嫂id</param>
-            <returns>ActionResult.</returns>
+        <member name="T:Ed.Web.Filters.UserAuthorizeAttribute">
+             <summary>
+            账户授权过滤器 2014-08-22 14:58:50 By 唐有炜
+             </summary>
+        </member>
+        <member name="T:Ed.Web.Filters.ApiAuthorizeAttribute">
+             <summary>
+            Api授权过滤器 2014-09-21 14:58:50 By 唐有炜
+             </summary>
         </member>
         <member name="F:Ed.Web.PregnanterMaintenanceApiController.PregnanterMaintenanceService">
             <summary>
@@ -1501,12 +1583,407 @@
             <param name="fields">字段集合</param>
             <returns>验证状态</returns>
         </member>
-        <member name="F:Ed.Web.PregnanterServiceRecordApiController.PregnanterServiceRecordService">
+        <member name="F:Ed.Web.SysLogApiController.SysLogService">
+            <summary>
+            依赖注入(SysLogApiController注入SysLogService) 2014-10-20 16:07:14 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.GetSysLogs(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有SysLog列表（默认前10条） 2014-10-20 16:07:145 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TSysLog&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.GetBootGridSysLogs">
+            <summary>
+            获取Bootgrid SysLog列表 2014-10-20 16:07:14 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.GetZTreeSysLogs(System.Int32)">
+            <summary>
+            获取SysLogZTree树形节点 2014-10-20 16:07:14 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.GetSysLog(System.Int32)">
+            <summary>
+            获取一条SysLog数据 2014-10-20 16:07:14 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TSysLog</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.AddSysLog(Ed.Entity.TSysLog)">
+             <summary>
+            添加信息 2014-10-20 16:07:14 By 唐有炜
+             </summary>
+             <param name="sysLog">sysLog</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.EditSysLog(Ed.Entity.TSysLog)">
+             <summary>
+            修改信息 2014-10-20 16:07:14 By 唐有炜
+             </summary>
+             <param name="sysLog">sysLog</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.DeleteSysLog(System.String)">
+             <summary>
+            删除    2014-10-20 16:07:14 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.SysLogApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-20 16:07:14 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.YuesaoOrderApiController.YuesaoOrderService">
+            <summary>
+            依赖注入(YuesaoOrderApiController注入YuesaoOrderService) 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.YuesaoOrderApiController.ClientInfoService">
+            <summary>
+            依赖注入(ClientInfoApiController注入ClientInfoService) 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.YuesaoOrderApiController.PregnanterServiceRecordService">
+            <summary>
+            依赖注入(YuesaoOrderApiController注入PregnanterInfoRecordService ) 2014-12-12 23:38:14 By 屠玲玲
+            </summary>
+        </member>
+        <member name="F:Ed.Web.YuesaoOrderApiController.PregnanterInfoService">
+            <summary>
+            依赖注入(PregnanterInfoApiController注入PregnanterInfoService ) 2014-12-12 23:38:14 By 屠玲玲
+            </summary>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.GetYuesaoOrders(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有YuesaoOrder列表（默认前10条） 2014-10-16 23:38:145 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TYuesaoOrder&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.GetBootGridYuesaoOrders">
+            <summary>
+            获取Bootgrid YuesaoOrder列表 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.GetZTreeYuesaoOrders(System.Int32)">
+            <summary>
+            获取YuesaoOrderZTree树形节点 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.GetYuesaoOrder(System.Int32)">
+            <summary>
+            获取一条YuesaoOrder数据 2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TYuesaoOrder</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.AddYuesaoOrder(Ed.Entity.TOrder)">
+             <summary>
+            添加信息 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.EditYuesaoOrder(Ed.Entity.TOrder)">
+             <summary>
+            修改月嫂订单(即处理订单) 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.SEditYuesaoOrder(Ed.Entity.TOrder)">
+             <summary>
+            变更以及添加月嫂服务(即处理订单) 2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="yuesaoOrder">yuesaoOrder</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.DeleteYuesaoOrder(System.String)">
+             <summary>
+            删除    2014-10-16 23:38:14 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.YuesaoOrderApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-16 23:38:14 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="T:Ed.Web.Areas.Settings.Controllers.DataBackupApiController">
+            <summary>
+            Class DataBackupApiController.
+            2014-10-16 02:23:17 修改 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.conntionString">
+            <summary>
+            数据库连接字符串
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.GetBootGridDatabackups">
+            <summary>
+            获取Bootgrid Databackup列表 2014-10-15 22:07:40 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.Get">
+            <summary>
+            获取数据库连接信息 2014-10-15 22:07:40 By 唐有炜
+            </summary>
+            <returns>IEnumerable&lt;System.String&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.Get(System.Int32)">
+            <summary>
+            数据库连接信息（长字符串） 2014-10-15 22:07:40 By 唐有炜
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>System.String.</returns>
+        </member>
+        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.RestoreDB(System.String,System.String,System.String@)">
+            <summary>
+            恢复数据库，恢复前杀死所有与本数据库相关进程
+            </summary>
+            <param name="strDbName">数据库名</param>
+            <param name="strFileName">存放路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ed.Web.Areas.Settings.Controllers.DataBackupApiController.Delete(System.String)">
+            <summary>
+            Deletes the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.ObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(Ed.Web.Api.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey"/> based on <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,Ed.Web.Api.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:Ed.Web.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="T:Ed.Web.Areas.Account.Controllers.LoginController">
+            <summary>
+            Class LoginController.
+            2014-10-13 20:09:45 修改 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Areas.Account.Controllers.LoginController.Index">
+            <summary>
+            Indexes this instance.
+            </summary>
+            <returns>ActionResult.</returns>
+        </member>
+        <member name="M:Ed.Web.Areas.Account.Controllers.LoginController.ForgetPassword">
+            <summary>
+            Forgets the password.
+            </summary>
+            <returns>ActionResult.</returns>
+        </member>
+        <member name="F:Ed.Web.ClientMaintenanceApiController.ClientMaintenanceService">
+            <summary>
+            依赖注入(ClientMaintenanceApiController注入ClientMaintenanceService) 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.GetClientMaintenances(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+             <summary>
+             获取所有ClientMaintenance列表（默认前10条） 2014-10-15 22:11:195 By 唐有炜
+             </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TClientMaintenance&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.GetBootGridClientMaintenances">
+            <summary>
+            获取Bootgrid ClientMaintenance列表 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.GetZTreeClientMaintenances(System.Int32)">
+            <summary>
+            获取ClientMaintenanceZTree树形节点 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.GetClientMaintenance(System.Int32)">
+            <summary>
+            获取一条ClientMaintenance数据 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TClientMaintenance</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.AddClientMaintenance(Ed.Entity.TClientMaintenance)">
+             <summary>
+            添加信息 2014-10-15 22:11:19 By 唐有炜
+             </summary>
+             <param name="clientMaintenance">clientMaintenance</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.EditClientMaintenance(Ed.Entity.TClientMaintenance)">
+             <summary>
+            修改信息 2014-10-15 22:11:19 By 唐有炜
+             </summary>
+             <param name="clientMaintenance">clientMaintenance</param>
+             <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.DeleteClientMaintenance(System.String)">
+             <summary>
+            删除    2014-10-15 22:11:19 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.ClientMaintenanceApiController.Validate(System.String)">
+            <summary>
+            验证字段是否存在  2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <param name="fields">字段集合</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="T:Ed.Web.Areas.Yuesao.Controllers.PregnanterInfoController">
+            <summary>
+            Class PregnanterInfoController.
+            </summary>
+        </member>
+        <member name="M:Ed.Web.Areas.Yuesao.Controllers.PregnanterInfoController.View(System.Nullable{System.Int32})">
+            <summary>
+            Views the specified identifier.
+            </summary>
+            <param name="id">月嫂id</param>
+            <returns>ActionResult.</returns>
+        </member>
+        <member name="F:Ed.Web.YPregnanterServiceRecordApiController.PregnanterServiceRecordService">
             <summary>
             依赖注入(PregnanterServiceRecordApiController注入PregnanterServiceRecordService) 2014-10-16 17:25:33 By 唐有炜
             </summary>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetPregnanterServiceRecords(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.GetPregnanterServiceRecords(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
              <summary>
              获取所有PregnanterServiceRecord列表（默认前10条） 2014-10-16 17:25:335 By 唐有炜
              </summary>
@@ -1518,7 +1995,7 @@
              <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
              <returns>IEnumerable&lt;TPregnanterServiceRecord&gt;.</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetBootGridPregnanterServiceRecords">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.GetBootGridPregnanterServiceRecords">
             <summary>
             获取Bootgrid PregnanterServiceRecord列表 2014-10-22 16:43:33 By 唐有炜
             </summary>
@@ -1528,41 +2005,41 @@
             <param name="searchPhrase">searchPhrase(格式)</param>
             <returns>json</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetZTreePregnanterServiceRecords(System.Int32)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.GetZTreePregnanterServiceRecords(System.Int32)">
             <summary>
             获取PregnanterServiceRecordZTree树形节点 2014-10-16 17:25:33 By 唐有炜
             </summary>
             <returns>json</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.GetPregnanterServiceRecord(System.Int32)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.GetPregnanterServiceRecord(System.Int32)">
             <summary>
             获取一条PregnanterServiceRecord数据 2014-10-16 17:25:33 By 唐有炜
             </summary>
             <param name="id">id</param>
             <returns>TPregnanterServiceRecord</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.AddPregnanterServiceRecord(Ed.Entity.TPregnanterServiceRecord)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.AddPregnanterServiceRecord(Ed.Entity.TPregnanterServiceRecord)">
              <summary>
             添加信息 2014-10-16 17:25:33 By 唐有炜
              </summary>
              <param name="pregnanterServiceRecord">pregnanterServiceRecord</param>
              <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.EditPregnanterServiceRecord(Ed.Entity.TPregnanterServiceRecord)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.EditPregnanterServiceRecord(Ed.Entity.TPregnanterServiceRecord)">
              <summary>
             修改信息 2014-10-16 17:25:33 By 唐有炜
              </summary>
              <param name="pregnanterServiceRecord">pregnanterServiceRecord</param>
              <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.DeletePregnanterServiceRecord(System.String)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.DeletePregnanterServiceRecord(System.String)">
              <summary>
             删除    2014-10-16 17:25:33 By 唐有炜
              </summary>
              <param name="ids">要删除的ids集合</param>
              <returns>ResponseMessage.</returns>
         </member>
-        <member name="M:Ed.Web.PregnanterServiceRecordApiController.Validate(System.String,System.String,System.String,System.String)">
+        <member name="M:Ed.Web.YPregnanterServiceRecordApiController.Validate(System.String,System.String,System.String,System.String)">
             <summary>
             验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
             </summary>
@@ -1572,158 +2049,195 @@
             <param name="operations">条件集合（or,and）</param>
             <returns>验证状态</returns>
         </member>
-        <member name="T:Ed.Web.Filters.ApiAuthorizeAttribute">
+        <member name="T:Ed.Web.ClientInfoApiController">
+            <summary>
+            Class ClientInfoApiController.
+            </summary>
+        </member>
+        <member name="F:Ed.Web.ClientInfoApiController.ClientInfoService">
+            <summary>
+            依赖注入(ClientInfoApiController注入ClientInfoService) 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+        </member>
+        <member name="F:Ed.Web.ClientInfoApiController.SysUserService">
+            <summary>
+            The system user service
+            </summary>
+        </member>
+        <member name="F:Ed.Web.ClientInfoApiController.ClientMaintenanceService">
+            <summary>
+            The client maintenance service
+            </summary>
+        </member>
+        <member name="F:Ed.Web.ClientInfoApiController.SysDepartmentService">
+            <summary>
+            The system department service
+            </summary>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.GetClientInfos(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+            <summary>
+            获取所有ClientInfo列表（默认前10条） 2014-10-15 14:36:335 By 唐有炜
+            </summary>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">页数.</param>
+            <param name="sortField">排序字段</param>
+            <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+            <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+            <returns>IEnumerable&lt;TClientInfo&gt;.</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.GetBootGridClientInfos">
+            <summary>
+            获取Bootgrid ClientInfo列表 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.GetZTreeClientInfos(System.Int32)">
+            <summary>
+            获取ClientInfoZTree树形节点 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.GetClientInfo(System.Int32)">
+            <summary>
+            获取一条ClientInfo数据 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TClientInfo</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.AddClientInfo(Ed.Entity.TClientInfo)">
+            <summary>
+            添加信息 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="clientInfo">clientInfo</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.EditClientInfo(Ed.Entity.TClientInfo)">
+            <summary>
+            修改信息 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="clientInfo">clientInfo</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.DeleteClientInfo(System.String)">
+            <summary>
+            删除    2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="ids">要删除的ids集合</param>
+            <returns>ResponseMessage.</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.UpdateClientInfoStatus(System.String,System.Int32)">
+            <summary>
+            修改状态 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="ids">The ids.</param>
+            <param name="status">The status.</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.UpdateClientInfoWeihu(System.String,System.Int32)">
+            <summary>
+            修改状态 2014-10-15 14:36:33 By 唐有炜
+            </summary>
+            <param name="ids">The ids.</param>
+            <param name="status">The status.</param>
+            <returns>ResponseMessage</returns>
+        </member>
+        <member name="M:Ed.Web.ClientInfoApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
+            </summary>
+            <param name="fields">字段集合(id,name)</param>
+            <param name="eqs">The eqs.</param>
+            <param name="values">The values.</param>
+            <param name="operations">条件集合（or,and）</param>
+            <returns>验证状态</returns>
+        </member>
+        <member name="F:Ed.Web.YPregnanterInfoApiController.PregnanterInfoService">
+            <summary>
+            依赖注入(PregnanterInfoApiController注入PregnanterInfoService) 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+        </member>
+        <member name="M:Ed.Web.YPregnanterInfoApiController.GetPregnanterInfos(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
              <summary>
-            Api授权过滤器 2014-09-21 14:58:50 By 唐有炜
+             获取所有PregnanterInfo列表（默认前10条） 2014-10-17 14:25:145 By 唐有炜
              </summary>
+             <param name="pageIndex">页码</param>
+             <param name="pageSize">页数.</param>
+             <param name="sortField">排序字段</param>
+             <param name="sortType">排序类型</param>
+            <param name="searchPhrase">searchPhrase(格式：加密的条件)</param>
+             <param name="format">返回格式（json：返回json数据，xml：返回xml数据）</param>
+             <returns>IEnumerable&lt;TPregnanterInfo&gt;.</returns>
         </member>
-        <member name="T:Ed.Web.Filters.AutoLoginAttribute">
+        <member name="M:Ed.Web.YPregnanterInfoApiController.GetBootGridPregnanterInfos">
+            <summary>
+            获取Bootgrid PregnanterInfo列表 2014-10-17 14:25:14 By 唐有炜
+            </summary>
+            <param name="current">current</param>
+            <param name="rowCount">rowCount</param>
+            <param name="sort[fieldName]">sort[fieldName]</param>
+            <param name="searchPhrase">searchPhrase(格式)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterInfoApiController.GetZTreePregnanterInfos(System.Int32)">
+            <summary>
+            获取PregnanterInfoZTree树形节点 2014-10-17 14:25:14 By 唐有炜
+            </summary>
+            <returns>json</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterInfoApiController.GetPregnanterInfo(System.Int32)">
+            <summary>
+            获取一条PregnanterInfo数据 2014-10-15 22:11:19 By 唐有炜
+            </summary>
+            <param name="id">id</param>
+            <returns>TPregnanterInfo</returns>
+        </member>
+        <member name="M:Ed.Web.YPregnanterInfoApiController.AddPregnanterInfo(Ed.Entity.TPregnanterInfo)">
              <summary>
-            自动登录过滤器 2014-08-22 14:58:50 By 唐有炜
+            添加信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
+             <param name="pregnanterInfo">pregnanterInfo</param>
+             <returns>ResponseMessage</returns>
         </member>
-        <member name="T:Ed.Web.Filters.RolePowerAuthorize">
-            <summary>
-            角色模块权限过滤器 14-10-24 by 唐有炜
-            </summary>
-        </member>
-        <member name="T:Ed.Web.Filters.UserAuthorizeAttribute">
+        <member name="M:Ed.Web.YPregnanterInfoApiController.EditPregnanterInfo(Ed.Entity.TPregnanterInfo)">
              <summary>
-            账户授权过滤器 2014-08-22 14:58:50 By 唐有炜
+            修改信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
+             <param name="pregnanterInfo">pregnanterInfo</param>
+             <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.MvcApplication.Configure(System.Web.Http.HttpConfiguration)">
+        <member name="M:Ed.Web.YPregnanterInfoApiController.EditPregnanterInfos(Ed.Entity.TPregnanterInfo)">
              <summary>
-            配置全局设置
+            修改信息 2014-10-15 22:11:19 By 唐有炜
              </summary>
-             <param name="config">config</param>
+             <param name="pregnanterInfo">pregnanterInfo</param>
+             <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.Helpers.MyControllerHelper.FilterModulePowers(System.Collections.Generic.IEnumerable{System.Collections.Generic.Dictionary{System.String,System.Object}},System.Int32)">
-            <summary>
-            根据角色id筛选对应的模块权限数据
-            </summary>
-            <param name="tempMoudlsPowers"></param>
-            <param name="roleId"></param>
-            <returns></returns>
+        <member name="M:Ed.Web.YPregnanterInfoApiController.DeletePregnanterInfo(System.String)">
+             <summary>
+            删除    2014-10-15 22:11:19 By 唐有炜
+             </summary>
+             <param name="ids">要删除的ids集合</param>
+             <returns>ResponseMessage.</returns>
         </member>
-        <member name="T:Ed.Web.Helpers.MyHtmlHelper">
+        <member name="M:Ed.Web.YPregnanterInfoApiController.UpdatePregnanterInfoStatus(System.String,System.Int32)">
             <summary>
-            Html格式化输出辅助类
-            2014-10-13 02:50:51 修改 By 唐有炜
+            修改状态 2014-10-15 22:11:19 By 唐有炜
             </summary>
+            <param name="id">id</param>
+            <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.IsNull(System.Web.Mvc.HtmlHelper,System.String,System.String)">
+        <member name="M:Ed.Web.YPregnanterInfoApiController.Validate(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
-            自定义字符串长度 2014-05-25 By 唐有炜
+            验证字段是否存在  2014-10-15 14:36:33 By 唐有炜(注意：字段必须与条件一一对应)
             </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="value">The value.</param>
-            <param name="replaceValue">The replace value.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultPic(System.Web.Mvc.HtmlHelper,System.String,System.String)">
-            <summary>
-            加载默认图片 2014-05-25 By 唐有炜
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="src">The source.</param>
-            <param name="imgUrl">The img URL.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.String,System.String)">
-            <summary>
-            Loads the default value.
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="value">The value.</param>
-            <param name="replaceValue">The replace value.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.Nullable{System.Int32},System.String)">
-            <summary>
-            Loads the default value.
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="value">The value.</param>
-            <param name="replaceValue">The replace value.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.Nullable{System.Double},System.String)">
-            <summary>
-            Loads the default value.
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="value">The value.</param>
-            <param name="replaceValue">The replace value.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadDefaultValue(System.Web.Mvc.HtmlHelper,System.Object,System.Object,System.String)">
-            <summary>
-            Loads the default value.
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="obj">The object.</param>
-            <param name="value">The value.</param>
-            <param name="replaceValue">The replace value.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.NullPalse(System.Web.Mvc.HtmlHelper,System.Object)">
-            <summary>
-            加载默认 2014-05-25 By 唐有炜
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="field">The field.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.DateTimeNullPalse(System.Web.Mvc.HtmlHelper,System.Nullable{System.DateTime})">
-            <summary>
-            加载默认时间 2014-05-25 By 唐有炜
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="dt">The dt.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.BuildSelectList(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Boolean)">
-            <summary>
-            Builds the select list. 14-10-14 By 唐有炜
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="lists">下拉框集合</param>
-            <param name="defaultValue">默认值</param>
-            <param name="showLabel">是否显示"请选择",默认显示</param>
-            <returns>IEnumerable&lt;SelectListItem&gt;.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.OptionsPalse(System.Web.Mvc.HtmlHelper,System.Nullable{System.Int32},System.String,System.String)">
-            <summary>
-            整型多选项输出 2014-07-29 By 唐有炜
-            </summary>
-            <param name="htmlHelper">The HTML helper.</param>
-            <param name="value">当前值</param>
-            <param name="options">选项1|a,2|b</param>
-            <param name="replaceValue">The replace value.</param>
-            <returns>MvcHtmlString.</returns>
-        </member>
-        <member name="M:Ed.Web.Helpers.MyHtmlHelper.LoadModulePowers(System.Web.Mvc.HtmlHelper,System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.String,System.String)">
-            <summary>
-            根据模块别名判断是否有权限
-            </summary>
-            <param name="htmlHelper"></param>
-            <param name="models"></param>
-            <param name="mid">模块id</param>
-            <param name="paction">操作（默认查看）</param>
-            <returns></returns>
-        </member>
-        <member name="T:Ed.Web.WebApiConfig">
-            <summary>
-            Class WebApiConfig.
-            2014-10-13 02:05:08 修改 By 唐有炜
-            </summary>
-        </member>
-        <member name="M:Ed.Web.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
-            <summary>
-            Registers the specified configuration.
-            </summary>
-            <param name="config">The configuration.</param>
+            <param name="fields">字段集合(id,name)</param>
+            <param name="eqs">The eqs.</param>
+            <param name="values">The values.</param>
+            <param name="operations">条件集合（or,and）</param>
+            <param name="existReturn">存在时的返回结果（默认true）</param>
+            <returns>验证状态</returns>
         </member>
     </members>
 </doc>

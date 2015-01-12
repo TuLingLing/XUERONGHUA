@@ -69,15 +69,6 @@
                     }
             });
         }
-
-
-
-
-
-
-
-
-
                 //表单验证方法，供父窗口调用
         function form_valid() {
             if ($("#orderfinance_form").valid()) {
@@ -119,7 +110,7 @@
               </tr>
               <tr>
                 <th><span class="must">*</span>收款金额：</th>
-                <td colspan="3"> @Html.TextBoxFor(model => model.FinPayment, new { @class = "form-control required", @style = "width:100px;  color:red;font-weight:bold;",@placeholder="收款金额"}) <span style="color:#999;">款金额必须>0，自动累加该订单号对应的收款总计金额</span></td>
+                <td colspan="3"> @Html.TextBoxFor(model => model.FinPayment, new { @class = "form-control required number", @style = "width:100px;  color:red;font-weight:bold;",@placeholder="收款金额"}) <span style="color:#999;">款金额必须>0，自动累加该订单号对应的收款总计金额</span></td>
               </tr>
               
               <tr>

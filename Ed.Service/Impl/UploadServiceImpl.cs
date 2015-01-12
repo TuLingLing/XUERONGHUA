@@ -146,6 +146,9 @@ namespace Ed.Service.Impl
                             WaterMark.AddImageSignPic(serverFileName, serverFileName, 
                                 this.siteConfig.watermarkpic, this.siteConfig.watermarkposition, 
                                 this.siteConfig.watermarkimgquality, this.siteConfig.watermarktransparency);
+                            WaterMark.AddImageSignPic(serverFileName, serverThumbnailFileName,
+                              this.siteConfig.watermarkpic, this.siteConfig.watermarkposition,
+                              this.siteConfig.watermarkimgquality, this.siteConfig.watermarktransparency);
                             break;
                     }
                 }
