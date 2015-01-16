@@ -187,16 +187,17 @@
         var ids = get_selected_ids("order_grid_data");
         //console.log(ids);
         if (ids == "") {
-            showTopMsg("请选择你更改状态为“执行中”的记录！", "错误提示", "Error");      
+            showTopMsg("请选择你更改状态为“执行中”的记录！", "错误提示", "Error");                        
             return false;
         }
+      
         //console.log(ids);
         //return false;
         showTopDialog("show_order_trash", "<div class='dialog_confirm'>确认将选中订单的状态更改为“执行中”吗？</div>", "温馨提示", 400, 75, function () {
             $.ajax({
                 type: "GET",
                 cache: false,
-                url: "/api/OrderApi/UpdateOrderStatusUpdate?ids=" + ids + "&status=3",
+                url: "/api/OrderApi/UpdateOrderStatus?ids=" + ids + "&status=3",
                 //data: { ids: ids },
                 dataType: "json",
                 beforeSend: function () {
@@ -317,12 +318,9 @@
             });
 
         }, function () { });
-
         //必须有这个，阻止刷新
         return false;
-    }
-
-        
+    }       
          </script>
     
  </head>

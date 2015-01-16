@@ -41,7 +41,7 @@
             order_grid = $("#order_grid_data").bootgrid({
                 ajax: true,
                 post: function () {
-                    return {
+                    return {                      
                         OrderCreater: "@Session[EdKeys.SESSION_USER_ID]"
                     };
                 },
@@ -128,7 +128,7 @@
                     "commands": function (column, row) {
                         if (row.OrderSumMoney - row.OrderPrepaid > 0) {
                             if (row.OrderType == 1) {
-                                return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>  <a href='javascript:money_back(\"" + row.OrderCode + "\")'  style=\"color:red\">收款</a> <a href='javascript:order_edit(\"" + row.OrderCode + "\")'  style=\"color:green\">变更</a>";
+                                return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>  <a href='javascript:money_back(\"" + row.OrderCode + "\")'  style=\"color:red\">收款</a>";
                             }
                             if (row.OrderType == 2) {
                                 return "<a href='javascript:order_show1(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>  <a href='javascript:money_back(\"" + row.OrderCode + "\")'  style=\"color:red\">收款</a>";
@@ -139,11 +139,11 @@
                             if (row.OrderType == 4) {
                                 return "<a href='javascript:order_show3(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>  <a href='javascript:money_back(\"" + row.OrderCode + "\")'  style=\"color:red\">收款</a>";
                             }
-
+                            
                         }
                         else {
                             if (row.OrderType == 1) {
-                                return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a> <a href='javascript:order_edit(\"" + row.OrderCode + "\")'  style=\"color:green\">变更</a>";
+                                return "<a href='javascript:order_show(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
                             }
                             if (row.OrderType == 2) {
                                 return "<a href='javascript:order_show1(\"" + row.OrderCode + "\")'  style=\"color:blue\">查看</a>";
@@ -227,63 +227,7 @@
             });
 
         }
-        //更改订单预定时间
-        function order_edit(order_code) {
-            showTopWindow("show_order_do", "/Order/YuesaoOrder/SEdit?actionType=Do&order_code=" + order_code, "变更月嫂", 1000, 550, function () {
 
-                var yuesaoorder_form = $(top.window.frames["frm_show_order_do"].document).find("#step4_form");
-                //console.log(yuesaoorder_form);
-                var flag = top.window.document.getElementById("frm_show_order_do").contentWindow.form_valid();
-                if (!flag) {
-                    return false;
-                }
-
-                if (!flag) {
-                    return false;
-                }
-                var data = $(yuesaoorder_form).serialize();
-                //console.log(data);
-
-                //alert(data);
-                $.ajax({
-                    type: "POST",
-                    cache: false,
-                    url: "/api/YuesaoOrderApi/SEditYuesaoOrder?order_code=" + order_code,
-                    data: data,
-                    dataType: "json",
-                    beforeSend: function () {
-                        //显示加载中
-                        showTopDialog("show_loading", "<div class='dialog_loading'>变更月嫂确认中，请稍后...</div>", "温馨提示", 400, 95);
-                    },
-                    complete: function () {
-                    },
-                    success: function (result) {
-                        top.dialog.list["show_loading"].close().remove();
-                        //toLowerCase报错
-                        //var status = result.Status.toLowerCase();
-                        var status = result.Status;
-                        if (status == true || status == "true" || status == "True") {
-                            //刷新数据
-                            //                            show_do_order_success();
-                            order_grid.bootgrid("reload");
-                            top.dialog.list["show_order_do"].close().remove();
-                            showMsg("变更月嫂成功！", "Success");
-
-                        } else {
-                            top.dialog.list["show_order_do"].close().remove();
-                            showMsg("系统异常(变更月嫂最多只能四个)，变更月嫂确认失败！", "Error");
-                        }
-                    },
-                    error: function () {
-                        top.dialog.list["show_order_do"].close().remove();
-                        top.dialog.list["show_loading"].close().remove();
-                        showMsg("网络连接错误!", "错误提示", "Error");
-                    }
-                });
-                //必须有这个，阻止刷新
-                return false;
-            }, function () { });
-        }
         //状态更改为回收站
         function order_trash() {
             var ids = get_selected_ids("order_grid_data");
@@ -324,29 +268,31 @@
                         showTopMsg("网络连接错误!", "错误提示", "Error");
                     }
                 });
-                //必须有这个，阻止刷新
-                return false;
             });
-
+            //必须有这个，阻止刷新
+            return false;
         }
-
 
         //状态更改为执行中
         function order_ing() {
             var ids = get_selected_ids("order_grid_data");
             //console.log(ids);
             if (ids == "") {
-                showTopMsg("请选择你更改状态为“执行中”的记录！", "错误提示", "Error");
+                showTopMsg("请选择你要更改为执行中的记录！", "错误提示", "Error");
                 return false;
             }
+            //console.log(ids);
+            //return false;
+
+
             //已经完成的订单不能更改为执行中
             if (ids.indexOf(4) > 0) {
                 showTopMsg("您选择的订单包含已经完成的订单，已经完成的订单不能更改为执行中！", "错误提示", "Error");
                 return false;
             }
-            //console.log(ids);
-            //return false;
-            showTopDialog("show_order_trash", "<div class='dialog_confirm'>确认将选中订单的状态更改为“执行中”吗？</div>", "温馨提示", 400, 75, function () {
+
+
+            showTopDialog("show_order_img", "<div class='dialog_confirm'>确认将选中记录更改为执行中吗？</div>", "温馨提示", 400, 75, function () {
                 $.ajax({
                     type: "GET",
                     cache: false,
@@ -366,9 +312,9 @@
                         if (status == true || status == "true" || status == "True") {
                             //刷新数据
                             order_grid.bootgrid("reload");
-                            showMsg("订单状态更改为“执行中”成功！", "Success");
+                            showMsg("订单更改为执行中成功！", "Success");
                         } else {
-                            showMsg("系统异常，订单状态更改为“执行中”失败！", "Error");
+                            showMsg("系统异常，订单更改为执行中失败！", "Error");
                         }
                     },
                     error: function () {
@@ -379,20 +325,23 @@
             //必须有这个，阻止刷新
             return false;
         }
-        function order_wan() {
+
+        //状态更改为已完成
+        function order_finish() {
             var ids = get_selected_ids("order_grid_data");
             //console.log(ids);
             if (ids == "") {
-                showTopMsg("请选择你更改状态为“完成”的记录！", "错误提示", "Error");
+                showTopMsg("请选择你要更改为完成的记录！", "错误提示", "Error");
                 return false;
             }
             //console.log(ids);
             //return false;
-            showTopDialog("show_order_trash", "<div class='dialog_confirm'>确认将选中订单的状态更改为“完成”吗？</div>", "温馨提示", 400, 75, function () {
+
+            showTopDialog("show_order_finish", "<div class='dialog_confirm'>确认将选中记录更改为完成吗？</div>", "温馨提示", 400, 75, function () {
                 $.ajax({
                     type: "GET",
                     cache: false,
-                    url: "/api/OrderApi/UpdateOrderStatusWan?ids=" + ids + "&status=4",
+                    url: "/api/OrderApi/UpdateOrderStatus?ids=" + ids + "&status=4",
                     //data: { ids: ids },
                     dataType: "json",
                     beforeSend: function () {
@@ -408,9 +357,9 @@
                         if (status == true || status == "true" || status == "True") {
                             //刷新数据
                             order_grid.bootgrid("reload");
-                            showMsg("订单状态更改为“完成”成功！", "Success");
+                            showMsg("订单更改为完成成功！", "Success");
                         } else {
-                            showMsg("系统异常，订单状态更改为“完成”失败！", "Error");
+                            showMsg("系统异常，订单更改为完成失败！", "Error");
                         }
                     },
                     error: function () {
@@ -421,52 +370,6 @@
             //必须有这个，阻止刷新
             return false;
         }
-
-        //        //状态更改为执行中
-        //        function order_ing() {
-        //            var ids = get_selected_ids("order_grid_data");         
-        //            //console.log(ids);
-        //            if (ids == "") {
-        //                showTopMsg("请选择你要更改为执行中的记录！", "错误提示", "Error");
-        //                return false;
-        //            }
-        //            //console.log(ids);
-        //            //return false;
-        //           
-        //            showTopDialog("show_order_trash", "<div class='dialog_confirm'>确认将选中记录更改为执行中吗？</div>", "温馨提示", 400, 75, function () {
-        //                $.ajax({
-        //                    type: "GET",
-        //                    cache: false,
-        //                    url: "/api/OrderApi/UpdateOrderStatusUpdate?ids=" + ids + "&status=3",
-        //                    //data: { ids: ids },
-        //                    dataType: "json",
-        //                    beforeSend: function () {
-        //                        //showMsg("添加中，请稍后...");
-        //                    },
-        //                    complete: function () {
-        //                        //d.close().remove();
-        //                    },
-        //                    success: function (result) {
-        //                        //toLowerCase报错
-        //                        //var status = result.Status.toLowerCase();
-        //                        var status = result.Status;
-        //                        if (status == true || status == "true" || status == "True") {
-        //                            //刷新数据
-        //                            order_grid.bootgrid("reload");
-        //                            showMsg("订单更改为执行中成功！", "Success");
-        //                        } else {
-        //                            showMsg("系统异常，订单更改为执行中失败！", "Error");
-        //                        }
-        //                    },
-        //                    error: function () {
-        //                        showTopMsg("网络连接错误!", "错误提示", "Error");
-        //                    }
-        //                });
-        //                //必须有这个，阻止刷新
-        //                return false;
-        //            });
-        //           
-        //        }
     </script>
 </head>
 <body>

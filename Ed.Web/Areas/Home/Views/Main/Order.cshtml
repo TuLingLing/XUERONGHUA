@@ -64,6 +64,9 @@
         function show_my() {
             showTopContentWindow("show_list_my", "/Order/Order/My", '@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1100, 500);
         }
+        function show_my1() {
+            showTopContentWindow("show_list_my", "/Order/Order/My1", '@Html.Raw("【"+@Session[EdKeys.SESSION_USER_NAME]+"】"+"的订单信息管理")', 1100, 500);
+        }
         function show_do() {
             showTopContentWindow("show_list", "/Order/Order/Do", "待处理订单信息管理", 1000, 500);
         }
@@ -101,7 +104,11 @@
                 }*@
                 @if (Html.LoadModulePowers(@Model, "Order_my"))
                 {
-                    <li onclick=" show_my(); "><img src="~/Themes/default/home/images/order_02.png"><span>我的订单</span></li>
+                    <li onclick=" show_my(); "><img src="~/Themes/default/home/images/order_02.png"><span>我的订单(全)</span></li>
+                }
+                  @if (Html.LoadModulePowers(@Model, "Order_my1"))
+                {
+                    <li onclick=" show_my1(); "><img src="~/Themes/default/home/images/order_02.png"><span>我的订单</span></li>
                 }
                 @if (Html.LoadModulePowers(@Model, "Order_do"))
                 {

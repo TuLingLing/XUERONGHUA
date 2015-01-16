@@ -960,7 +960,7 @@
             <param name="id">id</param>
             <returns>ResponseMessage</returns>
         </member>
-        <member name="M:Ed.Web.OrderApiController.UpdateOrderStatusUpdate(System.String,System.Int32)">
+        <member name="M:Ed.Web.OrderApiController.UpdateOrderStatus(System.String,System.Int32)">
             <summary>
             修改状态(执行中) 2014-10-20 21:14:18 By 唐有炜
             </summary>

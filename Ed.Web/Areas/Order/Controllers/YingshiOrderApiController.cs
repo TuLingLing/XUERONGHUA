@@ -365,29 +365,29 @@ namespace Ed.Web
 
 
         #region 修改状态 2014-10-16 23:38:14 By 唐有炜
-        //		
-        //        // GET /api/YuesaoOrderApi/UpdateYuesaoOrderStatus/5
-        //        /// <summary>
-        //        /// 修改状态 2014-10-16 23:38:14 By 唐有炜
-        //        /// </summary>
-        //        /// <param name="id">id</param>
-        //        /// <returns>ResponseMessage</returns>
-        //        [HttpPost]
-        //        public ResponseMessage UpdateYuesaoOrderStatus(int ids)
-        //        {
-        //            ResponseMessage rmsg = new ResponseMessage();
-        //             if (YuesaoOrderService.UpdateEntityStatus(null,null))
-        //                        {
-        //                            rmsg.Status = true;
-        //                        }
-        //                        else
-        //                        {
-        //                            rmsg.Status = false;
-        //                        }
-        //            
-        //            return rmsg;
-        //        }
-        //		
+
+        //// GET /api/YuesaoOrderApi/UpdateYuesaoOrderStatus/5
+        ///// <summary>
+        ///// 修改状态 2014-10-16 23:38:14 By 唐有炜
+        ///// </summary>
+        ///// <param name="id">id</param>
+        ///// <returns>ResponseMessage</returns>
+        //[HttpPost]
+        //public ResponseMessage UpdateYuesaoOrderStatus(int ids)
+        //{
+        //    ResponseMessage rmsg = new ResponseMessage();
+        //    if (YuesaoOrderService.UpdateEntityStatus(null, null))
+        //    {
+        //        rmsg.Status = true;
+        //    }
+        //    else
+        //    {
+        //        rmsg.Status = false;
+        //    }
+
+        //    return rmsg;
+        //}
+        		
         #endregion
 
 

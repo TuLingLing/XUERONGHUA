@@ -43,6 +43,14 @@ public  class OrderController: Controller
             return View("My");
         }
 
+        // GET: URL
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult My1()
+        {
+            return View("My1");
+        }
+
         #endregion
 
 

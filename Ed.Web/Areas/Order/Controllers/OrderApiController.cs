@@ -428,7 +428,7 @@ namespace Ed.Web
         /// <param name="id">id</param>
         /// <returns>ResponseMessage</returns>
         [HttpGet]
-        public ResponseMessage UpdateOrderStatusUpdate(string ids, int status)
+        public ResponseMessage UpdateOrderStatus(string ids, int status)
         {
             ResponseMessage rmsg = new ResponseMessage();
 
